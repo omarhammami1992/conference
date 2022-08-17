@@ -1,8 +1,8 @@
 package com.soat.back.middleware.command;
 
-import com.soat.back.cqrs.Command;
-import com.soat.back.cqrs.CommandResponse;
-import com.soat.back.cqrs.Event;
+import com.soat.back.common.domain.cqrs.Command;
+import com.soat.back.common.domain.cqrs.CommandResponse;
+import com.soat.back.common.domain.cqrs.Event;
 import com.soat.back.middleware.event.EventBus;
 
 import java.util.concurrent.atomic.AtomicReference;

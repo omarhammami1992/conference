@@ -1,7 +1,7 @@
 package com.soat.back.middleware.command;
 
-import com.soat.back.cqrs.Command;
-import com.soat.back.cqrs.CommandResponse;
+import com.soat.back.common.domain.cqrs.Command;
+import com.soat.back.common.domain.cqrs.CommandResponse;
 
 public class CommandBusLogger implements CommandBus {
 

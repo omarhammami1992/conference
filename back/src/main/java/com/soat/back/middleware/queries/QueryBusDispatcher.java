@@ -1,8 +1,8 @@
 package com.soat.back.middleware.queries;
 
-import com.soat.back.cqrs.Query;
-import com.soat.back.cqrs.QueryHandler;
-import com.soat.back.cqrs.QueryResponse;
+import com.soat.back.common.domain.cqrs.Query;
+import com.soat.back.common.domain.cqrs.QueryHandler;
+import com.soat.back.common.domain.cqrs.QueryResponse;
 
 import java.util.List;
 import java.util.Map;

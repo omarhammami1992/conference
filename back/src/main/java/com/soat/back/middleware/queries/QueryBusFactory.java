@@ -1,7 +1,7 @@
 package com.soat.back.middleware.queries;
 
-import com.soat.back.cqrs.Query;
-import com.soat.back.cqrs.QueryHandler;
+import com.soat.back.common.domain.cqrs.Query;
+import com.soat.back.common.domain.cqrs.QueryHandler;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

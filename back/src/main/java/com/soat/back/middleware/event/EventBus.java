@@ -1,7 +1,7 @@
 package com.soat.back.middleware.event;
 
-import com.soat.back.cqrs.Command;
-import com.soat.back.cqrs.Event;
+import com.soat.back.common.domain.cqrs.Command;
+import com.soat.back.common.domain.cqrs.Event;
 
 import java.util.Set;
 

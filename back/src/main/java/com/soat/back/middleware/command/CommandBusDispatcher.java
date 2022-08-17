@@ -1,8 +1,8 @@
 package com.soat.back.middleware.command;
 
-import com.soat.back.cqrs.Command;
-import com.soat.back.cqrs.CommandHandler;
-import com.soat.back.cqrs.CommandResponse;
+import com.soat.back.common.domain.cqrs.Command;
+import com.soat.back.common.domain.cqrs.CommandHandler;
+import com.soat.back.common.domain.cqrs.CommandResponse;
 
 import java.util.List;
 import java.util.Map;

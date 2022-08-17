@@ -1,8 +1,8 @@
 package com.soat.back.middleware.event;
 
 
-import com.soat.back.cqrs.Event;
-import com.soat.back.cqrs.EventHandler;
+import com.soat.back.common.domain.cqrs.Event;
+import com.soat.back.common.domain.cqrs.EventHandler;
 
 import java.util.List;
 

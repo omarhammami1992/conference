@@ -1,6 +1,7 @@
 package com.soat.back.middleware.event;
 
-import com.soat.back.cqrs.*;
+import com.soat.back.common.cqrs.*;
+import com.soat.back.common.domain.cqrs.*;
 
 import java.util.*;
 import java.util.stream.Collectors;

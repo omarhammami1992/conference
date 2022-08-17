@@ -1,7 +1,7 @@
 package com.soat.back.middleware.queries;
 
-import com.soat.back.cqrs.Query;
-import com.soat.back.cqrs.QueryResponse;
+import com.soat.back.common.domain.cqrs.Query;
+import com.soat.back.common.domain.cqrs.QueryResponse;
 
 public class QueryBusLogger implements QueryBus {
 

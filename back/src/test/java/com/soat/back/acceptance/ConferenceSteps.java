@@ -1,4 +1,4 @@
-package com.soat.back;
+package com.soat.back.acceptance;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.soat.back.common.infrastructure.JpaConference;
@@ -17,7 +17,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;

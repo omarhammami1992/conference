@@ -1,4 +1,4 @@
-package com.soat.back;
+package com.soat.back.acceptance;
 
 import org.junit.platform.suite.api.ConfigurationParameter;
 import org.junit.platform.suite.api.IncludeEngines;

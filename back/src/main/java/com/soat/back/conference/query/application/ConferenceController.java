@@ -5,7 +5,7 @@ import com.soat.back.common.domain.cqrs.QueryResponse;
 import com.soat.back.conference.event.GetAllConferencesSucceeded;
 import com.soat.back.conference.query.GetAllConferencesQuery;
 import com.soat.back.conference.query.domain.Conference;
-import com.soat.back.middleware.queries.QueryBusFactory;
+import com.soat.back.common.infrastructure.middleware.queries.QueryBusFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

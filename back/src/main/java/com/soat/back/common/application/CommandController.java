@@ -1,7 +1,7 @@
 package com.soat.back.common.application;
 
-import com.soat.back.middleware.command.CommandBus;
-import com.soat.back.middleware.command.CommandBusFactory;
+import com.soat.back.common.infrastructure.middleware.command.CommandBus;
+import com.soat.back.common.infrastructure.middleware.command.CommandBusFactory;
 
 public abstract class CommandController {
     private CommandBus commandBus;

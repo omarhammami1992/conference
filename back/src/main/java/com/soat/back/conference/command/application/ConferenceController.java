@@ -5,7 +5,7 @@ import com.soat.back.common.domain.cqrs.CommandResponse;
 import com.soat.back.common.domain.cqrs.Event;
 import com.soat.back.conference.command.SaveConferenceCommand;
 import com.soat.back.conference.event.SaveConferenceSucceeded;
-import com.soat.back.middleware.command.CommandBusFactory;
+import com.soat.back.common.infrastructure.middleware.command.CommandBusFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

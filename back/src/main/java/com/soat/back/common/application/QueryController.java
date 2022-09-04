@@ -1,7 +1,7 @@
 package com.soat.back.common.application;
 
-import com.soat.back.middleware.queries.QueryBus;
-import com.soat.back.middleware.queries.QueryBusFactory;
+import com.soat.back.common.infrastructure.middleware.queries.QueryBus;
+import com.soat.back.common.infrastructure.middleware.queries.QueryBusFactory;
 
 
 public abstract class QueryController {

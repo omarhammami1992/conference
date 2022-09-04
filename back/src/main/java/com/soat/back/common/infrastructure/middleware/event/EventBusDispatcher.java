@@ -1,4 +1,4 @@
-package com.soat.back.middleware.event;
+package com.soat.back.common.infrastructure.middleware.event;
 
 import com.soat.back.common.domain.cqrs.*;
 

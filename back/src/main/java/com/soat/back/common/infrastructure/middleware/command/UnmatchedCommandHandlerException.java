@@ -1,4 +1,4 @@
-package com.soat.back.middleware.command;
+package com.soat.back.common.infrastructure.middleware.command;
 
 
 import com.soat.back.common.domain.cqrs.Command;

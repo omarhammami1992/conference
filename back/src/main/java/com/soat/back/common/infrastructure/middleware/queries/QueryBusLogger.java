@@ -1,4 +1,4 @@
-package com.soat.back.middleware.queries;
+package com.soat.back.common.infrastructure.middleware.queries;
 
 import com.soat.back.common.domain.cqrs.Query;
 import com.soat.back.common.domain.cqrs.QueryResponse;

@@ -1,12 +1,12 @@
-package com.soat.back.middleware.command;
+package com.soat.back.common.infrastructure.middleware.command;
 
 import com.soat.back.common.domain.cqrs.CommandHandler;
 import com.soat.back.common.domain.cqrs.Event;
 import com.soat.back.common.domain.cqrs.EventHandler;
+import com.soat.back.common.infrastructure.middleware.event.EventBus;
+import com.soat.back.common.infrastructure.middleware.event.EventBusFactory;
 import com.soat.back.conference.command.SaveConferenceCommandHandler;
 import com.soat.back.conference.command.domain.ConferencePort;
-import com.soat.back.middleware.event.EventBus;
-import com.soat.back.middleware.event.EventBusFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

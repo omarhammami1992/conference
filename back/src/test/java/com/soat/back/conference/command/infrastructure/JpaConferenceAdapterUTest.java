@@ -5,7 +5,7 @@ import com.soat.back.common.infrastructure.JpaConference;
 import com.soat.back.common.infrastructure.JpaConferenceRepository;
 import com.soat.back.conference.command.domain.ConferencePort;
 import com.soat.back.conference.command.domain.ConferenceSavingException;
-import com.soat.back.conference.command.domain.ConferenceToSave;
+import com.soat.back.conference.command.domain.Conference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -44,14 +44,14 @@ class JpaConferenceAdapterUTest {
             final String link = "https:www.devoxx";
             final LocalDate startDate = LocalDate.of(2022, 11, 1);
             final LocalDate endDate = LocalDate.of(2022, 11, 3);
-            ConferenceToSave conferenceToSave = new ConferenceToSave(name, link, startDate, endDate);
+            Conference conference = new Conference(name, link, startDate, endDate);
 
             final int conferenceIdValue = 1;
             ArgumentCaptor<JpaConference> jpaConferenceArgumentCaptor = ArgumentCaptor.forClass(JpaConference.class);
             when(jpaConferenceRepository.save(jpaConferenceArgumentCaptor.capture())).thenReturn(new JpaConference(conferenceIdValue, name, link, startDate, endDate));
 
             // when
-            final ConferenceId conferenceId = conferencePort.save(conferenceToSave);
+            final ConferenceId conferenceId = conferencePort.save(conference);
 
             // then
             final ConferenceId expectedConferenceId = new ConferenceId(conferenceIdValue);
@@ -66,12 +66,12 @@ class JpaConferenceAdapterUTest {
             final String link = "https:www.devoxx";
             final LocalDate startDate = LocalDate.of(2022, 11, 1);
             final LocalDate endDate = LocalDate.of(2022, 11, 3);
-            ConferenceToSave conferenceToSave = new ConferenceToSave(name, link, startDate, endDate);
+            Conference conference = new Conference(name, link, startDate, endDate);
 
             when(jpaConferenceRepository.save(any(JpaConference.class))).thenThrow(PersistenceException.class);
 
             // when
-            final Throwable throwable = catchThrowable(() -> conferencePort.save(conferenceToSave));
+            final Throwable throwable = catchThrowable(() -> conferencePort.save(conference));
 
             // then
             assertThat(throwable).isInstanceOf(ConferenceSavingException.class);

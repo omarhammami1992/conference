@@ -2,9 +2,9 @@ package com.soat.back.conference.command.application;
 
 import com.soat.back.common.domain.cqrs.CommandResponse;
 import com.soat.back.common.domain.ConferenceId;
-import com.soat.back.conference.command.SaveConferenceCommand;
-import com.soat.back.conference.event.SaveConferenceFailed;
-import com.soat.back.conference.event.SaveConferenceSucceeded;
+import com.soat.back.conference.command.CreateConferenceCommand;
+import com.soat.back.conference.event.CreateConferenceFailed;
+import com.soat.back.conference.event.CreateConferenceSucceeded;
 import com.soat.back.common.infrastructure.middleware.command.CommandBus;
 import com.soat.back.common.infrastructure.middleware.command.CommandBusFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,8 +44,8 @@ class ConferenceControllerUTest {
         void should_return_id_of_saved_conference_and_http_status_201_when_saving_succeeded() {
             // given
             final int expectedConferenceId = 1;
-            final SaveConferenceSucceeded saveConferenceSucceeded = new SaveConferenceSucceeded(new ConferenceId(expectedConferenceId));
-            when(commandBus.dispatch(any(SaveConferenceCommand.class))).thenReturn(new CommandResponse<>(saveConferenceSucceeded));
+            final CreateConferenceSucceeded createConferenceSucceeded = new CreateConferenceSucceeded(new ConferenceId(expectedConferenceId));
+            when(commandBus.dispatch(any(CreateConferenceCommand.class))).thenReturn(new CommandResponse<>(createConferenceSucceeded));
 
             // when
             final ResponseEntity<Integer> responseEntity = conferenceController.save(new ConferenceToSaveJson("DEVOXX", "https:www.devoxx", "01-01-2022", "03-01-2022"));
@@ -58,8 +58,8 @@ class ConferenceControllerUTest {
         @Test
         void should_return_http_status_500_when_failed() {
             // given
-            final SaveConferenceFailed saveConferenceSucceeded = new SaveConferenceFailed();
-            when(commandBus.dispatch(any(SaveConferenceCommand.class))).thenReturn(new CommandResponse<>(saveConferenceSucceeded));
+            final CreateConferenceFailed saveConferenceSucceeded = new CreateConferenceFailed();
+            when(commandBus.dispatch(any(CreateConferenceCommand.class))).thenReturn(new CommandResponse<>(saveConferenceSucceeded));
 
             // when
             final ResponseEntity<Integer> responseEntity = conferenceController.save(new ConferenceToSaveJson("DEVOXX", "https:www.devoxx", "01-01-2022", "03-01-2022"));

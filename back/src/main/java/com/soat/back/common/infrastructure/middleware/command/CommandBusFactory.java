@@ -5,7 +5,7 @@ import com.soat.back.common.domain.cqrs.Event;
 import com.soat.back.common.domain.cqrs.EventHandler;
 import com.soat.back.common.infrastructure.middleware.event.EventBus;
 import com.soat.back.common.infrastructure.middleware.event.EventBusFactory;
-import com.soat.back.conference.command.SaveConferenceCommandHandler;
+import com.soat.back.conference.command.CreateConferenceCommandHandler;
 import com.soat.back.conference.command.domain.ConferencePort;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class CommandBusFactory {
 
     protected List<CommandHandler> getCommandHandlers() {
         return List.of(
-                new SaveConferenceCommandHandler(conferencePort)
+                new CreateConferenceCommandHandler(conferencePort)
         );
     }
 

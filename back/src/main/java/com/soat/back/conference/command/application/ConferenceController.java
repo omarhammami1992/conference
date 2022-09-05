@@ -3,8 +3,8 @@ package com.soat.back.conference.command.application;
 import com.soat.back.common.application.CommandController;
 import com.soat.back.common.domain.cqrs.CommandResponse;
 import com.soat.back.common.domain.cqrs.Event;
-import com.soat.back.conference.command.SaveConferenceCommand;
-import com.soat.back.conference.event.SaveConferenceSucceeded;
+import com.soat.back.conference.command.CreateConferenceCommand;
+import com.soat.back.conference.event.CreateConferenceSucceeded;
 import com.soat.back.common.infrastructure.middleware.command.CommandBusFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,18 +28,18 @@ public class ConferenceController extends CommandController {
 
     @PostMapping("")
     public ResponseEntity<Integer> save(@RequestBody ConferenceToSaveJson conferenceToSaveJson) {
-        final SaveConferenceCommand saveConferenceCommand = new SaveConferenceCommand(
+        final CreateConferenceCommand createConferenceCommand = new CreateConferenceCommand(
                 conferenceToSaveJson.name(),
                 conferenceToSaveJson.link(),
                 LocalDate.parse(conferenceToSaveJson.startDate(), DATE_TIME_FORMATTER),
                 LocalDate.parse(conferenceToSaveJson.endDate(), DATE_TIME_FORMATTER)
         );
-        CommandResponse<Event> commandResponse = getCommandBus().dispatch(saveConferenceCommand);
+        CommandResponse<Event> commandResponse = getCommandBus().dispatch(createConferenceCommand);
 
-        return commandResponse.findFirst(SaveConferenceSucceeded.class)
+        return commandResponse.findFirst(CreateConferenceSucceeded.class)
                 .map(event ->  {
-                    final SaveConferenceSucceeded saveConferenceSucceeded = (SaveConferenceSucceeded) event;
-                    return new ResponseEntity(saveConferenceSucceeded.conferenceId().value(), HttpStatus.CREATED);
+                    final CreateConferenceSucceeded createConferenceSucceeded = (CreateConferenceSucceeded) event;
+                    return new ResponseEntity(createConferenceSucceeded.conferenceId().value(), HttpStatus.CREATED);
                 })
                 .orElse(new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR));
 

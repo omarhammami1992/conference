@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.soat.back.common.domain.cqrs.CommandResponse;
 import com.soat.back.common.domain.ConferenceId;
-import com.soat.back.conference.command.SaveConferenceCommand;
-import com.soat.back.conference.event.SaveConferenceSucceeded;
+import com.soat.back.conference.command.CreateConferenceCommand;
+import com.soat.back.conference.event.CreateConferenceSucceeded;
 import com.soat.back.common.infrastructure.middleware.command.CommandBus;
 import com.soat.back.common.infrastructure.middleware.command.CommandBusFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,8 +56,8 @@ class ConferenceControllerITest {
             ConferenceToSaveJson conferenceToSaveJson = new ConferenceToSaveJson("DEVOXX", "https:www.devoxx", "01-01-2022", "03-01-2022");
             final String requestJson = toJson(conferenceToSaveJson);
 
-            final SaveConferenceSucceeded saveConferenceSucceeded = new SaveConferenceSucceeded(new ConferenceId(1));
-            when(commandBus.dispatch(any(SaveConferenceCommand.class))).thenReturn(new CommandResponse<>(saveConferenceSucceeded));
+            final CreateConferenceSucceeded createConferenceSucceeded = new CreateConferenceSucceeded(new ConferenceId(1));
+            when(commandBus.dispatch(any(CreateConferenceCommand.class))).thenReturn(new CommandResponse<>(createConferenceSucceeded));
 
             // when
             final ResultActions resultActions = mockMvc.perform(

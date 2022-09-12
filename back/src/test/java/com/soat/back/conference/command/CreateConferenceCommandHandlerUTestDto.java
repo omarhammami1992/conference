@@ -1,9 +1,10 @@
 package com.soat.back.conference.command;
 
 import com.soat.back.common.domain.ConferenceId;
+import com.soat.back.conference.command.domain.Conference;
+import com.soat.back.conference.command.domain.ConferenceDto;
 import com.soat.back.conference.command.domain.ConferencePort;
 import com.soat.back.conference.command.domain.ConferenceSavingException;
-import com.soat.back.conference.command.domain.Conference;
 import com.soat.back.conference.event.CreateConferenceFailed;
 import com.soat.back.conference.event.CreateConferenceRejected;
 import com.soat.back.conference.event.CreateConferenceSucceeded;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -22,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CreateConferenceCommandHandlerUTest {
+class CreateConferenceCommandHandlerUTestDto {
 
     private CreateConferenceCommandHandler createConferenceCommandHandler;
 
@@ -46,25 +48,31 @@ class CreateConferenceCommandHandlerUTest {
         void should_return_SaveConferenceSucceeded_when_success() throws ConferenceSavingException {
             // given
             final ConferenceId savedConferenceId = new ConferenceId(12);
-            when(conferencePort.save(new Conference(NAME, LINK, START_DATE, END_DATE))).thenReturn(savedConferenceId);
+            ConferenceFake conferenceFake = new ConferenceFake(NAME, LINK, START_DATE, END_DATE);
+            ArgumentCaptor<Conference> conferenceArgumentCaptor = ArgumentCaptor.forClass(Conference.class);
+            when(conferencePort.save(conferenceArgumentCaptor.capture())).thenReturn(savedConferenceId);
 
             // when
             final CommandResponse<Event> commandResponse = createConferenceCommandHandler.handle(new CreateConferenceCommand(NAME, LINK, START_DATE, END_DATE));
 
             // then
             assertThat(commandResponse.events()).usingRecursiveFieldByFieldElementComparator().containsExactly(new CreateConferenceSucceeded(savedConferenceId));
+            assertThat(conferenceArgumentCaptor.getValue()).usingRecursiveComparison().isEqualTo(conferenceFake);
         }
 
         @Test
         void should_return_SaveConferenceFailed_when_fail() throws ConferenceSavingException {
             // given
-            when(conferencePort.save(new Conference(NAME, LINK, START_DATE, END_DATE))).thenThrow(ConferenceSavingException.class);
+            ArgumentCaptor<Conference> conferenceArgumentCaptor = ArgumentCaptor.forClass(Conference.class);
+            Conference conferenceFake = new ConferenceFake(NAME, LINK, START_DATE, END_DATE);
+            when(conferencePort.save(conferenceArgumentCaptor.capture())).thenThrow(ConferenceSavingException.class);
 
             // when
             final CommandResponse<Event> commandResponse = createConferenceCommandHandler.handle(new CreateConferenceCommand(NAME, LINK, START_DATE, END_DATE));
 
             // then
             assertThat(commandResponse.events()).usingRecursiveFieldByFieldElementComparator().containsExactly(new CreateConferenceFailed());
+            assertThat(conferenceArgumentCaptor.getValue()).usingRecursiveComparison().isEqualTo(conferenceFake);
         }
 
         @Test

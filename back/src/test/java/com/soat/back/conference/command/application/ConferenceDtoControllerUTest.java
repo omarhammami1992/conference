@@ -22,7 +22,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ConferenceControllerUTest {
+class ConferenceDtoControllerUTest {
 
     private ConferenceController conferenceController;
 

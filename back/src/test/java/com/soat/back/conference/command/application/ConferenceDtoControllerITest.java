@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ConferenceController.class)
 @ActiveProfiles("test")
-class ConferenceControllerITest {
+class ConferenceDtoControllerITest {
 
     @Autowired
     private MockMvc mockMvc;

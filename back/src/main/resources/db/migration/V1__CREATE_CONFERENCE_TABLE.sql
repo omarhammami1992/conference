@@ -1,4 +1,4 @@
-create table conference
+create table conferenceDto
 (
     id         serial primary key,
     name       varchar(100) not null,

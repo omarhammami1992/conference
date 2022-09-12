@@ -29,6 +29,13 @@ public class JpaConference {
         this.endDate = endDate;
     }
 
+    public JpaConference(String name, String link, LocalDate startDate, LocalDate endDate) {
+        this.name = name;
+        this.link = link;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     public JpaConference() {
 
     }

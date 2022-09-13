@@ -5,6 +5,7 @@ import com.soat.back.common.infrastructure.JpaConference;
 import com.soat.back.common.infrastructure.JpaConferenceRepository;
 import com.soat.back.conference.command.application.ConferenceToSaveJson;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -70,4 +71,9 @@ public class ConferenceSteps extends AcceptanceTest {
         );
         assertThat(savedConference).usingRecursiveComparison().isEqualTo(expectedSavedConference);
     }
+
+   @And("qu'il y un système de tarifaction early bird between date {int} et date {int} à {int} euros")
+   public void quIlYUnSystèmeDeTarifactionEarlyBirdBetweenDateEtDateÀEuros(int arg0, int arg1, int arg2) {
+
+   }
 }

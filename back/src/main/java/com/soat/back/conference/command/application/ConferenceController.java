@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.soat.back.conference.command.domain.Conference;
 import com.soat.back.conference.command.domain.CreateConference;
-import com.soat.back.conference.command.domain.ConferenceToSave;
 
 @RestController
 @RequestMapping("/conference")
@@ -24,17 +24,17 @@ public class ConferenceController{
     }
 
     @PostMapping("")
-    public ResponseEntity<Integer> save(@RequestBody ConferenceToSaveJson conferenceToSaveJson) {
-        ConferenceToSave buildConferenceToSave = buildCreateConferenceCommand(conferenceToSaveJson);
-        Integer id = createConference.execute(buildConferenceToSave);
+    public ResponseEntity<Integer> save(@RequestBody ConferenceJson conferenceJson) {
+        Conference buildConference = convertToConference(conferenceJson);
+        Integer id = createConference.execute(buildConference);
         return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
-    private ConferenceToSave buildCreateConferenceCommand(ConferenceToSaveJson conferenceToSaveJson) {
-        return new ConferenceToSave(conferenceToSaveJson.name(),
-              conferenceToSaveJson.link(),
-              LocalDate.parse(conferenceToSaveJson.startDate(), DATE_TIME_FORMATTER),
-              LocalDate.parse(conferenceToSaveJson.endDate(), DATE_TIME_FORMATTER)
+    private Conference convertToConference(ConferenceJson conferenceJson) {
+        return new Conference(conferenceJson.name(),
+              conferenceJson.link(),
+              LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
+              LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
         );
     }
 }

@@ -11,8 +11,8 @@ public class CreateConference {
       this.conferencePort = conferencePort;
    }
 
-   public Integer execute(ConferenceToSave conferenceToSave) {
-      return conferencePort.save(conferenceToSave);
+   public Integer execute(Conference conference) {
+      return conferencePort.save(conference);
    }
 
 }

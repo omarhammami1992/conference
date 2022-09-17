@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.soat.back.common.infrastructure.JpaConference;
 import com.soat.back.common.infrastructure.JpaConferenceRepository;
-import com.soat.back.conference.command.application.ConferenceToSaveJson;
+import com.soat.back.conference.command.application.ConferenceJson;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext
@@ -29,7 +29,7 @@ public class ConferenceSteps extends AcceptanceTest {
 
     private static final String API_CONFERENCE = "/conference";
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    private ConferenceToSaveJson conferenceToSaveJson;
+    private ConferenceJson conferenceJson;
 
     @Autowired
     private JpaConferenceRepository jpaConferenceRepository;
@@ -42,12 +42,12 @@ public class ConferenceSteps extends AcceptanceTest {
 
     @Given("une conférence ayant le nom {string}, le lien {string} et qui dure entre {string} et {string}")
     public void uneConférenceAvantLeNomLeLienEtQuiDureEntreEt(String name, String link, String startDate, String endDate) {
-        conferenceToSaveJson = new ConferenceToSaveJson(name, link, startDate, endDate);
+        conferenceJson = new ConferenceJson(name, link, startDate, endDate);
     }
 
     @When("l utilisateur tente de l enregistrer")
     public void lUtilisateurTenteDeLEnregistrer() throws JsonProcessingException {
-        executePost("", conferenceToSaveJson);
+        executePost("", conferenceJson);
     }
 
 
@@ -57,10 +57,10 @@ public class ConferenceSteps extends AcceptanceTest {
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
         JpaConference expectedJpaConference = new JpaConference(
               savedConferenceId,
-              conferenceToSaveJson.name(),
-              conferenceToSaveJson.link(),
-              LocalDate.parse(conferenceToSaveJson.startDate(), DATE_TIME_FORMATTER),
-              LocalDate.parse(conferenceToSaveJson.endDate(), DATE_TIME_FORMATTER));
+              conferenceJson.name(),
+              conferenceJson.link(),
+              LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
+              LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER));
 
         assertThat(expectedJpaConference).usingRecursiveComparison().isEqualTo(jpaConference);
     }

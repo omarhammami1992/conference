@@ -1,4 +1,7 @@
 package com.soat.back.conference.command.application;
 
-public record ConferenceJson(String name, String link, String startDate, String endDate) {
+import java.util.List;
+
+public record ConferenceJson(String name, String link, String startDate, String endDate,
+                             List<PricingRangeJson> pricingRanges) {
 }

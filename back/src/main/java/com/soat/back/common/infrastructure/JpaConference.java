@@ -2,6 +2,7 @@ package com.soat.back.common.infrastructure;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "conference")
@@ -58,5 +59,9 @@ public class JpaConference {
 
     public LocalDate getEndDate() {
         return endDate;
+    }
+
+    public List<JpaPriceRange> getPriceRanges() {
+        return null;
     }
 }

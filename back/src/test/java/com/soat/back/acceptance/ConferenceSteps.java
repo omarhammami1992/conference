@@ -48,7 +48,6 @@ public class ConferenceSteps extends AcceptanceTest {
    private String link;
    private String startDate;
    private String endDate;
-   private String startDate1;
 
    @Before
    public void before() {
@@ -56,7 +55,7 @@ public class ConferenceSteps extends AcceptanceTest {
       RestAssured.basePath = API_CONFERENCE;
    }
 
-   @Given("une conférence ayant le nom {string}, le lien {string} et qui dure entre {string} et {string}")
+   @Given("une conférence ayant le nom {string}, le lien {string} et qui dure entre le {string} et le {string}")
    public void uneConférenceAvantLeNomLeLienEtQuiDureEntreEt(String name, String link, String startDate, String endDate) {
       this.name = name;
       this.link = link;
@@ -91,13 +90,13 @@ public class ConferenceSteps extends AcceptanceTest {
             .containsExactlyInAnyOrder(jpaPriceRanges.toArray(JpaPriceRange[]::new));
    }
 
-   @And("qu'elle a un système de tarification early bird à {float} € avant {string}")
+   @And("qu'elle a un système de tarification early bird à {float} € avant le {string}")
    public void quElleAUnSystèmeDetarificationEarlyBirdÀ€Avant(float price, String endDate) {
       PriceRangeJson priceRangeJson = new PriceRangeJson(price, null, endDate);
       PRICE_RANGE_JSONS.add(priceRangeJson);
    }
 
-   @And("qu'elle a un système de tarification early bird à {float} € entre {string} et {string}")
+   @And("qu'elle a un système de tarification early bird à {float} € entre le {string} et le {string}")
    public void quElleAUnSystèmeDetarificationEarlyBirdÀ€EntreEt(float price, String startDate, String endDate) {
       PriceRangeJson priceRangeJson = new PriceRangeJson(price, startDate, endDate);
       PRICE_RANGE_JSONS.add(priceRangeJson);

@@ -15,7 +15,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -79,14 +78,16 @@ public class ConferenceSteps extends AcceptanceTest {
             conferenceJson.name(),
             conferenceJson.link(),
             LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
-            LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER));
+            LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
+      );
 
       assertThat(expectedJpaConference).usingRecursiveComparison().ignoringFields("priceRanges").isEqualTo(jpaConference);
 
       List<JpaPriceRange> jpaPriceRanges = dataTableTransformEntries(dataTable, this::buildJpaPriceRange);
 
-      assertThat(expectedJpaConference.getPriceRanges())
-            .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
+      assert jpaConference != null;
+      assertThat(jpaConference.getPriceRanges())
+            .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id", "conference")
             .containsExactlyInAnyOrder(jpaPriceRanges.toArray(JpaPriceRange[]::new));
    }
 
@@ -108,7 +109,7 @@ public class ConferenceSteps extends AcceptanceTest {
       PRICE_RANGE_JSONS.add(priceRangeJson);
    }
 
-   public static <T> List<T> dataTableTransformEntries(DataTable dataTable, Function<Map<String, String>, T> transformFunction) {
+   private static <T> List<T> dataTableTransformEntries(DataTable dataTable, Function<Map<String, String>, T> transformFunction) {
       final List<T> transformResults = new ArrayList<>();
       final List<Map<String, String>> dataTableEntries = dataTable.asMaps(String.class, String.class);
       dataTableEntries.forEach(mapEntry -> {

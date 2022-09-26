@@ -30,20 +30,15 @@ public class ConferenceController{
 
     @PostMapping("")
     public ResponseEntity<Integer> save(@RequestBody ConferenceJson conferenceJson) {
-        Conference buildConference = convertToConference(conferenceJson);
-        Integer id = createConference.execute(buildConference);
+        Conference conference = convertToConference(conferenceJson);
+        Integer id = createConference.execute(conference);
         return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
     private Conference convertToConference(ConferenceJson conferenceJson) {
         List<PriceRange> priceRanges = conferenceJson.priceRangeJsons().stream()
-              .map(priceRangeJson -> new PriceRange(
-              priceRangeJson.price(),
-              new DateInterval(
-                    ofNullable(priceRangeJson.startDate()).map(startDate -> LocalDate.parse(startDate, DATE_TIME_FORMATTER)).orElse(null),
-                    ofNullable(priceRangeJson.endDate()).map(endDate -> LocalDate.parse(endDate, DATE_TIME_FORMATTER)).orElse(null)
-              )
-        )).toList();
+              .map(this::toPriceRange)
+              .toList();
         return new Conference(
               conferenceJson.name(),
               conferenceJson.link(),
@@ -51,5 +46,19 @@ public class ConferenceController{
               LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER),
               priceRanges
         );
+    }
+
+    private PriceRange toPriceRange(PriceRangeJson priceRangeJson) {
+        return new PriceRange(
+              priceRangeJson.price(),
+              new DateInterval(
+                    toDate(priceRangeJson.startDate()),
+                    toDate(priceRangeJson.endDate())
+              )
+        );
+    }
+
+    private LocalDate toDate(String priceRangeJson) {
+        return ofNullable(priceRangeJson).map(startDate -> LocalDate.parse(startDate, DATE_TIME_FORMATTER)).orElse(null);
     }
 }

@@ -28,20 +28,24 @@ public class JpaPriceRange {
    @JoinColumn(name = "conference_id")
    private JpaConference conference;
 
+   public JpaPriceRange() {
+
+   }
    public JpaPriceRange(Float price, LocalDate startDate, LocalDate endDate, JpaConference conference) {
       this.price = price;
       this.startDate = startDate;
       this.endDate = endDate;
       this.conference = conference;
    }
+
    public JpaPriceRange(Float price, LocalDate startDate, LocalDate endDate) {
       this.price = price;
       this.startDate = startDate;
       this.endDate = endDate;
    }
 
-   public JpaPriceRange() {
-
+   public Integer getId() {
+      return id;
    }
 
    public Float getPrice() {
@@ -54,10 +58,6 @@ public class JpaPriceRange {
 
    public LocalDate getEndDate() {
       return endDate;
-   }
-
-   public Integer getId() {
-      return id;
    }
 
    public JpaConference getConference() {

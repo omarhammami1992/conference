@@ -18,9 +18,11 @@ public class JpaConference {
     @Column
     private LocalDate startDate;
 
-
     @Column
     private LocalDate endDate;
+
+    @OneToMany(mappedBy = "conference", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<JpaPriceRange> priceRanges;
 
     public JpaConference(Integer id, String name, String link, LocalDate startDate, LocalDate endDate) {
         this.id = id;
@@ -30,15 +32,16 @@ public class JpaConference {
         this.endDate = endDate;
     }
 
+
+    public JpaConference() {
+
+    }
+
     public JpaConference(String name, String link, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.link = link;
         this.startDate = startDate;
         this.endDate = endDate;
-    }
-
-    public JpaConference() {
-
     }
 
     public Integer getId() {
@@ -62,6 +65,10 @@ public class JpaConference {
     }
 
     public List<JpaPriceRange> getPriceRanges() {
-        return null;
+        return priceRanges;
+    }
+
+    public void setPriceRanges(List<JpaPriceRange> priceRanges) {
+        this.priceRanges = priceRanges;
     }
 }

@@ -1,6 +1,8 @@
 package com.soat.back.conference.command.infrastructure;
 
 import java.util.List;
+
+import com.soat.back.common.infrastructure.JpaPriceGroup;
 import org.springframework.stereotype.Repository;
 import com.soat.back.common.infrastructure.JpaConference;
 import com.soat.back.common.infrastructure.JpaConferenceRepository;
@@ -28,6 +30,7 @@ public class ConferenceJpaAdapter implements ConferencePort {
       JpaConference jpaConference = new JpaConference(
             conferenceToSave.name(),
             conferenceToSave.link(),
+            conferenceToSave.getPrice(),
             conferenceToSave.startDate(),
             conferenceToSave.endDate()
       );
@@ -36,6 +39,11 @@ public class ConferenceJpaAdapter implements ConferencePort {
             .map(priceRange -> toJpaPriceRange(jpaConference, priceRange))
             .toList();
       jpaConference.setPriceRanges(jpaPriceRanges);
+
+      final var jpaPriceGroup = new JpaPriceGroup(conferenceToSave.getPriceGroup().price(),conferenceToSave.getPriceGroup().threshold());
+      jpaConference.setPriceGroup(jpaPriceGroup);
+
+
       return jpaConference;
    }
 

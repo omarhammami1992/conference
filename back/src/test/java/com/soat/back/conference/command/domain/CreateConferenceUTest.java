@@ -1,5 +1,7 @@
 package com.soat.back.conference.command.domain;
 
+import com.soat.back.conference.command.application.ConferenceParams;
+import com.soat.back.conference.command.application.PriceRangeParams;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,12 +26,10 @@ class CreateConferenceUTest {
     @Test
     void execute_should_throw_exception_when_not_continuous_ranges() {
         // given
-        final DateInterval september = new DateInterval(LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 30));
-        final PriceRange septemberPrice = new PriceRange(150f, september);
-        final DateInterval november = new DateInterval(LocalDate.of(2022, 11, 1), LocalDate.of(2022, 11, 30));
-        final PriceRange nevemberPrice = new PriceRange(200f, november);
+        final PriceRangeParams septemberPrice = new PriceRangeParams(150f, LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 30));
+        final PriceRangeParams nevemberPrice = new PriceRangeParams(200f, LocalDate.of(2022, 11, 1), LocalDate.of(2022, 11, 30));
 
-        Conference conference = new Conference(
+        ConferenceParams conferenceParams = new ConferenceParams(
                 "devoxx",
                 "link",
                 LocalDate.of(2022, 12,1),
@@ -38,7 +38,7 @@ class CreateConferenceUTest {
         );
 
         // when & then
-        final Throwable throwable = catchThrowable(() -> createConference.execute(conference));
+        final Throwable throwable = catchThrowable(() -> createConference.execute(conferenceParams));
 
         // then
         assertThat(throwable).isInstanceOf(IllegalArgumentException.class);

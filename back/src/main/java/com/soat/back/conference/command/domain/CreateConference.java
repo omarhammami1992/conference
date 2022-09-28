@@ -1,5 +1,6 @@
 package com.soat.back.conference.command.domain;
 
+import com.soat.back.conference.command.application.ConferenceParams;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,13 +12,11 @@ public class CreateConference {
         this.conferencePort = conferencePort;
     }
 
-    public Integer execute(Conference conference) {
-        conference.priceRanges().stream().map(PriceRange::dateInterval).reduce((dateInterval, dateInterval2) -> {
-            if (!dateInterval2.startDate().minusDays(1).equals(dateInterval.endDate())){
-                throw new IllegalArgumentException();
-            }
-            return dateInterval2;
-        });
+    public Integer execute(ConferenceParams conferenceParams) {
+        var priceRanges = conferenceParams.priceRanges().stream()
+                .map(priceRange -> new PriceRange(priceRange.price(), new DateInterval(priceRange.startDate(), priceRange.endDate())))
+                .toList();
+        var conference = new Conference(conferenceParams.name(), conferenceParams.link(), conferenceParams.startDate(), conferenceParams.endDate(), priceRanges);
         return conferencePort.save(conference);
     }
 

@@ -1,7 +1,8 @@
 package com.soat.back.conference.command.domain;
 
-import com.soat.back.conference.command.application.ConferenceParams;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CreateConference {
@@ -12,12 +13,18 @@ public class CreateConference {
         this.conferencePort = conferencePort;
     }
 
-    public Integer execute(ConferenceParams conferenceParams) {
-        var priceRanges = conferenceParams.priceRanges().stream()
+    public Integer execute(ConferenceParams conferenceParams) throws InvalidIntervalException {
+        final List<PriceRange> priceRanges = buildPriceRanges(conferenceParams);
+        final PriceGroup priceGroup = new PriceGroup(conferenceParams.priceGroup(), conferenceParams.participantsThreshold());
+
+        var conference = new Conference(conferenceParams.name(), conferenceParams.link(), conferenceParams.price(), conferenceParams.startDate(), conferenceParams.endDate(), priceRanges, priceGroup);
+        return conferencePort.save(conference);
+    }
+
+    private static List<PriceRange> buildPriceRanges(ConferenceParams conferenceParams) {
+        return conferenceParams.priceRanges().stream()
                 .map(priceRange -> new PriceRange(priceRange.price(), new DateInterval(priceRange.startDate(), priceRange.endDate())))
                 .toList();
-        var conference = new Conference(conferenceParams.name(), conferenceParams.link(), conferenceParams.startDate(), conferenceParams.endDate(), priceRanges);
-         return conferencePort.save(conference);
     }
 
 }

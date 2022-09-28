@@ -1,5 +1,7 @@
 package com.soat.back.acceptance;
 
+import com.soat.back.common.infrastructure.JpaPriceGroup;
+import com.soat.back.conference.command.application.PriceGroupJson;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -35,95 +38,125 @@ import com.soat.back.conference.command.application.PriceRangeJson;
 @ActiveProfiles("AcceptanceTest")
 public class ConferenceSteps extends AcceptanceTest {
 
-   private static final List<PriceRangeJson> PRICE_RANGE_JSONS = new ArrayList<>();
+    private static final List<PriceRangeJson> PRICE_RANGE_JSONS = new ArrayList<>();
 
-   private static final String API_CONFERENCE = "/conference";
-   private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-   private ConferenceJson conferenceJson;
+    private static final String API_CONFERENCE = "/conference";
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private ConferenceJson conferenceJson;
 
-   @Autowired
-   private JpaConferenceRepository jpaConferenceRepository;
-   private String name;
-   private String link;
-   private String startDate;
-   private String endDate;
+    @Autowired
+    private JpaConferenceRepository jpaConferenceRepository;
+    private String name;
+    private String link;
+    private String startDate;
+    private String endDate;
+    private float price;
+    private PriceGroupJson priceGroup;
 
-   @Before
-   public void before() {
-      RestAssured.port = port;
-      RestAssured.basePath = API_CONFERENCE;
-   }
+    @Before
+    public void before() {
+        RestAssured.port = port;
+        RestAssured.basePath = API_CONFERENCE;
+    }
 
-   @Given("une conférence ayant le nom {string}, le lien {string} et qui dure entre le {string} et le {string}")
-   public void uneConférenceAvantLeNomLeLienEtQuiDureEntreEt(String name, String link, String startDate, String endDate) {
-      this.name = name;
-      this.link = link;
-      this.startDate = startDate;
-      this.endDate = endDate;
-   }
+    @Given("une conférence ayant le nom {string}, le lien {string} et qui dure entre le {string} et le {string}")
+    public void uneConférenceAvantLeNomLeLienEtQuiDureEntreEt(String name, String link, String startDate, String endDate) {
+        this.name = name;
+        this.link = link;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 
-   @When("l utilisateur tente de l enregistrer")
-   public void lUtilisateurTenteDeLEnregistrer() throws JsonProcessingException {
-      conferenceJson = new ConferenceJson(name, link, startDate, endDate, PRICE_RANGE_JSONS);
-      executePost("", conferenceJson);
-   }
+    @When("l utilisateur tente de l enregistrer")
+    public void lUtilisateurTenteDeLEnregistrer() throws JsonProcessingException {
+        conferenceJson = new ConferenceJson(name, link, startDate, endDate, price, PRICE_RANGE_JSONS, priceGroup);
+        executePost("", conferenceJson);
+    }
 
 
-   @Then("la conférence est enregistée")
-   public void laConférenceEstEnregistée(DataTable dataTable) {
-      final Integer savedConferenceId = response.then().extract().as(Integer.class);
-      JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
-      JpaConference expectedJpaConference = new JpaConference(
-            savedConferenceId,
-            conferenceJson.name(),
-            conferenceJson.link(),
-            LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
-            LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
-      );
+    @Then("la conférence est enregistée avec les intervalles de date")
+    public void laConférenceEstEnregistée(DataTable dataTable) {
+        final Integer savedConferenceId = response.then().extract().as(Integer.class);
+        JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
+        JpaConference expectedJpaConference = new JpaConference(
+                savedConferenceId,
+                conferenceJson.name(),
+                conferenceJson.link(),
+                conferenceJson.price(),
+                LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
+                LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
+        );
 
-      assertThat(expectedJpaConference).usingRecursiveComparison().ignoringFields("priceRanges").isEqualTo(jpaConference);
+        assertThat(expectedJpaConference).usingRecursiveComparison().ignoringFields("priceRanges").isEqualTo(jpaConference);
 
-      List<JpaPriceRange> jpaPriceRanges = dataTableTransformEntries(dataTable, this::buildJpaPriceRange);
+        List<JpaPriceRange> jpaPriceRanges = dataTableTransformEntries(dataTable, this::buildJpaPriceRange);
 
-      assert jpaConference != null;
-      assertThat(jpaConference.getPriceRanges())
-            .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id", "conference")
-            .containsExactlyInAnyOrder(jpaPriceRanges.toArray(JpaPriceRange[]::new));
-   }
+        assert jpaConference != null;
+        assertThat(jpaConference.getPriceRanges())
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id", "conference")
+                .containsExactlyInAnyOrder(jpaPriceRanges.toArray(JpaPriceRange[]::new));
+    }
 
-   @And("qu'elle a un système de tarification early bird à {float} € avant le {string}")
-   public void quElleAUnSystèmeDetarificationEarlyBirdÀ€Avant(float price, String endDate) {
-      PriceRangeJson priceRangeJson = new PriceRangeJson(price, null, endDate);
-      PRICE_RANGE_JSONS.add(priceRangeJson);
-   }
+    @And("qu'elle a un système de tarification early bird à {float} € avant le {string}")
+    public void quElleAUnSystèmeDetarificationEarlyBirdÀ€Avant(float price, String endDate) {
+        PriceRangeJson priceRangeJson = new PriceRangeJson(price, null, endDate);
+        PRICE_RANGE_JSONS.add(priceRangeJson);
+    }
 
-   @And("qu'elle a un système de tarification early bird à {float} € entre le {string} et le {string}")
-   public void quElleAUnSystèmeDetarificationEarlyBirdÀ€EntreEt(float price, String startDate, String endDate) {
-      PriceRangeJson priceRangeJson = new PriceRangeJson(price, startDate, endDate);
-      PRICE_RANGE_JSONS.add(priceRangeJson);
-   }
+    @And("qu'elle a un système de tarification early bird à {float} € entre le {string} et le {string}")
+    public void quElleAUnSystèmeDetarificationEarlyBirdÀ€EntreEt(float price, String startDate, String endDate) {
+        PriceRangeJson priceRangeJson = new PriceRangeJson(price, startDate, endDate);
+        PRICE_RANGE_JSONS.add(priceRangeJson);
+    }
 
-   @And("qu'elle a une tarification pleine à {float} € à partir du {string}")
-   public void quElleAUneTarificationPleineÀ€ÀPartirDu(float price, String startDate) {
-      PriceRangeJson priceRangeJson = new PriceRangeJson(price, startDate, null);
-      PRICE_RANGE_JSONS.add(priceRangeJson);
-   }
+    @And("qu'elle a une tarification pleine à {float} €")
+    public void quElleAUneTarificationPleineÀ€ÀPartirDu(float price) {
+        this.price = price;
+    }
 
-   private static <T> List<T> dataTableTransformEntries(DataTable dataTable, Function<Map<String, String>, T> transformFunction) {
-      final List<T> transformResults = new ArrayList<>();
-      final List<Map<String, String>> dataTableEntries = dataTable.asMaps(String.class, String.class);
-      dataTableEntries.forEach(mapEntry -> {
-         transformResults.add(transformFunction.apply(mapEntry));
-      });
-      return transformResults;
-   }
+    private static <T> List<T> dataTableTransformEntries(DataTable dataTable, Function<Map<String, String>, T> transformFunction) {
+        final List<T> transformResults = new ArrayList<>();
+        final List<Map<String, String>> dataTableEntries = dataTable.asMaps(String.class, String.class);
+        dataTableEntries.forEach(mapEntry -> {
+            transformResults.add(transformFunction.apply(mapEntry));
+        });
+        return transformResults;
+    }
 
-   private JpaPriceRange buildJpaPriceRange(Map<String, String> entry) {
-      var startDate = entry.get("startDate").equals("null") ? null : LocalDate.parse(entry.get("startDate"), DATE_TIME_FORMATTER);
-      var endDate = entry.get("endDate").equals("null") ? null : LocalDate.parse(entry.get("endDate"), DATE_TIME_FORMATTER);
-      return new JpaPriceRange(
-            Float.valueOf(entry.get("price")),
-            startDate,
-            endDate);
-   }
+    private JpaPriceRange buildJpaPriceRange(Map<String, String> entry) {
+        var startDate = entry.get("startDate").equals("null") ? null : LocalDate.parse(entry.get("startDate"), DATE_TIME_FORMATTER);
+        var endDate = entry.get("endDate").equals("null") ? null : LocalDate.parse(entry.get("endDate"), DATE_TIME_FORMATTER);
+        return new JpaPriceRange(
+                Float.valueOf(entry.get("price")),
+                startDate,
+                endDate);
+    }
+
+    @And("qu'elle a un système de tarification de groupe à {float} € par personne lorsqu on réserve à partir de {int} billets")
+    public void quElleAUnSystèmeDeTarificationDeGroupeÀ€ParPersonneLorsquOnRéserveÀPartirDeBillets(float ticketPrice, int participantThreshold) {
+        this.priceGroup = new PriceGroupJson(ticketPrice, participantThreshold);
+    }
+
+    @Then("la conférence est enregistée avec le prix {float} € et un prix réduit de {float} € à partir de {int} participants")
+    public void laConférenceEstEnregistéeAvecLePrix€EtUnPrixRéduitDe€ÀPartirDeParticipants(float price, float groupPrice, int threshold) {
+
+
+        final Integer savedConferenceId = response.then().extract().as(Integer.class);
+        JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
+        JpaConference expectedJpaConference = new JpaConference(
+                savedConferenceId,
+                conferenceJson.name(),
+                conferenceJson.link(),
+                conferenceJson.price(),
+                LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
+                LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
+        );
+
+
+        assertThat(jpaConference).isNotNull().usingRecursiveComparison().ignoringFields("priceGroup")
+                .isEqualTo(expectedJpaConference);
+        assertThat(jpaConference.getGroupPrice()).usingRecursiveComparison().ignoringFields("id")
+                .isEqualTo(new JpaPriceGroup(groupPrice, threshold));
+
+    }
 }

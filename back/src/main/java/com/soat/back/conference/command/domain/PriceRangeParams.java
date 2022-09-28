@@ -1,4 +1,4 @@
-package com.soat.back.conference.command.application;
+package com.soat.back.conference.command.domain;
 
 import com.soat.back.conference.command.domain.DateInterval;
 

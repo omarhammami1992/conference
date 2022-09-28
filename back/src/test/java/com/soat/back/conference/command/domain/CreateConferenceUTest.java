@@ -1,7 +1,5 @@
 package com.soat.back.conference.command.domain;
 
-import com.soat.back.conference.command.application.ConferenceParams;
-import com.soat.back.conference.command.application.PriceRangeParams;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +7,6 @@ import java.time.LocalDate;
 
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class CreateConferenceUTest {
     public static final int GENERATED_CONFERENCE_ID = 42;
@@ -41,6 +38,6 @@ class CreateConferenceUTest {
         final Throwable throwable = catchThrowable(() -> createConference.execute(conferenceParams));
 
         // then
-        assertThat(throwable).isInstanceOf(IllegalArgumentException.class);
+        assertThat(throwable).isInstanceOf(InvalidIntervalException.class);
     }
 }

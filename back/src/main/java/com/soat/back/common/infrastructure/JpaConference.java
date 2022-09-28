@@ -16,6 +16,8 @@ public class JpaConference {
     private String link;
 
     @Column
+    private Float price;
+    @Column
     private LocalDate startDate;
 
     @Column
@@ -23,11 +25,21 @@ public class JpaConference {
 
     @OneToMany(mappedBy = "conference", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<JpaPriceRange> priceRanges;
-
-    public JpaConference(Integer id, String name, String link, LocalDate startDate, LocalDate endDate) {
+    @OneToOne(mappedBy = "conference", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private JpaPriceGroup priceGroup;
+    public JpaConference(Integer id, String name, String link, Float price,  LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.name = name;
         this.link = link;
+        this.price = price;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public JpaConference(String name, String link, Float price, LocalDate startDate, LocalDate endDate) {
+        this.name = name;
+        this.link = link;
+        this.price = price;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -35,13 +47,6 @@ public class JpaConference {
 
     public JpaConference() {
 
-    }
-
-    public JpaConference(String name, String link, LocalDate startDate, LocalDate endDate) {
-        this.name = name;
-        this.link = link;
-        this.startDate = startDate;
-        this.endDate = endDate;
     }
 
     public Integer getId() {
@@ -70,5 +75,13 @@ public class JpaConference {
 
     public void setPriceRanges(List<JpaPriceRange> priceRanges) {
         this.priceRanges = priceRanges;
+    }
+
+    public JpaPriceGroup getGroupPrice() {
+        return this.priceGroup;
+    }
+
+    public void setPriceGroup(JpaPriceGroup priceGroup) {
+        this.priceGroup = priceGroup;
     }
 }

@@ -17,7 +17,7 @@ public class CreateConference {
                 .map(priceRange -> new PriceRange(priceRange.price(), new DateInterval(priceRange.startDate(), priceRange.endDate())))
                 .toList();
         var conference = new Conference(conferenceParams.name(), conferenceParams.link(), conferenceParams.startDate(), conferenceParams.endDate(), priceRanges);
-        return conferencePort.save(conference);
+         return conferencePort.save(conference);
     }
 
 }

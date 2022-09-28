@@ -6,12 +6,15 @@ import java.util.List;
 public record Conference(String name, String link, LocalDate startDate, LocalDate endDate,
                          List<PriceRange> priceRanges) {
     public Conference {
+        checkIntervals(priceRanges);
+    }
+
+    private void checkIntervals(List<PriceRange> priceRanges) {
         priceRanges.stream().map(PriceRange::dateInterval).reduce((current, next) -> {
             if (!next.startDate().minusDays(1).equals(current.endDate())){
                 throw new IllegalArgumentException();
             }
             return next;
         });
-
     }
 }

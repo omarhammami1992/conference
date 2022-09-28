@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.soat.back.conference.command.domain.Conference;
 import com.soat.back.conference.command.domain.CreateConference;
 import com.soat.back.conference.command.domain.DateInterval;
 import com.soat.back.conference.command.domain.PriceRange;
@@ -30,16 +29,16 @@ public class ConferenceController{
 
     @PostMapping("")
     public ResponseEntity<Integer> save(@RequestBody ConferenceJson conferenceJson) {
-        Conference conference = convertToConference(conferenceJson);
-        Integer id = createConference.execute(conference);
+        ConferenceParams conferenceParams = convertToConferenceParams(conferenceJson);
+        Integer id = createConference.execute(conferenceParams);
         return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
-    private Conference convertToConference(ConferenceJson conferenceJson) {
-        List<PriceRange> priceRanges = conferenceJson.priceRangeJsons().stream()
-              .map(this::toPriceRange)
+    private ConferenceParams convertToConferenceParams(ConferenceJson conferenceJson) {
+        List<PriceRangeParams> priceRanges = conferenceJson.priceRangeJsons().stream()
+              .map(this::toPriceRangeParams)
               .toList();
-        return new Conference(
+        return new ConferenceParams(
               conferenceJson.name(),
               conferenceJson.link(),
               LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
@@ -48,13 +47,11 @@ public class ConferenceController{
         );
     }
 
-    private PriceRange toPriceRange(PriceRangeJson priceRangeJson) {
-        return new PriceRange(
+    private PriceRangeParams toPriceRangeParams(PriceRangeJson priceRangeJson) {
+        return new PriceRangeParams(
               priceRangeJson.price(),
-              new DateInterval(
                     toDate(priceRangeJson.startDate()),
                     toDate(priceRangeJson.endDate())
-              )
         );
     }
 

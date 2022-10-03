@@ -40,7 +40,7 @@ public class ConferenceJpaAdapter implements ConferencePort {
             .toList();
       jpaConference.setPriceRanges(jpaPriceRanges);
 
-      final var jpaPriceGroup = new JpaPriceGroup(conferenceToSave.getPriceGroup().price(),conferenceToSave.getPriceGroup().threshold());
+      final var jpaPriceGroup = new JpaPriceGroup(conferenceToSave.getPriceGroup().price(),conferenceToSave.getPriceGroup().threshold(), jpaConference);
       jpaConference.setPriceGroup(jpaPriceGroup);
 
 

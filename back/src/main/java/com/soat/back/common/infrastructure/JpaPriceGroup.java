@@ -16,14 +16,21 @@ public class JpaPriceGroup {
     private Integer threshold;
 
     @OneToOne
+    @JoinColumn(name = "conference_id")
     private JpaConference conference;
 
     public JpaPriceGroup() {
 
     }
-    public JpaPriceGroup(float groupPrice, int threshold) {
-        price = groupPrice;
+    public JpaPriceGroup(float groupPrice, int threshold, JpaConference conference) {
+        this.price = groupPrice;
         this.threshold = threshold;
+        this.conference = conference;
+    }
+
+    public JpaPriceGroup(float groupPrice, int threshold) {
+        this.threshold = threshold;
+        this.price = groupPrice;
     }
 
     public Integer getId() {

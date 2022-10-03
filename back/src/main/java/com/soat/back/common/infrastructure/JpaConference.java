@@ -2,6 +2,7 @@ package com.soat.back.common.infrastructure;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,7 +25,8 @@ public class JpaConference {
     private LocalDate endDate;
 
     @OneToMany(mappedBy = "conference", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<JpaPriceRange> priceRanges;
+    private List<JpaPriceRange> priceRanges = new ArrayList<JpaPriceRange>();
+
     @OneToOne(mappedBy = "conference", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private JpaPriceGroup priceGroup;
     public JpaConference(Integer id, String name, String link, Float price,  LocalDate startDate, LocalDate endDate) {

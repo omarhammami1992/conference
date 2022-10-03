@@ -1,18 +1,18 @@
 package com.soat.back.conference.command.domain;
 
+import static java.util.List.of;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-
-import static java.util.List.of;
-import static org.assertj.core.api.Assertions.*;
-
 class CreateConferenceUTest {
-    public static final int GENERATED_CONFERENCE_ID = 42;
+    private static final int GENERATED_CONFERENCE_ID = 42;
     private CreateConference createConference;
 
-    private ConferencePort conferencePort = conference -> GENERATED_CONFERENCE_ID;
+    private final ConferencePort conferencePort = conference -> GENERATED_CONFERENCE_ID;
 
     @BeforeEach
     void setUp() {
@@ -25,13 +25,17 @@ class CreateConferenceUTest {
         // given
         final PriceRangeParams septemberPrice = new PriceRangeParams(150f, LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 30));
         final PriceRangeParams nevemberPrice = new PriceRangeParams(200f, LocalDate.of(2022, 11, 1), LocalDate.of(2022, 11, 30));
+        float defaultPrice = 300f;
 
         ConferenceParams conferenceParams = new ConferenceParams(
-                "devoxx",
-                "link",
-                LocalDate.of(2022, 12,1),
-                LocalDate.of(2022, 12,3),
-                of(septemberPrice, nevemberPrice)
+              "devoxx",
+              "link",
+              LocalDate.of(2022, 12, 1),
+              LocalDate.of(2022, 12, 3),
+              defaultPrice,
+              of(septemberPrice, nevemberPrice),
+              null,
+              null
         );
 
         // when & then

@@ -152,11 +152,12 @@ public class ConferenceSteps extends AcceptanceTest {
                 LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
         );
 
-
         assertThat(jpaConference).isNotNull().usingRecursiveComparison().ignoringFields("priceGroup")
                 .isEqualTo(expectedJpaConference);
+
+        JpaPriceGroup expectedPriceGroup = new JpaPriceGroup(groupPrice, threshold);
         assertThat(jpaConference.getGroupPrice()).usingRecursiveComparison().ignoringFields("id")
-                .isEqualTo(new JpaPriceGroup(groupPrice, threshold));
+                .isEqualTo(expectedPriceGroup);
 
     }
 }

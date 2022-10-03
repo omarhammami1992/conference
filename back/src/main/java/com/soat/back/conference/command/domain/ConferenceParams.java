@@ -9,5 +9,6 @@ public record ConferenceParams(String name,
                                LocalDate endDate,
                                Float price,
                                List<PriceRangeParams> priceRanges,
-                               Float priceGroup, Integer participantsThreshold) {
+                               Float priceGroup,
+                               Integer participantsThreshold) {
 }

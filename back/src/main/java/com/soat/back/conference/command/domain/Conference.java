@@ -2,7 +2,6 @@ package com.soat.back.conference.command.domain;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 public final class Conference {
     private final String name;

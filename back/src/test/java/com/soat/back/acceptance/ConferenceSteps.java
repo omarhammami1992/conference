@@ -139,8 +139,6 @@ public class ConferenceSteps extends AcceptanceTest {
 
     @Then("la conférence est enregistée avec le prix {float} € et un prix réduit de {float} € à partir de {int} participants")
     public void laConférenceEstEnregistéeAvecLePrix€EtUnPrixRéduitDe€ÀPartirDeParticipants(float price, float groupPrice, int threshold) {
-
-
         final Integer savedConferenceId = response.then().extract().as(Integer.class);
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
         JpaConference expectedJpaConference = new JpaConference(
@@ -156,7 +154,7 @@ public class ConferenceSteps extends AcceptanceTest {
                 .isEqualTo(expectedJpaConference);
 
         JpaPriceGroup expectedPriceGroup = new JpaPriceGroup(groupPrice, threshold);
-        assertThat(jpaConference.getGroupPrice()).usingRecursiveComparison().ignoringFields("id")
+        assertThat(jpaConference.getGroupPrice()).usingRecursiveComparison().ignoringFields("id", "conference")
                 .isEqualTo(expectedPriceGroup);
 
     }

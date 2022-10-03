@@ -25,7 +25,7 @@ public class JpaConference {
     private LocalDate endDate;
 
     @OneToMany(mappedBy = "conference", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<JpaPriceRange> priceRanges = new ArrayList<JpaPriceRange>();
+    private List<JpaPriceRange> priceRanges = new ArrayList<>();
 
     @OneToOne(mappedBy = "conference", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private JpaPriceGroup priceGroup;
@@ -46,7 +46,6 @@ public class JpaConference {
         this.endDate = endDate;
     }
 
-
     public JpaConference() {
 
     }
@@ -61,6 +60,14 @@ public class JpaConference {
 
     public String getLink() {
         return link;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public JpaPriceGroup getPriceGroup() {
+        return priceGroup;
     }
 
     public LocalDate getStartDate() {

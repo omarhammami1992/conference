@@ -15,7 +15,10 @@ public class CreateConference {
 
     public Integer execute(ConferenceParams conferenceParams) throws InvalidIntervalException {
         final List<PriceRange> priceRanges = buildPriceRanges(conferenceParams);
-        final PriceGroup priceGroup = new PriceGroup(conferenceParams.priceGroup(), conferenceParams.participantsThreshold());
+        PriceGroup priceGroup = null;
+        if (conferenceParams.priceGroup() != null && conferenceParams.participantsThreshold() != null ) {
+            priceGroup = new PriceGroup(conferenceParams.priceGroup(), conferenceParams.participantsThreshold());
+        }
 
         var conference = new Conference(conferenceParams.name(), conferenceParams.link(), conferenceParams.price(), conferenceParams.startDate(), conferenceParams.endDate(), priceRanges, priceGroup);
         return conferencePort.save(conference);

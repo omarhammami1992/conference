@@ -38,7 +38,7 @@ import com.soat.back.conference.command.application.PriceRangeJson;
 @ActiveProfiles("AcceptanceTest")
 public class ConferenceSteps extends AcceptanceTest {
 
-    private static final List<PriceRangeJson> PRICE_RANGE_JSONS = new ArrayList<>();
+    private static List<PriceRangeJson> priceRangeJsons = new ArrayList<>();
 
     private static final String API_CONFERENCE = "/conference";
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -57,6 +57,8 @@ public class ConferenceSteps extends AcceptanceTest {
     public void before() {
         RestAssured.port = port;
         RestAssured.basePath = API_CONFERENCE;
+        priceGroup = null;
+        priceRangeJsons = new ArrayList<>();
     }
 
     @Given("une conférence ayant le nom {string}, le lien {string} et qui dure entre le {string} et le {string}")
@@ -69,44 +71,45 @@ public class ConferenceSteps extends AcceptanceTest {
 
     @When("l utilisateur tente de l enregistrer")
     public void lUtilisateurTenteDeLEnregistrer() throws JsonProcessingException {
-        conferenceJson = new ConferenceJson(name, link, startDate, endDate, price, PRICE_RANGE_JSONS, priceGroup);
+        conferenceJson = new ConferenceJson(name, link, startDate, endDate, price, priceRangeJsons, priceGroup);
         executePost("", conferenceJson);
     }
 
-
-    @Then("la conférence est enregistée avec les intervalles de date")
-    public void laConférenceEstEnregistée(DataTable dataTable) {
+    @Then("la conférence est enregistée avec le prix {float} € et  les intervalles de réduction early bird")
+    public void laConférenceEstEnregistéeAvecLePrix€EtLesIntervallesDeRéductionEarlyBird(float defaultPrice, DataTable dataTable) {
         final Integer savedConferenceId = response.then().extract().as(Integer.class);
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
         JpaConference expectedJpaConference = new JpaConference(
-                savedConferenceId,
-                conferenceJson.name(),
-                conferenceJson.link(),
-                conferenceJson.price(),
-                LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
-                LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
+              savedConferenceId,
+              conferenceJson.name(),
+              conferenceJson.link(),
+              defaultPrice,
+              LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
+              LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
         );
 
-        assertThat(expectedJpaConference).usingRecursiveComparison().ignoringFields("priceRanges").isEqualTo(jpaConference);
+        assertThat(jpaConference).usingRecursiveComparison()
+              .ignoringFields("priceRanges")
+              .isEqualTo(expectedJpaConference);
 
         List<JpaPriceRange> jpaPriceRanges = dataTableTransformEntries(dataTable, this::buildJpaPriceRange);
 
         assert jpaConference != null;
         assertThat(jpaConference.getPriceRanges())
-                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id", "conference")
-                .containsExactlyInAnyOrder(jpaPriceRanges.toArray(JpaPriceRange[]::new));
+              .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id", "conference")
+              .containsExactlyInAnyOrder(jpaPriceRanges.toArray(JpaPriceRange[]::new));
     }
 
     @And("qu'elle a un système de tarification early bird à {float} € avant le {string}")
     public void quElleAUnSystèmeDetarificationEarlyBirdÀ€Avant(float price, String endDate) {
         PriceRangeJson priceRangeJson = new PriceRangeJson(price, null, endDate);
-        PRICE_RANGE_JSONS.add(priceRangeJson);
+        priceRangeJsons.add(priceRangeJson);
     }
 
     @And("qu'elle a un système de tarification early bird à {float} € entre le {string} et le {string}")
     public void quElleAUnSystèmeDetarificationEarlyBirdÀ€EntreEt(float price, String startDate, String endDate) {
         PriceRangeJson priceRangeJson = new PriceRangeJson(price, startDate, endDate);
-        PRICE_RANGE_JSONS.add(priceRangeJson);
+        priceRangeJsons.add(priceRangeJson);
     }
 
     @And("qu'elle a une tarification pleine à {float} €")
@@ -145,7 +148,7 @@ public class ConferenceSteps extends AcceptanceTest {
                 savedConferenceId,
                 conferenceJson.name(),
                 conferenceJson.link(),
-                conferenceJson.price(),
+                price,
                 LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
                 LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
         );

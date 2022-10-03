@@ -48,8 +48,8 @@ public class ConferenceController {
                 LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER),
                 conferenceJson.price(),
                 priceRangeParams,
-                conferenceJson.priceGroup().price(),
-                conferenceJson.priceGroup().participantsThreshold()
+                ofNullable(conferenceJson.priceGroup()).map(PriceGroupJson::price).orElse(null),
+                ofNullable(conferenceJson.priceGroup()).map(PriceGroupJson::participantsThreshold).orElse(null)
         );
     }
 

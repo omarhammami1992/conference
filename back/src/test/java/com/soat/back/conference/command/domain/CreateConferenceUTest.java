@@ -24,7 +24,7 @@ class CreateConferenceUTest {
     void execute_should_throw_exception_when_not_continuous_ranges() {
         // given
         final PriceRangeParams septemberPrice = new PriceRangeParams(150f, LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 30));
-        final PriceRangeParams nevemberPrice = new PriceRangeParams(200f, LocalDate.of(2022, 11, 1), LocalDate.of(2022, 11, 30));
+        final PriceRangeParams novemberPrice = new PriceRangeParams(200f, LocalDate.of(2022, 11, 1), LocalDate.of(2022, 11, 30));
         float defaultPrice = 300f;
 
         ConferenceParams conferenceParams = new ConferenceParams(
@@ -33,9 +33,34 @@ class CreateConferenceUTest {
               LocalDate.of(2022, 12, 1),
               LocalDate.of(2022, 12, 3),
               defaultPrice,
-              of(septemberPrice, nevemberPrice),
+              of(septemberPrice, novemberPrice),
               null,
               null
+        );
+
+        // when & then
+        final Throwable throwable = catchThrowable(() -> createConference.execute(conferenceParams));
+
+        // then
+        assertThat(throwable).isInstanceOf(InvalidIntervalException.class);
+    }
+
+    @Test
+    void execute_should_throw_exception_when_price_not_strictly_ascending() {
+        // given
+        final PriceRangeParams septemberPrice = new PriceRangeParams(250f, LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 30));
+        final PriceRangeParams octoberPrice = new PriceRangeParams(200f, LocalDate.of(2022, 10, 1), LocalDate.of(2022, 11, 30));
+        float defaultPrice = 300f;
+
+        ConferenceParams conferenceParams = new ConferenceParams(
+                "devoxx",
+                "link",
+                LocalDate.of(2022, 12, 1),
+                LocalDate.of(2022, 12, 3),
+                defaultPrice,
+                of(septemberPrice, octoberPrice),
+                null,
+                null
         );
 
         // when & then

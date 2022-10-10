@@ -1,6 +1,7 @@
 package com.soat.back.acceptance;
 
 import com.soat.back.common.infrastructure.JpaPriceGroup;
+import com.soat.back.conference.command.application.PriceAttendingDaysJson;
 import com.soat.back.conference.command.application.PriceGroupJson;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
@@ -38,6 +39,7 @@ import com.soat.back.conference.command.application.PriceRangeJson;
 @ActiveProfiles("AcceptanceTest")
 public class ConferenceSteps extends AcceptanceTest {
 
+    private static final List<PriceAttendingDaysJson> priceAttendingDaysJsons = new ArrayList<>();
     private static List<PriceRangeJson> priceRangeJsons = new ArrayList<>();
 
     private static final String API_CONFERENCE = "/conference";
@@ -51,13 +53,13 @@ public class ConferenceSteps extends AcceptanceTest {
     private String startDate;
     private String endDate;
     private float price;
-    private PriceGroupJson priceGroup;
+    private PriceGroupJson priceGroupJson;
 
     @Before
     public void before() {
         RestAssured.port = port;
         RestAssured.basePath = API_CONFERENCE;
-        priceGroup = null;
+        priceGroupJson = null;
         priceRangeJsons = new ArrayList<>();
     }
 
@@ -71,7 +73,7 @@ public class ConferenceSteps extends AcceptanceTest {
 
     @When("l utilisateur tente de l enregistrer")
     public void lUtilisateurTenteDeLEnregistrer() throws JsonProcessingException {
-        conferenceJson = new ConferenceJson(name, link, startDate, endDate, price, priceRangeJsons, priceGroup);
+        conferenceJson = new ConferenceJson(name, link, startDate, endDate, price, priceRangeJsons, priceGroupJson, priceAttendingDaysJsons);
         executePost("", conferenceJson);
     }
 
@@ -137,7 +139,7 @@ public class ConferenceSteps extends AcceptanceTest {
 
     @And("qu'elle a un système de tarification de groupe à {float} € par personne lorsqu on réserve à partir de {int} billets")
     public void quElleAUnSystèmeDeTarificationDeGroupeÀ€ParPersonneLorsquOnRéserveÀPartirDeBillets(float ticketPrice, int participantThreshold) {
-        this.priceGroup = new PriceGroupJson(ticketPrice, participantThreshold);
+        this.priceGroupJson = new PriceGroupJson(ticketPrice, participantThreshold);
     }
 
     @Then("la conférence est enregistée avec le prix {float} € et un prix réduit de {float} € à partir de {int} participants")
@@ -159,6 +161,18 @@ public class ConferenceSteps extends AcceptanceTest {
         JpaPriceGroup expectedPriceGroup = new JpaPriceGroup(groupPrice, threshold);
         assertThat(jpaConference.getGroupPrice()).usingRecursiveComparison().ignoringFields("id", "conference")
                 .isEqualTo(expectedPriceGroup);
+
+    }
+
+    @And("qu'elle a un système de tarification par journée de présence à {float} € les {float} jours")
+    public void quElleAUnSystèmeDeTarificationParJournéeDePrésenceÀ€LesJours(float price, float attendingDays) {
+        PriceAttendingDaysJson priceAttendingDaysJson = new PriceAttendingDaysJson(price, attendingDays);
+        priceAttendingDaysJsons.add(priceAttendingDaysJson);
+
+    }
+
+    @Then("la conférence est enregistée avec le prix {float} € et les prix réduits par jour de présence")
+    public void laConférenceEstEnregistéeAvecLePrix€EtLesPrixRéduitsParJourDePrésence(float price) {
 
     }
 }

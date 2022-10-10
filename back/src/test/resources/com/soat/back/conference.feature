@@ -19,3 +19,16 @@ Feature: Gestion des conférences
     And qu'elle a une tarification pleine à 300 €
     When l utilisateur tente de l enregistrer
     Then la conférence est enregistée avec le prix 300 € et un prix réduit de 150 € à partir de 10 participants
+
+  Scenario: Création d'une conférence avec un système de par journée de présence
+    Given une conférence ayant le nom "Devoxx", le lien "https://www.devoxx" et qui dure entre le "01-12-2022" et le "07-12-2022"
+    And qu'elle a un système de tarification par journée de présence à 400 € les 2 jours
+    And qu'elle a un système de tarification par journée de présence à 600 € les 2,5 jours
+    And qu'elle a un système de tarification par journée de présence à 950 € les 4,5 jours
+    And qu'elle a une tarification pleine à 1000 €
+    When l utilisateur tente de l enregistrer
+    Then la conférence est enregistée avec le prix 1000 € et les prix réduits par jour de présence
+      | price | attendingDays |
+      | 400   | 2             |
+      | 600   | 2,5           |
+      | 950   | 4,5           |

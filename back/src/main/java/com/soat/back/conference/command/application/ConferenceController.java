@@ -21,7 +21,7 @@ import static java.util.Optional.ofNullable;
 @RequestMapping("/conference")
 public class ConferenceController {
 
-    DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     private final CreateConference createConference;
 
@@ -29,13 +29,14 @@ public class ConferenceController {
         this.createConference = createConference;
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<Integer> save(@RequestBody ConferenceJson conferenceJson) throws InvalidIntervalException {
         ConferenceParams conferenceParams = toConferenceParams(conferenceJson);
         Integer id = createConference.execute(conferenceParams);
         return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
+    //TODO: move to utility class and add UTs
     private ConferenceParams toConferenceParams(ConferenceJson conferenceJson) {
         List<PriceRangeParams> priceRangeParams = conferenceJson.priceRanges().stream()
                 .map(this::toPriceRangeParams)
@@ -56,12 +57,14 @@ public class ConferenceController {
     private PriceRangeParams toPriceRangeParams(PriceRangeJson priceRangeJson) {
         return new PriceRangeParams(
                 priceRangeJson.price(),
-                toDate(priceRangeJson.startDate()),
-                toDate(priceRangeJson.endDate())
+                toLocalDate(priceRangeJson.startDate()),
+                toLocalDate(priceRangeJson.endDate())
         );
     }
 
-    private LocalDate toDate(String priceRangeJson) {
-        return ofNullable(priceRangeJson).map(startDate -> LocalDate.parse(startDate, DATE_TIME_FORMATTER)).orElse(null);
+    private LocalDate toLocalDate(String dateValue) {
+        return ofNullable(dateValue)
+              .map(startDate -> LocalDate.parse(startDate, DATE_TIME_FORMATTER))
+              .orElse(null);
     }
 }

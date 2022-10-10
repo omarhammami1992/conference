@@ -1,10 +1,7 @@
 package com.soat.back.conference.command.domain;
 
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
-@Service
 public class CreateConference {
 
     private final ConferencePort conferencePort;
@@ -15,18 +12,30 @@ public class CreateConference {
 
     public Integer execute(ConferenceParams conferenceParams) throws InvalidIntervalException {
         final List<PriceRange> priceRanges = buildPriceRanges(conferenceParams);
+        PriceGroup priceGroup = getPriceGroup(conferenceParams);
+
+        var conference = new Conference(conferenceParams.name(),
+              conferenceParams.link(),
+              conferenceParams.price(),
+              conferenceParams.startDate(),
+              conferenceParams.endDate(),
+              priceRanges,
+              priceGroup
+        );
+        return conferencePort.save(conference);
+    }
+
+    private static PriceGroup getPriceGroup(ConferenceParams conferenceParams) {
         PriceGroup priceGroup = null;
-        if (conferenceParams.priceGroup() != null && conferenceParams.participantsThreshold() != null ) {
+        if (conferenceParams.priceGroup() != null && conferenceParams.participantsThreshold() != null) {
             priceGroup = new PriceGroup(conferenceParams.priceGroup(), conferenceParams.participantsThreshold());
         }
-
-        var conference = new Conference(conferenceParams.name(), conferenceParams.link(), conferenceParams.price(), conferenceParams.startDate(), conferenceParams.endDate(), priceRanges, priceGroup);
-        return conferencePort.save(conference);
+        return priceGroup;
     }
 
     private static List<PriceRange> buildPriceRanges(ConferenceParams conferenceParams) {
         return conferenceParams.priceRanges().stream()
-                .map(priceRange -> new PriceRange(priceRange.price(), new DateInterval(priceRange.startDate(), priceRange.endDate())))
+              .map(priceRange -> new PriceRange(priceRange.price(), new DateInterval(priceRange.startDate(), priceRange.endDate())))
                 .toList();
     }
 

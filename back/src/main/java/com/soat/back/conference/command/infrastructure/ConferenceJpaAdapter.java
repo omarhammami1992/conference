@@ -21,34 +21,35 @@ public class ConferenceJpaAdapter implements ConferencePort {
 
    @Override
    public Integer save(Conference conferenceToSave) {
-      JpaConference jpaConference = convertToJpaConference(conferenceToSave);
+      JpaConference jpaConference = toJpaConference(conferenceToSave);
       JpaConference conference = jpaConferenceRepository.save(jpaConference);
       return conference.getId();
    }
 
-   private static JpaConference convertToJpaConference(Conference conferenceToSave) {
+   //TODO: move to specific utility class add UTs
+   private JpaConference toJpaConference(Conference conference) {
       JpaConference jpaConference = new JpaConference(
-            conferenceToSave.name(),
-            conferenceToSave.link(),
-            conferenceToSave.getPrice(),
-            conferenceToSave.startDate(),
-            conferenceToSave.endDate()
+            conference.name(),
+            conference.link(),
+            conference.getPrice(),
+            conference.startDate(),
+            conference.endDate()
       );
-      List<JpaPriceRange> jpaPriceRanges = conferenceToSave.priceRanges()
+      List<JpaPriceRange> jpaPriceRanges = conference.priceRanges()
             .stream()
             .map(priceRange -> toJpaPriceRange(jpaConference, priceRange))
             .toList();
       jpaConference.setPriceRanges(jpaPriceRanges);
 
-      if (conferenceToSave.getPriceGroup() != null) {
-         final var jpaPriceGroup = new JpaPriceGroup(conferenceToSave.getPriceGroup().price(), conferenceToSave.getPriceGroup().threshold(), jpaConference);
+      if (conference.getPriceGroup() != null) {
+         final var jpaPriceGroup = new JpaPriceGroup(conference.getPriceGroup().price(), conference.getPriceGroup().threshold(), jpaConference);
          jpaConference.setPriceGroup(jpaPriceGroup);
       }
 
       return jpaConference;
    }
 
-   private static JpaPriceRange toJpaPriceRange(JpaConference jpaConference, PriceRange priceRange) {
+   private JpaPriceRange toJpaPriceRange(JpaConference jpaConference, PriceRange priceRange) {
       return new JpaPriceRange(
             priceRange.price(),
             priceRange.dateInterval().startDate(),

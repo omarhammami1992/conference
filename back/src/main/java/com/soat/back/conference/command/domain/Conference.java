@@ -1,5 +1,7 @@
 package com.soat.back.conference.command.domain;
 
+import static java.util.Collections.emptyList;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,18 +16,36 @@ public final class Conference {
     private final List<PriceRange> priceRanges;
     private final PriceGroup priceGroup;
 
-    public Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceRange> priceRanges, PriceGroup priceGroup) throws InvalidIntervalException {
-        checkIntervals(priceRanges, price);
+    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceRange> priceRanges) {
         this.name = name;
         this.link = link;
         this.price = price;
         this.startDate = startDate;
         this.endDate = endDate;
         this.priceRanges = priceRanges;
+        this.priceGroup = null;
+    }
+
+    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup) {
+        this.name = name;
+        this.link = link;
+        this.price = price;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.priceRanges = emptyList();
         this.priceGroup = priceGroup;
     }
 
-    private void checkIntervals(List<PriceRange> priceRanges, Float price) throws InvalidIntervalException {
+    public static Conference createWithPriceRanges(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceRange> priceRanges) throws InvalidIntervalException {
+        checkIntervals(priceRanges, price);
+        return new Conference(name, link, price, startDate, endDate, priceRanges);
+    }
+
+    public static Conference createPriceGroup(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup) {
+        return new Conference(name, link, price, startDate, endDate, priceGroup);
+    }
+
+    private static void checkIntervals(List<PriceRange> priceRanges, Float price) throws InvalidIntervalException {
         for (int i = 0; i < priceRanges.size() - 1; i++) {
             checkIntervalDates(priceRanges, i);
             checkIntervalsPrices(priceRanges, i);
@@ -33,19 +53,19 @@ public final class Conference {
         checkPrices(priceRanges, price);
     }
 
-    private void checkIntervalDates(List<PriceRange> priceRanges, int i) throws InvalidIntervalException {
+    private static void checkIntervalDates(List<PriceRange> priceRanges, int i) throws InvalidIntervalException {
         if (!priceRanges.get(i + 1).dateInterval().startDate().minusDays(1).equals(priceRanges.get(i).dateInterval().endDate())) {
             throw new InvalidIntervalException();
         }
     }
 
-    private void checkIntervalsPrices(List<PriceRange> priceRanges, int i) throws InvalidIntervalException {
+    private static void checkIntervalsPrices(List<PriceRange> priceRanges, int i) throws InvalidIntervalException {
         if (priceRanges.get(i).price() > priceRanges.get(i + 1).price()) {
             throw new InvalidIntervalException();
         }
     }
 
-    private void checkPrices(List<PriceRange> priceRanges, Float price) throws InvalidIntervalException  {
+    private static void checkPrices(List<PriceRange> priceRanges, Float price) throws InvalidIntervalException  {
         if (priceRanges != null && price < priceRanges.get(priceRanges.size() - 1).price()) {
             throw new InvalidIntervalException();
         }

@@ -15,7 +15,7 @@ public final class Conference {
     private final PriceGroup priceGroup;
 
     public Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceRange> priceRanges, PriceGroup priceGroup) throws InvalidIntervalException {
-        checkIntervals(priceRanges);
+        checkIntervals(priceRanges, price);
         this.name = name;
         this.link = link;
         this.price = price;
@@ -25,11 +25,29 @@ public final class Conference {
         this.priceGroup = priceGroup;
     }
 
-    private void checkIntervals(List<PriceRange> priceRanges) throws InvalidIntervalException {
+    private void checkIntervals(List<PriceRange> priceRanges, Float price) throws InvalidIntervalException {
         for (int i = 0; i < priceRanges.size() - 1; i++) {
-            if (!priceRanges.get(i + 1).dateInterval().startDate().minusDays(1).equals(priceRanges.get(i).dateInterval().endDate())) {
-                throw new InvalidIntervalException();
-            }
+            checkIntervalDates(priceRanges, i);
+            checkIntervalsPrices(priceRanges, i);
+        }
+        checkPrices(priceRanges, price);
+    }
+
+    private void checkIntervalDates(List<PriceRange> priceRanges, int i) throws InvalidIntervalException {
+        if (!priceRanges.get(i + 1).dateInterval().startDate().minusDays(1).equals(priceRanges.get(i).dateInterval().endDate())) {
+            throw new InvalidIntervalException();
+        }
+    }
+
+    private void checkIntervalsPrices(List<PriceRange> priceRanges, int i) throws InvalidIntervalException {
+        if (priceRanges.get(i).price() > priceRanges.get(i + 1).price()) {
+            throw new InvalidIntervalException();
+        }
+    }
+
+    private void checkPrices(List<PriceRange> priceRanges, Float price) throws InvalidIntervalException  {
+        if (priceRanges != null && price < priceRanges.get(priceRanges.size() - 1).price()) {
+            throw new InvalidIntervalException();
         }
     }
 

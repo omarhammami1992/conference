@@ -34,7 +34,6 @@ class CreateConferenceUTest {
               LocalDate.of(2022, 12, 3),
               defaultPrice,
               of(septemberPrice, novemberPrice),
-              null,
               null
         );
 
@@ -59,7 +58,6 @@ class CreateConferenceUTest {
                 LocalDate.of(2022, 12, 3),
                 defaultPrice,
                 of(septemberPrice, octoberPrice),
-                null,
                 null
         );
 
@@ -84,7 +82,6 @@ class CreateConferenceUTest {
                 LocalDate.of(2022, 12, 3),
                 defaultPrice,
                 of(septemberPrice, octoberPrice),
-                null,
                 null
         );
 

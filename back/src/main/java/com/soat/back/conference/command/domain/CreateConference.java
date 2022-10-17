@@ -12,23 +12,33 @@ public class CreateConference {
 
     public Integer execute(ConferenceParams conferenceParams) throws InvalidIntervalException {
         final List<PriceRange> priceRanges = buildPriceRanges(conferenceParams);
-        PriceGroup priceGroup = getPriceGroup(conferenceParams);
+        final PriceGroup priceGroup = buildPriceGroup(conferenceParams.priceGroupParams());
 
-        var conference = new Conference(conferenceParams.name(),
-              conferenceParams.link(),
-              conferenceParams.price(),
-              conferenceParams.startDate(),
-              conferenceParams.endDate(),
-              priceRanges,
-              priceGroup
-        );
+        Conference conference;
+        if (priceRanges.isEmpty()) {
+            conference = Conference.createPriceGroup(
+                  conferenceParams.name(),
+                  conferenceParams.link(),
+                  conferenceParams.price(),
+                  conferenceParams.startDate(),
+                  conferenceParams.endDate(),
+                  priceGroup);
+        } else {
+            conference = Conference.createWithPriceRanges(
+                  conferenceParams.name(),
+                  conferenceParams.link(),
+                  conferenceParams.price(),
+                  conferenceParams.startDate(),
+                  conferenceParams.endDate(),
+                  priceRanges);
+        }
         return conferencePort.save(conference);
     }
 
-    private static PriceGroup getPriceGroup(ConferenceParams conferenceParams) {
+    private static PriceGroup buildPriceGroup(PriceGroupParams priceGroupParams) {
         PriceGroup priceGroup = null;
-        if (conferenceParams.priceGroup() != null && conferenceParams.participantsThreshold() != null) {
-            priceGroup = new PriceGroup(conferenceParams.priceGroup(), conferenceParams.participantsThreshold());
+        if (priceGroupParams != null) {
+            priceGroup = new PriceGroup(priceGroupParams.priceGroup(), priceGroupParams.participantsThreshold());
         }
         return priceGroup;
     }

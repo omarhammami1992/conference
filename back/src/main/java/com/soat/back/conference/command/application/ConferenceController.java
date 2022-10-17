@@ -1,21 +1,21 @@
 package com.soat.back.conference.command.application;
 
-import com.soat.back.conference.command.domain.ConferenceParams;
-import com.soat.back.conference.command.domain.CreateConference;
-import com.soat.back.conference.command.domain.InvalidIntervalException;
-import com.soat.back.conference.command.domain.PriceRangeParams;
+import static java.util.Optional.ofNullable;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
-import static java.util.Optional.ofNullable;
+import com.soat.back.conference.command.domain.ConferenceParams;
+import com.soat.back.conference.command.domain.CreateConference;
+import com.soat.back.conference.command.domain.InvalidIntervalException;
+import com.soat.back.conference.command.domain.PriceGroupParams;
+import com.soat.back.conference.command.domain.PriceRangeParams;
 
 @RestController
 @RequestMapping("/conference")
@@ -41,17 +41,25 @@ public class ConferenceController {
         List<PriceRangeParams> priceRangeParams = conferenceJson.priceRanges().stream()
                 .map(this::toPriceRangeParams)
                 .toList();
+        var priceGroupParams = toPriceGroupParams(conferenceJson);
 
         return new ConferenceParams(
-                conferenceJson.name(),
-                conferenceJson.link(),
-                LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
-                LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER),
-                conferenceJson.price(),
-                priceRangeParams,
-                ofNullable(conferenceJson.priceGroup()).map(PriceGroupJson::price).orElse(null),
-                ofNullable(conferenceJson.priceGroup()).map(PriceGroupJson::participantsThreshold).orElse(null)
+              conferenceJson.name(),
+              conferenceJson.link(),
+              LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
+              LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER),
+              conferenceJson.price(),
+              priceRangeParams,
+              priceGroupParams
         );
+    }
+
+    private static PriceGroupParams toPriceGroupParams(ConferenceJson conferenceJson) {
+        PriceGroupParams priceGroupParams = null;
+        if (conferenceJson.priceGroup() != null) {
+            priceGroupParams = new PriceGroupParams(conferenceJson.priceGroup().price(), conferenceJson.priceGroup().participantsThreshold() );
+        }
+        return priceGroupParams;
     }
 
     private PriceRangeParams toPriceRangeParams(PriceRangeJson priceRangeJson) {

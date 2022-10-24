@@ -1,5 +1,6 @@
 package com.soat.back.acceptance;
 
+import com.soat.back.common.infrastructure.JpaPriceAttendingDay;
 import com.soat.back.common.infrastructure.JpaPriceGroup;
 import com.soat.back.conference.command.application.PriceAttendingDaysJson;
 import com.soat.back.conference.command.application.PriceGroupJson;
@@ -77,6 +78,12 @@ public class ConferenceSteps extends AcceptanceTest {
         executePost("", conferenceJson);
     }
 
+    @And("qu'elle a un système de tarification early bird à {float} € avant le {string}")
+    public void quElleAUnSystèmeDetarificationEarlyBirdÀ€Avant(float price, String endDate) {
+        PriceRangeJson priceRangeJson = new PriceRangeJson(price, null, endDate);
+        priceRangeJsons.add(priceRangeJson);
+    }
+
     @Then("la conférence est enregistée avec le prix {float} € et  les intervalles de réduction early bird")
     public void laConférenceEstEnregistéeAvecLePrix€EtLesIntervallesDeRéductionEarlyBird(float defaultPrice, DataTable dataTable) {
         final Integer savedConferenceId = response.then().extract().as(Integer.class);
@@ -91,7 +98,7 @@ public class ConferenceSteps extends AcceptanceTest {
         );
 
         assertThat(jpaConference).usingRecursiveComparison()
-              .ignoringFields("priceRanges")
+              .ignoringFields("priceRanges", "priceAttendingDays")
               .isEqualTo(expectedJpaConference);
 
         List<JpaPriceRange> jpaPriceRanges = dataTableTransformEntries(dataTable, this::buildJpaPriceRange);
@@ -100,12 +107,6 @@ public class ConferenceSteps extends AcceptanceTest {
         assertThat(jpaConference.getPriceRanges())
               .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id", "conference")
               .containsExactlyInAnyOrder(jpaPriceRanges.toArray(JpaPriceRange[]::new));
-    }
-
-    @And("qu'elle a un système de tarification early bird à {float} € avant le {string}")
-    public void quElleAUnSystèmeDetarificationEarlyBirdÀ€Avant(float price, String endDate) {
-        PriceRangeJson priceRangeJson = new PriceRangeJson(price, null, endDate);
-        priceRangeJsons.add(priceRangeJson);
     }
 
     @And("qu'elle a un système de tarification early bird à {float} € entre le {string} et le {string}")
@@ -155,8 +156,10 @@ public class ConferenceSteps extends AcceptanceTest {
                 LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
         );
 
-        assertThat(jpaConference).isNotNull().usingRecursiveComparison().ignoringFields("priceGroup")
-                .isEqualTo(expectedJpaConference);
+        assertThat(jpaConference).isNotNull()
+              .usingRecursiveComparison()
+              .ignoringFields("priceGroup", "priceAttendingDays")
+              .isEqualTo(expectedJpaConference);
 
         JpaPriceGroup expectedPriceGroup = new JpaPriceGroup(groupPrice, threshold);
         assertThat(jpaConference.getGroupPrice()).usingRecursiveComparison().ignoringFields("id", "conference")
@@ -172,7 +175,31 @@ public class ConferenceSteps extends AcceptanceTest {
     }
 
     @Then("la conférence est enregistée avec le prix {float} € et les prix réduits par jour de présence")
-    public void laConférenceEstEnregistéeAvecLePrix€EtLesPrixRéduitsParJourDePrésence(float price) {
+    public void laConférenceEstEnregistéeAvecLePrix€EtLesPrixRéduitsParJourDePrésence(float price, DataTable dataTable) {
+        final Integer savedConferenceId = response.then().extract().as(Integer.class);
+        JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
+        JpaConference expectedJpaConference = new JpaConference(
+              savedConferenceId,
+              conferenceJson.name(),
+              conferenceJson.link(),
+              price,
+              LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
+              LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
+        );
 
+        assertThat(jpaConference).usingRecursiveComparison()
+              .ignoringFields("priceRanges", "priceGroup")
+              .isEqualTo(expectedJpaConference);
+
+        var attendingDays = dataTableTransformEntries(dataTable, this::buildJpaPriceAttendingDay);
+        assertThat(jpaConference.getPriceAttendingDays())
+              .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id", "conference")
+              .containsExactlyInAnyOrder(attendingDays.toArray(JpaPriceAttendingDay[]::new));
+    }
+
+    private JpaPriceAttendingDay buildJpaPriceAttendingDay(Map<String, String> entry) {
+        return new JpaPriceAttendingDay(
+              Float.valueOf(entry.get("price")),
+              Float.valueOf(entry.get("attendingDays")));
     }
 }

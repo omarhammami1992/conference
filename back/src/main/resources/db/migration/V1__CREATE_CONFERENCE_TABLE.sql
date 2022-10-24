@@ -27,10 +27,11 @@ create table price_group
    constraint fk_price_group_conference foreign key (conference_id) references conference (id)
 );
 
-create table price_attending_days
+create table price_attending_day
 (
    id            serial primary key,
    price         decimal not null,
-   attendingDays decimal not null,
-   conference_id integer, constraint fk_price_by_attending_days_conference foreign key (conference_id) references conference (id)
+   attending_days decimal not null,
+   conference_id integer,
+   constraint fk_price_by_attending_days_conference foreign key (conference_id) references conference (id)
 );

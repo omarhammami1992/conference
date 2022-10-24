@@ -10,12 +10,13 @@ public class CreateConference {
         this.conferencePort = conferencePort;
     }
 
-    public Integer execute(ConferenceParams conferenceParams) throws InvalidIntervalException {
+    public Integer execute(ConferenceParams conferenceParams) throws InvalidIntervalException, InvalidPricesException, InvalidThresholdException {
         final List<PriceRange> priceRanges = buildPriceRanges(conferenceParams);
         final PriceGroup priceGroup = buildPriceGroup(conferenceParams.priceGroupParams());
+        final List<PriceAttendingDay> priceAttendingDays = buildPriceAttendingDays(conferenceParams);
 
         Conference conference;
-        if (priceRanges.isEmpty()) {
+        if (priceRanges.isEmpty() && priceAttendingDays.isEmpty()) {
             conference = Conference.createPriceGroup(
                   conferenceParams.name(),
                   conferenceParams.link(),
@@ -23,7 +24,7 @@ public class CreateConference {
                   conferenceParams.startDate(),
                   conferenceParams.endDate(),
                   priceGroup);
-        } else {
+        } else if (priceAttendingDays.isEmpty()) {
             conference = Conference.createWithPriceRanges(
                   conferenceParams.name(),
                   conferenceParams.link(),
@@ -31,8 +32,23 @@ public class CreateConference {
                   conferenceParams.startDate(),
                   conferenceParams.endDate(),
                   priceRanges);
+        } else {
+            conference = Conference.createWithPriceAttendingDays(
+                  conferenceParams.name(),
+                  conferenceParams.link(),
+                  conferenceParams.price(),
+                  conferenceParams.startDate(),
+                  conferenceParams.endDate(),
+                  priceAttendingDays
+            );
         }
         return conferencePort.save(conference);
+    }
+
+    private List<PriceAttendingDay> buildPriceAttendingDays(ConferenceParams conferenceParams) {
+        return conferenceParams.priceAttendingDaysParams().stream()
+              .map(priceAttendingDay -> new PriceAttendingDay(priceAttendingDay.price(), priceAttendingDay.attendingDays()))
+              .toList();
     }
 
     private static PriceGroup buildPriceGroup(PriceGroupParams priceGroupParams) {

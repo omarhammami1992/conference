@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.soat.back.conference.command.domain.ConferenceParams;
 import com.soat.back.conference.command.domain.CreateConference;
 import com.soat.back.conference.command.domain.InvalidIntervalException;
+import com.soat.back.conference.command.domain.InvalidPricesException;
+import com.soat.back.conference.command.domain.InvalidThresholdException;
+import com.soat.back.conference.command.domain.PriceAttendingDaysParams;
 import com.soat.back.conference.command.domain.PriceGroupParams;
 import com.soat.back.conference.command.domain.PriceRangeParams;
 
@@ -30,7 +33,7 @@ public class ConferenceController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> save(@RequestBody ConferenceJson conferenceJson) throws InvalidIntervalException {
+    public ResponseEntity<Integer> save(@RequestBody ConferenceJson conferenceJson) throws InvalidIntervalException, InvalidPricesException, InvalidThresholdException {
         ConferenceParams conferenceParams = toConferenceParams(conferenceJson);
         Integer id = createConference.execute(conferenceParams);
         return new ResponseEntity<>(id, HttpStatus.CREATED);
@@ -42,6 +45,9 @@ public class ConferenceController {
                 .map(this::toPriceRangeParams)
                 .toList();
         var priceGroupParams = toPriceGroupParams(conferenceJson);
+        List<PriceAttendingDaysParams> priceAttendingDaysParams = conferenceJson.attendingDays().stream()
+              .map(this::toPriceAttendingDaysParams)
+              .toList();
 
         return new ConferenceParams(
               conferenceJson.name(),
@@ -50,7 +56,8 @@ public class ConferenceController {
               LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER),
               conferenceJson.price(),
               priceRangeParams,
-              priceGroupParams
+              priceGroupParams,
+              priceAttendingDaysParams
         );
     }
 
@@ -67,6 +74,13 @@ public class ConferenceController {
                 priceRangeJson.price(),
                 toLocalDate(priceRangeJson.startDate()),
                 toLocalDate(priceRangeJson.endDate())
+        );
+    }
+
+    private PriceAttendingDaysParams toPriceAttendingDaysParams(PriceAttendingDaysJson priceAttendingDaysJson) {
+        return new PriceAttendingDaysParams(
+              priceAttendingDaysJson.price(),
+              priceAttendingDaysJson.attendingDays()
         );
     }
 

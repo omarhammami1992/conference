@@ -27,8 +27,12 @@ public class JpaConference {
     @OneToMany(mappedBy = "conference", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<JpaPriceRange> priceRanges = new ArrayList<>();
 
+    @OneToMany(mappedBy = "conference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<JpaPriceAttendingDay> priceAttendingDays = new ArrayList<>();
+
     @OneToOne(mappedBy = "conference", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private JpaPriceGroup priceGroup;
+
     public JpaConference(Integer id, String name, String link, Float price,  LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.name = name;
@@ -92,5 +96,13 @@ public class JpaConference {
 
     public void setPriceGroup(JpaPriceGroup priceGroup) {
         this.priceGroup = priceGroup;
+    }
+
+    public List<JpaPriceAttendingDay> getPriceAttendingDays() {
+        return priceAttendingDays;
+    }
+
+    public void setPriceAttendingDays(List<JpaPriceAttendingDay> priceAttendingDays) {
+        this.priceAttendingDays = priceAttendingDays;
     }
 }

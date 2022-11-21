@@ -2,6 +2,7 @@ package com.soat.back.conference.command.infrastructure;
 
 import java.util.List;
 
+import com.soat.back.common.infrastructure.JpaPriceAttendingDay;
 import com.soat.back.common.infrastructure.JpaPriceGroup;
 import org.springframework.stereotype.Repository;
 import com.soat.back.common.infrastructure.JpaConference;
@@ -9,6 +10,7 @@ import com.soat.back.common.infrastructure.JpaConferenceRepository;
 import com.soat.back.common.infrastructure.JpaPriceRange;
 import com.soat.back.conference.command.domain.Conference;
 import com.soat.back.conference.command.domain.ConferencePort;
+import com.soat.back.conference.command.domain.PriceAttendingDay;
 import com.soat.back.conference.command.domain.PriceRange;
 
 @Repository
@@ -46,7 +48,17 @@ public class ConferenceJpaAdapter implements ConferencePort {
          jpaConference.setPriceGroup(jpaPriceGroup);
       }
 
+      List<JpaPriceAttendingDay> jpaPriceAttendingDays = conference.getPriceAttendingDays()
+            .stream()
+            .map(priceAttendingDay -> toJpaPriceAttendingDay(priceAttendingDay, jpaConference))
+            .toList();
+      jpaConference.setPriceAttendingDays(jpaPriceAttendingDays);
+
       return jpaConference;
+   }
+
+   private JpaPriceAttendingDay toJpaPriceAttendingDay(PriceAttendingDay priceAttendingDay, JpaConference conference) {
+      return new JpaPriceAttendingDay(priceAttendingDay.price(), priceAttendingDay.attendingDay(), conference);
    }
 
    private JpaPriceRange toJpaPriceRange(JpaConference jpaConference, PriceRange priceRange) {

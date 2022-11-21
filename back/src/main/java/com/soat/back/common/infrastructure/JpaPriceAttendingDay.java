@@ -2,6 +2,7 @@ package com.soat.back.common.infrastructure;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,13 +22,19 @@ public class JpaPriceAttendingDay {
    @Column
    private Float attendingDays;
 
-   @ManyToOne
+   @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "conference_id")
    private JpaConference conference;
 
    public JpaPriceAttendingDay(Float price, Float attendingDays) {
       this.price = price;
       this.attendingDays = attendingDays;
+   }
+
+   public JpaPriceAttendingDay(Float price, Float attendingDays, JpaConference conference) {
+      this.price = price;
+      this.attendingDays = attendingDays;
+      this.conference = conference;
    }
 
    public JpaPriceAttendingDay() {

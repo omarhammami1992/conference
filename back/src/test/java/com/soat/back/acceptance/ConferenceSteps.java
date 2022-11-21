@@ -188,7 +188,7 @@ public class ConferenceSteps extends AcceptanceTest {
         );
 
         assertThat(jpaConference).usingRecursiveComparison()
-              .ignoringFields("priceRanges", "priceGroup")
+              .ignoringFields("priceRanges", "priceGroup", "priceAttendingDays")
               .isEqualTo(expectedJpaConference);
 
         var attendingDays = dataTableTransformEntries(dataTable, this::buildJpaPriceAttendingDay);

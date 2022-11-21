@@ -17,7 +17,7 @@ public final class Conference {
     private final PriceGroup priceGroup;
     private final List<PriceAttendingDay> priceAttendingDays;
 
-    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceRange> priceRanges) {
+    private Conference(String name, String link, Float price, List<PriceRange> priceRanges, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.link = link;
         this.price = price;
@@ -52,7 +52,7 @@ public final class Conference {
 
     public static Conference createWithPriceRanges(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceRange> priceRanges) throws InvalidIntervalException, InvalidPricesException {
         checkIntervals(priceRanges, price);
-        return new Conference(name, link, price, startDate, endDate, priceRanges);
+        return new Conference(name, link, price, priceRanges, startDate, endDate);
     }
 
     public static Conference createPriceGroup(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup) throws InvalidPricesException, InvalidThresholdException {
@@ -129,6 +129,10 @@ public final class Conference {
 
     public PriceGroup getPriceGroup() {
         return priceGroup;
+    }
+
+    public List<PriceAttendingDay> getPriceAttendingDays() {
+        return priceAttendingDays;
     }
 
     @Override

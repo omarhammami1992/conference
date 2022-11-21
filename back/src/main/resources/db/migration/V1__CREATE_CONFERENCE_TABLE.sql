@@ -29,9 +29,9 @@ create table price_group
 
 create table price_attending_day
 (
-   id            serial primary key,
-   price         decimal not null,
-   attending_days decimal not null,
-   conference_id integer,
+   id             serial primary key,
+   price          decimal(10, 2) not null,
+   attending_days decimal(10, 2) not null,
+   conference_id  integer,
    constraint fk_price_by_attending_days_conference foreign key (conference_id) references conference (id)
 );

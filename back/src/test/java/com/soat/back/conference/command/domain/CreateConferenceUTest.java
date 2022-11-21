@@ -41,7 +41,7 @@ class CreateConferenceUTest {
                   LocalDate.of(2022, 12, 3),
                   defaultPrice,
                   of(septemberPrice, novemberPrice),
-                  null
+                  null, of()
             );
 
             // when
@@ -65,7 +65,8 @@ class CreateConferenceUTest {
                   LocalDate.of(2022, 12, 3),
                   defaultPrice,
                   of(septemberPrice, octoberPrice),
-                  null
+                  null,
+                  of()
             );
 
             // when
@@ -90,7 +91,8 @@ class CreateConferenceUTest {
                   LocalDate.of(2022, 12, 3),
                   defaultPrice,
                   of(septemberPrice, octoberPrice),
-                  null
+                  null,
+                  of()
             );
 
             // when
@@ -116,7 +118,8 @@ class CreateConferenceUTest {
                   LocalDate.of(2022, 12, 3),
                   defaultPrice,
                   of(),
-                  priceGroupParams
+                  priceGroupParams,
+                  of()
             );
 
             // when
@@ -139,7 +142,8 @@ class CreateConferenceUTest {
                   LocalDate.of(2022, 12, 3),
                   defaultPrice,
                   of(),
-                  priceGroupParams
+                  priceGroupParams,
+                  of()
             );
 
             // when

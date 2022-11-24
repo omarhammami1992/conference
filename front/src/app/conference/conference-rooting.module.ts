@@ -1,19 +1,17 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from "@angular/router";
 import {CreateConferencePageComponent} from "./create-conference-page/create-conference-page.component";
+import {ConferenceComponent} from "./conference.component";
 
 const routes: Routes = [
-  /*{
-    path: '', children: [
-      {path: 'create', component: CreateConferencePageComponent}
-    ],
-    redirectTo:'create/children',
-    pathMatch: 'full'
-  },*/
-  {path: 'create', component: CreateConferencePageComponent},
-  // {path: '', redirectTo: 'create', pathMatch: 'full'}
-
-
+  {
+    path: 'conference',
+    component: ConferenceComponent,
+    children: [
+      {path: 'create', component: CreateConferencePageComponent},
+      {path: '', redirectTo: 'create', pathMatch: 'full'}
+    ]
+  }
 ];
 
 @NgModule({

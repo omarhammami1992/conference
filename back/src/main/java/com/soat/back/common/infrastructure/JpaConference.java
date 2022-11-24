@@ -3,15 +3,8 @@ package com.soat.back.common.infrastructure;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -34,16 +27,13 @@ public class JpaConference {
     @Column
     private LocalDate endDate;
 
-    @OneToMany(mappedBy = "conference", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<JpaPriceRange> priceRanges = new ArrayList<>();
+    @OneToMany(mappedBy = "conference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<JpaPriceRange> priceRanges;
 
-    @OneToMany(mappedBy = "conference", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<JpaPriceAttendingDay> priceAttendingDays = new ArrayList<>();
+    @OneToMany(mappedBy = "conference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<JpaPriceAttendingDay> priceAttendingDays;
 
-    @OneToOne(mappedBy = "conference", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToOne(mappedBy = "conference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private JpaPriceGroup priceGroup;
 
     public JpaConference(Integer id, String name, String link, Float price,  LocalDate startDate, LocalDate endDate) {

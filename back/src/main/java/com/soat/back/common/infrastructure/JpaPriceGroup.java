@@ -15,7 +15,7 @@ public class JpaPriceGroup {
     @Column
     private Integer threshold;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "conference_id")
     private JpaConference conference;
 

@@ -34,6 +34,8 @@ import com.soat.back.common.infrastructure.JpaPriceRange;
 import com.soat.back.conference.command.application.ConferenceJson;
 import com.soat.back.conference.command.application.PriceRangeJson;
 
+import javax.transaction.Transactional;
+
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext
 @CucumberContextConfiguration
@@ -85,6 +87,7 @@ public class ConferenceSteps extends AcceptanceTest {
     }
 
     @Then("la conférence est enregistée avec le prix {float} € et  les intervalles de réduction early bird")
+    @Transactional
     public void laConférenceEstEnregistéeAvecLePrix€EtLesIntervallesDeRéductionEarlyBird(float defaultPrice, DataTable dataTable) {
         final Integer savedConferenceId = response.then().extract().as(Integer.class);
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
@@ -98,7 +101,7 @@ public class ConferenceSteps extends AcceptanceTest {
         );
 
         assertThat(jpaConference).usingRecursiveComparison()
-              .ignoringFields("priceRanges", "priceAttendingDays")
+              .ignoringFields("priceRanges", "priceGroup", "priceAttendingDays")
               .isEqualTo(expectedJpaConference);
 
         List<JpaPriceRange> jpaPriceRanges = dataTableTransformEntries(dataTable, this::buildJpaPriceRange);
@@ -158,7 +161,7 @@ public class ConferenceSteps extends AcceptanceTest {
 
         assertThat(jpaConference).isNotNull()
               .usingRecursiveComparison()
-              .ignoringFields("priceGroup", "priceAttendingDays")
+              .ignoringFields("priceRanges", "priceGroup", "priceAttendingDays")
               .isEqualTo(expectedJpaConference);
 
         JpaPriceGroup expectedPriceGroup = new JpaPriceGroup(groupPrice, threshold);
@@ -175,6 +178,7 @@ public class ConferenceSteps extends AcceptanceTest {
     }
 
     @Then("la conférence est enregistée avec le prix {float} € et les prix réduits par jour de présence")
+    @Transactional
     public void laConférenceEstEnregistéeAvecLePrix€EtLesPrixRéduitsParJourDePrésence(float price, DataTable dataTable) {
         final Integer savedConferenceId = response.then().extract().as(Integer.class);
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);

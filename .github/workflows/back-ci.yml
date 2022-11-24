@@ -15,9 +15,10 @@ defaults:
 on:
   push:
     branches: [ "master" ]
+    paths: [ "back/**" ]
   pull_request:
     branches: [ "master" ]
-
+    paths: [ "back/**" ]
 jobs:
   build:
 

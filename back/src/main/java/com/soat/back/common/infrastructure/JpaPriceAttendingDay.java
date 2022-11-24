@@ -22,7 +22,7 @@ public class JpaPriceAttendingDay {
    @Column
    private Float attendingDays;
 
-   @ManyToOne(fetch = FetchType.LAZY)
+   @ManyToOne
    @JoinColumn(name = "conference_id")
    private JpaConference conference;
 

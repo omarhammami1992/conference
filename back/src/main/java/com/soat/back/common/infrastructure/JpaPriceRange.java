@@ -25,7 +25,7 @@ public class JpaPriceRange {
    @Column
    private LocalDate endDate;
 
-   @ManyToOne(fetch = FetchType.LAZY)
+   @ManyToOne
    @JoinColumn(name = "conference_id")
    private JpaConference conference;
 

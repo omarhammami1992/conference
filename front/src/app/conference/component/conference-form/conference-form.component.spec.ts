@@ -22,4 +22,13 @@ describe('ConferenceFormComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('template', () => {
+    it('should contains ', () => {
+    });
+  });
+
+  it('spec name', () => {
+  });
+
 });

@@ -34,12 +34,5 @@ describe('CreateConferencePageComponent', () => {
       //Then
       expect(appCreateConferenceComponent).toBeTruthy()
     });
-
-
-
-
-
   });
-
-
 });

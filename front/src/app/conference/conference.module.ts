@@ -4,6 +4,7 @@ import { ConferenceFormComponent } from './component/conference-form/conference-
 import {ConferenceRoutingModule} from "./conference-routing.module";
 import { CreateConferencePageComponent } from './pages/create-conference-page/create-conference-page.component';
 import { HomeConferencePageComponent } from './pages/home-conference-page/home-conference-page.component';
+import {HttpClientModule} from "@angular/common/http";
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { HomeConferencePageComponent } from './pages/home-conference-page/home-c
   ],
   imports: [
     CommonModule,
-    ConferenceRoutingModule
+    ConferenceRoutingModule,
+    HttpClientModule
   ]
 })
 export class ConferenceModule { }

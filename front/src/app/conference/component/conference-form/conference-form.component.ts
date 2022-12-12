@@ -12,4 +12,7 @@ export class ConferenceFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  createConference() {
+
+  }
 }

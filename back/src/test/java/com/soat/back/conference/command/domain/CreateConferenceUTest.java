@@ -104,6 +104,33 @@ class CreateConferenceUTest {
             assertThat(throwable).isInstanceOf(InvalidPricesException.class);
             assertThat(throwable).hasMessage("Price range must be lower than default price");
         }
+
+        @Test
+        void execute_should_throw_exception_when_any_price_less_than_zero() {
+            // given
+            final PriceRangeParams septemberPrice = new PriceRangeParams(-50f, LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 30));
+            final PriceRangeParams octoberPrice = new PriceRangeParams(-20f, LocalDate.of(2022, 10, 1), LocalDate.of(2022, 11, 30));
+            float defaultPrice = 10f;
+
+            ConferenceParams conferenceParams = new ConferenceParams(
+                  "devoxx",
+                  "link",
+                  LocalDate.of(2022, 12, 1),
+                  LocalDate.of(2022, 12, 3),
+                  defaultPrice,
+                  List.of(septemberPrice, octoberPrice),
+                  null,
+                  List.of()
+            );
+
+            // when
+            final Throwable throwable = catchThrowable(() -> createConference.execute(conferenceParams));
+
+            // then
+            assertThat(throwable)
+                    .isInstanceOf(InvalidPricesException.class)
+                    .hasMessage("Price range greater than zero");
+        }
     }
 
     @Nested

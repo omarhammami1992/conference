@@ -16,7 +16,12 @@ public class CreateConference {
         final List<PriceAttendingDay> priceAttendingDays = buildPriceAttendingDays(conferenceParams);
 
         Conference conference;
-        if (priceRanges.isEmpty() && priceAttendingDays.isEmpty()) {
+        if (checkMinimumPriceGreaterThanZero(priceRanges))
+        {
+            throw new InvalidPricesException("Price range greater than zero");
+        }
+
+        if (hasPriceGroups(priceRanges, priceAttendingDays)) {
             conference = Conference.createPriceGroup(
                   conferenceParams.name(),
                   conferenceParams.link(),
@@ -32,7 +37,8 @@ public class CreateConference {
                   conferenceParams.startDate(),
                   conferenceParams.endDate(),
                   priceRanges);
-        } else {
+        }
+        else {
             conference = Conference.createWithPriceAttendingDays(
                   conferenceParams.name(),
                   conferenceParams.link(),
@@ -44,6 +50,17 @@ public class CreateConference {
         }
 
         return conferencePort.save(conference);
+    }
+
+    private static boolean hasPriceGroups(List<PriceRange> priceRanges, List<PriceAttendingDay> priceAttendingDays) {
+        return priceRanges.isEmpty() && priceAttendingDays.isEmpty();
+    }
+
+    private static boolean checkMinimumPriceGreaterThanZero(List<PriceRange> priceRanges) {
+        return priceRanges.stream()
+                .min((p1, p2) -> p1.price() < p2.price() ? 1 : 0)
+                .map(PriceRange::price)
+                .orElse(0f) < 0;
     }
 
     private List<PriceAttendingDay> buildPriceAttendingDays(ConferenceParams conferenceParams) {

@@ -54,7 +54,7 @@ class CreateConferenceUTest {
         }
 
         @Test
-        void execute_should_throw_exception_when_price_not_strictly_ascending() {
+        void execute_should_throw_exception_when_price_not_ascending() {
             // given
             final PriceRangeParams septemberPrice = new PriceRangeParams(250f, LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 30));
             final PriceRangeParams octoberPrice = new PriceRangeParams(200f, LocalDate.of(2022, 10, 1), LocalDate.of(2022, 11, 30));
@@ -131,6 +131,34 @@ class CreateConferenceUTest {
                     .isInstanceOf(InvalidPricesException.class)
                     .hasMessage("Price range greater than zero");
         }
+
+        @Test
+        void execute_should_throw_exception_when_same_price_in_price_range() {
+            // given
+            final PriceRangeParams septemberPrice = new PriceRangeParams(20f, LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 30));
+            final PriceRangeParams octoberPrice = new PriceRangeParams(20f, LocalDate.of(2022, 10, 1), LocalDate.of(2022, 11, 30));
+            float defaultPrice = 30f;
+
+            ConferenceParams conferenceParams = new ConferenceParams(
+                    "devoxx",
+                    "link",
+                    LocalDate.of(2022, 12, 1),
+                    LocalDate.of(2022, 12, 3),
+                    defaultPrice,
+                    List.of(septemberPrice, octoberPrice),
+                    null,
+                    List.of()
+            );
+
+            // when
+            final Throwable throwable = catchThrowable(() -> createConference.execute(conferenceParams));
+
+            // then
+            assertThat(throwable)
+                    .isInstanceOf(InvalidPricesException.class)
+                    .hasMessage("Non unique price range");
+        }
+
     }
 
     @Nested

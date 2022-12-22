@@ -1,6 +1,7 @@
 package com.soat.back.conference.command.domain;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CreateConference {
 
@@ -19,6 +20,11 @@ public class CreateConference {
         if (checkMinimumPriceGreaterThanZero(priceRanges))
         {
             throw new InvalidPricesException("Price range greater than zero");
+        }
+
+        if (checkUniquenessPriceInPriceRange(priceRanges))
+        {
+            throw new InvalidPricesException("Non unique price range");
         }
 
         if (hasPriceGroups(priceRanges, priceAttendingDays)) {
@@ -61,6 +67,14 @@ public class CreateConference {
                 .min((p1, p2) -> p1.price() < p2.price() ? 1 : 0)
                 .map(PriceRange::price)
                 .orElse(0f) < 0;
+    }
+
+    private static boolean checkUniquenessPriceInPriceRange(List<PriceRange> priceRanges) {
+        return priceRanges
+                .stream()
+                .map(PriceRange::price)
+                .collect(Collectors.toSet())
+                .size() != priceRanges.stream().count();
     }
 
     private List<PriceAttendingDay> buildPriceAttendingDays(ConferenceParams conferenceParams) {

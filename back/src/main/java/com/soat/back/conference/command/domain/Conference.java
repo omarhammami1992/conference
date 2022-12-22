@@ -3,7 +3,11 @@ package com.soat.back.conference.command.domain;
 import static java.util.Collections.emptyList;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public final class Conference {
     private final String name;
@@ -61,9 +65,45 @@ public final class Conference {
         return new Conference(name, link, price, startDate, endDate, priceGroup);
     }
 
-    public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays) {
+    public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays) throws InvalidAttendingDaysException {
+        if (ifIsAttendingDays(startDate, endDate, priceAttendingDays))
+            throw new InvalidAttendingDaysException("Attending days must be equal or less than conference duration");
+
+        if (hasDuplicatedAttendingDays(priceAttendingDays)) {
+            throw new InvalidAttendingDaysException("Attending days must be unique for one conference");
+        }
+
+        if (hasDuplicatedPrice(priceAttendingDays)) {
+            throw new InvalidAttendingDaysException("Price must be unique for one conference");
+        }
         return new Conference(name, link, price, startDate, endDate, priceAttendingDays);
     }
+
+    private static boolean hasDuplicatedAttendingDays(List<PriceAttendingDay> priceAttendingDays) {
+        return hasDuplicatedProperty(priceAttendingDays,PriceAttendingDay::attendingDay);
+    }
+
+    private static boolean hasDuplicatedPrice(List<PriceAttendingDay> priceAttendingDays) {
+        return hasDuplicatedProperty(priceAttendingDays,PriceAttendingDay::price);
+    }
+
+    private static <R> boolean hasDuplicatedProperty(List<PriceAttendingDay> list, Function<PriceAttendingDay, ? extends R> mapper) {
+        return list
+                .stream()
+                .map(mapper)
+                .collect(Collectors.toSet()).size() < list.size();
+    }
+
+        private static boolean ifIsAttendingDays(LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays) {
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+        var maxAttending = priceAttendingDays
+                .stream()
+                .max(Comparator.comparing(PriceAttendingDay::attendingDay))
+                .map(PriceAttendingDay::attendingDay)
+                .get();
+        return maxAttending > daysBetween;
+    }
+
 
     private static void checkPriceGroupThreshold(PriceGroup priceGroup) throws InvalidThresholdException {
         if (priceGroup.threshold() < 2) {
@@ -97,7 +137,7 @@ public final class Conference {
         }
     }
 
-    private static void checkPrices(List<PriceRange> priceRanges, Float price) throws InvalidPricesException  {
+    private static void checkPrices(List<PriceRange> priceRanges, Float price) throws InvalidPricesException {
         if (priceRanges != null && price < priceRanges.get(priceRanges.size() - 1).price()) {
             throw new InvalidPricesException("Price range must be lower than default price");
         }

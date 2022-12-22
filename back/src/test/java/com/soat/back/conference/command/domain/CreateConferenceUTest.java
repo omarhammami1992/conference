@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 import java.time.LocalDate;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -35,13 +37,13 @@ class CreateConferenceUTest {
             float defaultPrice = 300f;
 
             ConferenceParams conferenceParams = new ConferenceParams(
-                  "devoxx",
-                  "link",
-                  LocalDate.of(2022, 12, 1),
-                  LocalDate.of(2022, 12, 3),
-                  defaultPrice,
-                  of(septemberPrice, novemberPrice),
-                  null, of()
+                    "devoxx",
+                    "link",
+                    LocalDate.of(2022, 12, 1),
+                    LocalDate.of(2022, 12, 3),
+                    defaultPrice,
+                    of(septemberPrice, novemberPrice),
+                    null, of()
             );
 
             // when
@@ -59,14 +61,14 @@ class CreateConferenceUTest {
             float defaultPrice = 300f;
 
             ConferenceParams conferenceParams = new ConferenceParams(
-                  "devoxx",
-                  "link",
-                  LocalDate.of(2022, 12, 1),
-                  LocalDate.of(2022, 12, 3),
-                  defaultPrice,
-                  of(septemberPrice, octoberPrice),
-                  null,
-                  of()
+                    "devoxx",
+                    "link",
+                    LocalDate.of(2022, 12, 1),
+                    LocalDate.of(2022, 12, 3),
+                    defaultPrice,
+                    of(septemberPrice, octoberPrice),
+                    null,
+                    of()
             );
 
             // when
@@ -85,14 +87,14 @@ class CreateConferenceUTest {
             float defaultPrice = 200f;
 
             ConferenceParams conferenceParams = new ConferenceParams(
-                  "devoxx",
-                  "link",
-                  LocalDate.of(2022, 12, 1),
-                  LocalDate.of(2022, 12, 3),
-                  defaultPrice,
-                  of(septemberPrice, octoberPrice),
-                  null,
-                  of()
+                    "devoxx",
+                    "link",
+                    LocalDate.of(2022, 12, 1),
+                    LocalDate.of(2022, 12, 3),
+                    defaultPrice,
+                    of(septemberPrice, octoberPrice),
+                    null,
+                    of()
             );
 
             // when
@@ -112,14 +114,14 @@ class CreateConferenceUTest {
             float defaultPrice = 249f;
 
             ConferenceParams conferenceParams = new ConferenceParams(
-                  "devoxx",
-                  "link",
-                  LocalDate.of(2022, 12, 1),
-                  LocalDate.of(2022, 12, 3),
-                  defaultPrice,
-                  of(),
-                  priceGroupParams,
-                  of()
+                    "devoxx",
+                    "link",
+                    LocalDate.of(2022, 12, 1),
+                    LocalDate.of(2022, 12, 3),
+                    defaultPrice,
+                    of(),
+                    priceGroupParams,
+                    of()
             );
 
             // when
@@ -136,14 +138,14 @@ class CreateConferenceUTest {
             float defaultPrice = 350f;
 
             ConferenceParams conferenceParams = new ConferenceParams(
-                  "devoxx",
-                  "link",
-                  LocalDate.of(2022, 12, 1),
-                  LocalDate.of(2022, 12, 3),
-                  defaultPrice,
-                  of(),
-                  priceGroupParams,
-                  of()
+                    "devoxx",
+                    "link",
+                    LocalDate.of(2022, 12, 1),
+                    LocalDate.of(2022, 12, 3),
+                    defaultPrice,
+                    of(),
+                    priceGroupParams,
+                    of()
             );
 
             // when
@@ -152,6 +154,86 @@ class CreateConferenceUTest {
             // then
             assertThat(throwable).isInstanceOf(InvalidThresholdException.class);
             assertThat(throwable).hasMessage("Price group threshold must be greater than 1");
+        }
+    }
+
+    @Nested
+    class CreateWithAttendingDays {
+        @Test
+        void execute_should_throw_exception_when_attending_days_is_more_than_conference_duration() {
+            // given
+            final List<PriceAttendingDaysParams> priceAttendingDayList = List.of(
+                    new PriceAttendingDaysParams(300f, 1000f)
+            );
+            ConferenceParams conferenceParams = new ConferenceParams(
+                    "devoxx",
+                    "link",
+                    LocalDate.of(2022, 12, 1),
+                    LocalDate.of(2022, 12, 3),
+                    300f,
+                    of(),
+                    null,
+                    priceAttendingDayList
+            );
+
+            // when
+            final Throwable throwable = catchThrowable(() -> createConference.execute(conferenceParams));
+
+            // then
+            assertThat(throwable).isInstanceOf(InvalidAttendingDaysException.class);
+            assertThat(throwable).hasMessage("Attending days must be equal or less than conference duration");
+        }
+
+        @Test
+        void execute_should_throw_exception_when_we_have_conference_with_duplicated_attending_days() {
+            // given
+            final List<PriceAttendingDaysParams> priceAttendingDayList = List.of(
+                    new PriceAttendingDaysParams(300f, 2f),
+                    new PriceAttendingDaysParams(200f, 2f)
+            );
+            ConferenceParams conferenceParams = new ConferenceParams(
+                    "devoxx",
+                    "link",
+                    LocalDate.of(2022, 12, 1),
+                    LocalDate.of(2022, 12, 3),
+                    300f,
+                    of(),
+                    null,
+                    priceAttendingDayList
+            );
+
+            // when
+            final Throwable throwable = catchThrowable(() -> createConference.execute(conferenceParams));
+
+            // then
+            assertThat(throwable).isInstanceOf(InvalidAttendingDaysException.class);
+            assertThat(throwable).hasMessage("Attending days must be unique for one conference");
+        }
+
+        @Test
+        void execute_should_throw_exception_when_we_have_conference_with_duplicated_price() {
+            // given
+            final List<PriceAttendingDaysParams> priceAttendingDayList = List.of(
+                    new PriceAttendingDaysParams(300f, 1f),
+                    new PriceAttendingDaysParams(300f, 2f)
+            );
+            ConferenceParams conferenceParams = new ConferenceParams(
+                    "devoxx",
+                    "link",
+                    LocalDate.of(2022, 12, 1),
+                    LocalDate.of(2022, 12, 3),
+                    300f,
+                    of(),
+                    null,
+                    priceAttendingDayList
+            );
+
+            // when
+            final Throwable throwable = catchThrowable(() -> createConference.execute(conferenceParams));
+
+            // then
+            assertThat(throwable).isInstanceOf(InvalidAttendingDaysException.class);
+            assertThat(throwable).hasMessage("Price must be unique for one conference");
         }
     }
 }

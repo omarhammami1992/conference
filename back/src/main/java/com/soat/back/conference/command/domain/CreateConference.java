@@ -10,7 +10,7 @@ public class CreateConference {
         this.conferencePort = conferencePort;
     }
 
-    public Integer execute(ConferenceParams conferenceParams) throws InvalidIntervalException, InvalidPricesException, InvalidThresholdException {
+    public Integer execute(ConferenceParams conferenceParams) throws InvalidIntervalException, InvalidPricesException, InvalidThresholdException, InvalidAttendingDaysException {
         final List<PriceRange> priceRanges = buildPriceRanges(conferenceParams);
         final PriceGroup priceGroup = buildPriceGroup(conferenceParams.priceGroupParams());
         final List<PriceAttendingDay> priceAttendingDays = buildPriceAttendingDays(conferenceParams);
@@ -42,6 +42,7 @@ public class CreateConference {
                   priceAttendingDays
             );
         }
+
         return conferencePort.save(conference);
     }
 

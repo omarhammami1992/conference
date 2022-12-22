@@ -5,20 +5,14 @@ import static java.util.Optional.ofNullable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import com.soat.back.conference.command.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.soat.back.conference.command.domain.ConferenceParams;
-import com.soat.back.conference.command.domain.CreateConference;
-import com.soat.back.conference.command.domain.InvalidIntervalException;
-import com.soat.back.conference.command.domain.InvalidPricesException;
-import com.soat.back.conference.command.domain.InvalidThresholdException;
-import com.soat.back.conference.command.domain.PriceAttendingDaysParams;
-import com.soat.back.conference.command.domain.PriceGroupParams;
-import com.soat.back.conference.command.domain.PriceRangeParams;
 
 @RestController
 @RequestMapping("/conference")
@@ -33,7 +27,7 @@ public class ConferenceController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> save(@RequestBody ConferenceJson conferenceJson) throws InvalidIntervalException, InvalidPricesException, InvalidThresholdException {
+    public ResponseEntity<Integer> save(@RequestBody ConferenceJson conferenceJson) throws InvalidIntervalException, InvalidPricesException, InvalidThresholdException, InvalidAttendingDaysException {
         ConferenceParams conferenceParams = toConferenceParams(conferenceJson);
         Integer id = createConference.execute(conferenceParams);
         return new ResponseEntity<>(id, HttpStatus.CREATED);

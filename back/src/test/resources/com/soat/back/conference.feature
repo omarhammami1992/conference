@@ -32,3 +32,14 @@ Feature: Gestion des conférences
       | 400   | 2             |
       | 600   | 2.5           |
       | 950   | 4.5           |
+
+  Scenario: Récupérer la liste de toutes les conférences
+    Given une liste de conférences enregistrées
+      | name          | link                               | price | startDate  | endDate    |
+      | Devoxx        | https://www.devoxx                 | 300   | 01-09-2022 | 30-09-2022 |
+      | DataOps Rocks | https://summit-2022.dataops.rocks/ | 0     | 01-12-2022 | 30-12-2022 |
+    When l'utilisateur consulte la liste de conferences
+    Then les conférences à venir s'affichent
+      | id | name          | fullPrice | startDate  | endDate    | isOnline | city  | country |
+      | 1  | Devoxx        | 300       | 01-09-2022 | 30-09-2022 | False    | Paris | France  |
+      | 2  | DataOps Rocks | 0         | 01-12-2022 | 30-12-2022 | True     | Paris | France  |

@@ -4,6 +4,7 @@ import {ConferenceFormComponent} from './conference-form.component';
 import {By} from "@angular/platform-browser";
 import {Conference} from "../../model/conference";
 import {ConferenceService} from "../../service/conference.service";
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('ConferenceFormComponent', () => {
   let component: ConferenceFormComponent;
@@ -15,7 +16,8 @@ describe('ConferenceFormComponent', () => {
       declarations: [ConferenceFormComponent],
       providers: [
         {provide: ConferenceService, useValue: mockConferenceService }
-      ]
+      ],
+      imports: [ReactiveFormsModule]
     })
       .compileComponents();
   });
@@ -112,6 +114,8 @@ describe('ConferenceFormComponent', () => {
 
         const conferenceEndDateInput = fixture.debugElement.query(By.css('#conference-end-date'));
         conferenceEndDateInput.nativeElement.value = conference.endDate;
+
+        fixture.detectChanges();
 
         // when
         component.createConference();

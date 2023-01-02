@@ -1,7 +1,10 @@
 <p>conference-form works!</p>
-<input id="conference-name" />
-<input id="conference-link" />
-<input id="conference-price" />
-<input id="conference-start-date" />
-<input id="conference-end-date" />
-<button type="submit" id="conference-submit-button" (click)="createConference()" >Submit</button>
+<form [formGroup]="conferenceForm" (ngSubmit)="createConference()">
+  <input id="conference-name" formControName="name"/>
+  <input id="conference-link" formControlName="link" />
+  <input id="conference-price" formControlName="price" />
+  <input id="conference-start-date" formControlName="startDate" />
+  <input id="conference-end-date" formControlName="endDate" />
+  <button type="submit" id="conference-submit-button" >Submit</button>
+</form>
+

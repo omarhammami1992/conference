@@ -64,9 +64,8 @@ public class CreateConference {
 
     private static boolean checkMinimumPriceGreaterThanZero(List<PriceRange> priceRanges) {
         return priceRanges.stream()
-                .min((p1, p2) -> p1.price() < p2.price() ? 1 : 0)
-                .map(PriceRange::price)
-                .orElse(0f) < 0;
+                .mapToDouble(PriceRange::price)
+                .anyMatch(price -> price < 0);
     }
 
     private static boolean checkUniquenessPriceInPriceRange(List<PriceRange> priceRanges) {

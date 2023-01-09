@@ -22,19 +22,16 @@ export class ConferenceFormComponent implements OnInit {
       startDate: '',
       endDate: ''
     });
-    console.log(this.conferenceForm.value);
   }
 
   createConference() {
-    console.log(this.conferenceForm.value);
     const conference: Conference = {
       name: this.conferenceForm.controls.name.value,
-      price: this.conferenceForm.controls.price.value,
+      price: Number.parseFloat(this.conferenceForm.controls.price.value),
       link: this.conferenceForm.controls.link.value,
-      startDate: this.conferenceForm.controls.startDate.value,
-      endDate: this.conferenceForm.controls.endDate.value
+      startDate: new Date(this.conferenceForm.controls.startDate.value),
+      endDate: new Date(this.conferenceForm.controls.endDate.value)
     }
-    console.log(conference);
     this._conferenceService.createConference(conference);
   }
 }

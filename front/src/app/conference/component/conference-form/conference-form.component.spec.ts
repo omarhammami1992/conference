@@ -28,10 +28,6 @@ describe('ConferenceFormComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
   describe('template', () => {
     it('should contains conference name input', () => {
       // when
@@ -40,6 +36,7 @@ describe('ConferenceFormComponent', () => {
       // then
       expect(conferenceNameInput).toBeTruthy();
     });
+
     it('should contains conference link input', () => {
       // when
       const conferenceNameInput = fixture.debugElement.query(By.css('#conference-link'));
@@ -47,6 +44,7 @@ describe('ConferenceFormComponent', () => {
       // then
       expect(conferenceNameInput).toBeTruthy();
     });
+
     it('should contains conference price input', () => {
       // when
       const conferenceNameInput = fixture.debugElement.query(By.css('#conference-price'));
@@ -54,6 +52,7 @@ describe('ConferenceFormComponent', () => {
       // then
       expect(conferenceNameInput).toBeTruthy();
     });
+
     it('should contains conference start date input', () => {
       // when
       const conferenceNameInput = fixture.debugElement.query(By.css('#conference-start-date'));
@@ -61,6 +60,7 @@ describe('ConferenceFormComponent', () => {
       // then
       expect(conferenceNameInput).toBeTruthy();
     });
+
     it('should contains conference end date input', () => {
       // when
       const conferenceNameInput = fixture.debugElement.query(By.css('#conference-end-date'));
@@ -68,6 +68,7 @@ describe('ConferenceFormComponent', () => {
       // then
       expect(conferenceNameInput).toBeTruthy();
     });
+
     it('should contains submit button', () => {
       // when
       const conferenceSubmitButton = fixture.debugElement.query(By.css('#conference-submit-button'));
@@ -93,27 +94,33 @@ describe('ConferenceFormComponent', () => {
 
       it("should call conference service to create conference with appropriated data", () => {
         // given
-        const conference: Conference = {
+        const conference = {
           name: "conference",
           price: 1000,
           link: "archi hexa",
-          startDate: new Date(2022, 1, 1),
-          endDate: new Date(2022, 1, 3)
+          startDate: new Date("2022-01-01"),
+          endDate: new Date("2022-01-03")
         }
+        // spyOn(mockConferenceService, "createConference");
         const conferenceNameInput = fixture.debugElement.query(By.css('#conference-name'));
         conferenceNameInput.nativeElement.value = conference.name;
+        conferenceNameInput.nativeElement.dispatchEvent(new Event('input'));
 
         const conferencePriceInput = fixture.debugElement.query(By.css('#conference-price'));
         conferencePriceInput.nativeElement.value = conference.price;
+        conferencePriceInput.nativeElement.dispatchEvent(new Event('input'));
 
         const conferenceLinkInput = fixture.debugElement.query(By.css('#conference-link'));
         conferenceLinkInput.nativeElement.value = conference.link;
+        conferenceLinkInput.nativeElement.dispatchEvent(new Event('input'));
 
         const conferenceStartDateInput = fixture.debugElement.query(By.css('#conference-start-date'));
-        conferenceStartDateInput.nativeElement.value = conference.startDate;
+        conferenceStartDateInput.nativeElement.value = '2022-01-01';
+        conferenceStartDateInput.nativeElement.dispatchEvent(new Event('input'));
 
         const conferenceEndDateInput = fixture.debugElement.query(By.css('#conference-end-date'));
-        conferenceEndDateInput.nativeElement.value = conference.endDate;
+        conferenceEndDateInput.nativeElement.value = '2022-01-03';
+        conferenceEndDateInput.nativeElement.dispatchEvent(new Event('input'));
 
         fixture.detectChanges();
 
@@ -125,8 +132,5 @@ describe('ConferenceFormComponent', () => {
       })
     })
   })
-
-  it('spec name', () => {
-  });
 
 });

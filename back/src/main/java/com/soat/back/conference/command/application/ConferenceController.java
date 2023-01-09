@@ -46,8 +46,8 @@ public class ConferenceController {
         return new ConferenceParams(
               conferenceJson.name(),
               conferenceJson.link(),
-              LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
-              LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER),
+              conferenceJson.startDate(),
+              conferenceJson.endDate(),
               conferenceJson.price(),
               priceRangeParams,
               priceGroupParams,

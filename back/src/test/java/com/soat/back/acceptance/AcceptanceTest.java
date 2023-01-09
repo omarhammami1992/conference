@@ -10,7 +10,6 @@ import static io.restassured.RestAssured.given;
 
 public class AcceptanceTest {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     @LocalServerPort
     protected int port;
 
@@ -24,12 +23,11 @@ public class AcceptanceTest {
                 .get(url);
     }
 
-    public void executePost(String url, Object payload) throws JsonProcessingException {
-        String body = OBJECT_MAPPER.writeValueAsString(payload);
+    public void executePost(String url, Object payload) {
         response = given()
                 .log().all()
                 .header("Content-Type", ContentType.JSON)
-                .body(body)
+                .body(payload)
                 .when()
                 .post(url);
     }

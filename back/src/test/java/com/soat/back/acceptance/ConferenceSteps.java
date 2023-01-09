@@ -1,9 +1,5 @@
 package com.soat.back.acceptance;
 
-import com.soat.back.common.infrastructure.JpaPriceAttendingDay;
-import com.soat.back.common.infrastructure.JpaPriceGroup;
-import com.soat.back.conference.command.application.PriceAttendingDaysJson;
-import com.soat.back.conference.command.application.PriceGroupJson;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
@@ -23,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -31,11 +27,13 @@ import org.springframework.test.context.ActiveProfiles;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.soat.back.common.infrastructure.JpaConference;
 import com.soat.back.common.infrastructure.JpaConferenceRepository;
+import com.soat.back.common.infrastructure.JpaPriceAttendingDay;
+import com.soat.back.common.infrastructure.JpaPriceGroup;
 import com.soat.back.common.infrastructure.JpaPriceRange;
 import com.soat.back.conference.command.application.ConferenceJson;
+import com.soat.back.conference.command.application.PriceAttendingDaysJson;
+import com.soat.back.conference.command.application.PriceGroupJson;
 import com.soat.back.conference.command.application.PriceRangeJson;
-
-import javax.transaction.Transactional;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext
@@ -54,8 +52,8 @@ public class ConferenceSteps extends AcceptanceTest {
     private JpaConferenceRepository jpaConferenceRepository;
     private String name;
     private String link;
-    private String startDate;
-    private String endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private float price;
     private PriceGroupJson priceGroupJson;
 
@@ -71,8 +69,8 @@ public class ConferenceSteps extends AcceptanceTest {
     public void uneConférenceAvantLeNomLeLienEtQuiDureEntreEt(String name, String link, String startDate, String endDate) {
         this.name = name;
         this.link = link;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startDate = LocalDate.parse(startDate, DATE_TIME_FORMATTER);
+        this.endDate = LocalDate.parse(endDate, DATE_TIME_FORMATTER);
     }
 
     @When("l utilisateur tente de l enregistrer")
@@ -97,8 +95,8 @@ public class ConferenceSteps extends AcceptanceTest {
                 conferenceJson.name(),
                 conferenceJson.link(),
                 defaultPrice,
-                LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
-                LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
+                conferenceJson.startDate(),
+                conferenceJson.endDate()
         );
 
         assertThat(jpaConference).usingRecursiveComparison()
@@ -156,8 +154,8 @@ public class ConferenceSteps extends AcceptanceTest {
                 conferenceJson.name(),
                 conferenceJson.link(),
                 price,
-                LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
-                LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
+                conferenceJson.startDate(),
+                conferenceJson.endDate()
         );
 
         assertThat(jpaConference).isNotNull()
@@ -188,8 +186,8 @@ public class ConferenceSteps extends AcceptanceTest {
                 conferenceJson.name(),
                 conferenceJson.link(),
                 price,
-                LocalDate.parse(conferenceJson.startDate(), DATE_TIME_FORMATTER),
-                LocalDate.parse(conferenceJson.endDate(), DATE_TIME_FORMATTER)
+                conferenceJson.startDate(),
+                conferenceJson.endDate()
         );
 
         assertThat(jpaConference).usingRecursiveComparison()

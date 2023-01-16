@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConferenceService } from '../../service/conference.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Conference } from '../../model/conference';
 
 @Component({
@@ -16,7 +16,7 @@ export class ConferenceFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.conferenceForm = this._formBuilder.group({
-      name: '',
+      name: ['', Validators.required, Validators.minLength(1)],
       link: '',
       price: '',
       startDate: '',
@@ -25,6 +25,9 @@ export class ConferenceFormComponent implements OnInit {
   }
 
   createConference() {
+    // if (this.conferenceForm.invalid) {
+    //   return;
+    // }
     const conference: Conference = {
       name: this.conferenceForm.controls.name.value,
       price: Number.parseFloat(this.conferenceForm.controls.price.value),
@@ -32,6 +35,7 @@ export class ConferenceFormComponent implements OnInit {
       startDate: new Date(this.conferenceForm.controls.startDate.value),
       endDate: new Date(this.conferenceForm.controls.endDate.value)
     }
+
     this._conferenceService.createConference(conference);
   }
 }

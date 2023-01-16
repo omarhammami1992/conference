@@ -2,7 +2,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ConferenceFormComponent} from './conference-form.component';
 import {By} from "@angular/platform-browser";
-import {Conference} from "../../model/conference";
 import {ConferenceService} from "../../service/conference.service";
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -85,6 +84,7 @@ describe('ConferenceFormComponent', () => {
         const conferenceSubmitButton = fixture.debugElement.query(By.css('#conference-submit-button'));
         spyOn(component, "createConference");
 
+
         // when
         conferenceSubmitButton.nativeElement.click();
 
@@ -101,27 +101,13 @@ describe('ConferenceFormComponent', () => {
           startDate: new Date("2022-01-01"),
           endDate: new Date("2022-01-03")
         }
-        // spyOn(mockConferenceService, "createConference");
-        const conferenceNameInput = fixture.debugElement.query(By.css('#conference-name'));
-        conferenceNameInput.nativeElement.value = conference.name;
-        conferenceNameInput.nativeElement.dispatchEvent(new Event('input'));
-
-        const conferencePriceInput = fixture.debugElement.query(By.css('#conference-price'));
-        conferencePriceInput.nativeElement.value = conference.price;
-        conferencePriceInput.nativeElement.dispatchEvent(new Event('input'));
-
-        const conferenceLinkInput = fixture.debugElement.query(By.css('#conference-link'));
-        conferenceLinkInput.nativeElement.value = conference.link;
-        conferenceLinkInput.nativeElement.dispatchEvent(new Event('input'));
-
-        const conferenceStartDateInput = fixture.debugElement.query(By.css('#conference-start-date'));
-        conferenceStartDateInput.nativeElement.value = '2022-01-01';
-        conferenceStartDateInput.nativeElement.dispatchEvent(new Event('input'));
-
-        const conferenceEndDateInput = fixture.debugElement.query(By.css('#conference-end-date'));
-        conferenceEndDateInput.nativeElement.value = '2022-01-03';
-        conferenceEndDateInput.nativeElement.dispatchEvent(new Event('input'));
-
+        fillFormInputs({
+          name: "conference",
+          price: 1000,
+          link: "archi hexa",
+          startDate: "2022-01-01",
+          endDate: "2022-01-03"
+        });
         fixture.detectChanges();
 
         // when
@@ -130,7 +116,51 @@ describe('ConferenceFormComponent', () => {
         // then
         expect(mockConferenceService.createConference).toHaveBeenCalledOnceWith(conference);
       })
+
+      // TODO : this test pass even if is not correct
+      it("given input name empty should not be called when click on submit button", () => {
+
+          // given
+          const conferenceSubmitButton = fixture.debugElement.query(By.css('#conference-submit-button'));
+          spyOn(component, "createConference");
+          fillFormInputs({
+            name: "",
+            price: 1000,
+            link: "archi hexa",
+            startDate: "2022-01-01",
+            endDate: "2022-01-03"
+          });
+          fixture.detectChanges();
+
+          // when
+          conferenceSubmitButton.nativeElement.click();
+
+          // then
+          expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
+      })
     })
+
+    function fillFormInputs(conference: any) {
+      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-name'));
+      conferenceNameInput.nativeElement.value = conference.name;
+      conferenceNameInput.nativeElement.dispatchEvent(new Event('input'));
+
+      const conferencePriceInput = fixture.debugElement.query(By.css('#conference-price'));
+      conferencePriceInput.nativeElement.value = conference.price;
+      conferencePriceInput.nativeElement.dispatchEvent(new Event('input'));
+
+      const conferenceLinkInput = fixture.debugElement.query(By.css('#conference-link'));
+      conferenceLinkInput.nativeElement.value = conference.link;
+      conferenceLinkInput.nativeElement.dispatchEvent(new Event('input'));
+
+      const conferenceStartDateInput = fixture.debugElement.query(By.css('#conference-start-date'));
+      conferenceStartDateInput.nativeElement.value = conference.startDate;
+      conferenceStartDateInput.nativeElement.dispatchEvent(new Event('input'));
+
+      const conferenceEndDateInput = fixture.debugElement.query(By.css('#conference-end-date'));
+      conferenceEndDateInput.nativeElement.value = conference.endDate;
+      conferenceEndDateInput.nativeElement.dispatchEvent(new Event('input'));
+    }
   })
 
 });

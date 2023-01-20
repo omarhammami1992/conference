@@ -21,13 +21,14 @@ export class ConferenceFormComponent implements OnInit {
       price: '',
       startDate: '',
       endDate: ''
-    });
+    }, {updateOn: 'submit'});
   }
 
   createConference() {
-    // if (this.conferenceForm.invalid) {
-    //   return;
-    // }
+    if (this.conferenceForm.invalid) {
+      this.conferenceForm.markAllAsTouched()
+      return;
+    }
     const conference: Conference = {
       name: this.conferenceForm.controls.name.value,
       price: Number.parseFloat(this.conferenceForm.controls.price.value),

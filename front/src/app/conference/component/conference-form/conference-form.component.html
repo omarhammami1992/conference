@@ -1,10 +1,11 @@
 <p>conference-form works!</p>
 <form [formGroup]="conferenceForm" (ngSubmit)="createConference()">
   <input id="conference-name" formControlName="name"/>
+  <span id="required-name-error-message" *ngIf="conferenceForm.controls.name.touched && conferenceForm.controls.name.errors !== null"> Required name </span>
   <input id="conference-link" formControlName="link" />
   <input id="conference-price" formControlName="price" />
   <input type="date" id="conference-start-date" formControlName="startDate" />
   <input type="date" id="conference-end-date" formControlName="endDate" />
-  <button type="submit" id="conference-submit-button" >Submit</button>
+  <button type="submit" id="conference-submit-button">Submit</button>
 </form>
 

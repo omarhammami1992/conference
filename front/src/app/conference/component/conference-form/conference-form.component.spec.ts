@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ConferenceFormComponent} from './conference-form.component';
 import {By} from "@angular/platform-browser";
 import {ConferenceService} from "../../service/conference.service";
-import { ReactiveFormsModule } from '@angular/forms';
+import {ReactiveFormsModule} from '@angular/forms';
 
 describe('ConferenceFormComponent', () => {
   let component: ConferenceFormComponent;
@@ -14,7 +14,7 @@ describe('ConferenceFormComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ConferenceFormComponent],
       providers: [
-        {provide: ConferenceService, useValue: mockConferenceService }
+        {provide: ConferenceService, useValue: mockConferenceService}
       ],
       imports: [ReactiveFormsModule]
     })
@@ -84,7 +84,6 @@ describe('ConferenceFormComponent', () => {
         const conferenceSubmitButton = fixture.debugElement.query(By.css('#conference-submit-button'));
         spyOn(component, "createConference");
 
-
         // when
         conferenceSubmitButton.nativeElement.click();
 
@@ -117,26 +116,25 @@ describe('ConferenceFormComponent', () => {
         expect(mockConferenceService.createConference).toHaveBeenCalledOnceWith(conference);
       })
 
-      // TODO : this test pass even if is not correct
-      it("given input name empty should not be called when click on submit button", () => {
+      it("should not call conference service when name is not filled and should display error message", () => {
+        // given
+        fillFormInputs({
+          name: "",
+          price: 1000,
+          link: "archi hexa",
+          startDate: "2022-01-01",
+          endDate: "2022-01-03"
+        });
+        fixture.detectChanges();
 
-          // given
-          const conferenceSubmitButton = fixture.debugElement.query(By.css('#conference-submit-button'));
-          spyOn(component, "createConference");
-          fillFormInputs({
-            name: "",
-            price: 1000,
-            link: "archi hexa",
-            startDate: "2022-01-01",
-            endDate: "2022-01-03"
-          });
-          fixture.detectChanges();
+        // when
+        component.createConference();
 
-          // when
-          conferenceSubmitButton.nativeElement.click();
-
-          // then
-          expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
+        // then
+        expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
+        expect(component.conferenceForm.controls.name.errors).not.toEqual(null);
+        const requiredNameErrorMessage = fixture.debugElement.query(By.css('#required-name-error-message'));
+        expect(requiredNameErrorMessage).toBeTruthy();
       })
     })
 

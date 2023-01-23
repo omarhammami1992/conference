@@ -125,16 +125,37 @@ describe('ConferenceFormComponent', () => {
           startDate: "2022-01-01",
           endDate: "2022-01-03"
         });
-        fixture.detectChanges();
 
         // when
         component.createConference();
+        fixture.detectChanges();
 
         // then
         expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
         expect(component.conferenceForm.controls.name.errors).not.toEqual(null);
         const requiredNameErrorMessage = fixture.debugElement.query(By.css('#required-name-error-message'));
         expect(requiredNameErrorMessage).toBeTruthy();
+      })
+
+      it("should not call conference service when price is equal to 0 and should display error message", () => {
+        // given
+        fillFormInputs({
+          name: "devoxx",
+          price: 0,
+          link: "archi hexa",
+          startDate: "2022-01-01",
+          endDate: "2022-01-03"
+        });
+
+        // when
+        component.createConference();
+        fixture.detectChanges();
+
+        // then
+        expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
+        expect(component.conferenceForm.controls.price.errors).not.toEqual(null);
+        const requiredPriceErrorMessage = fixture.debugElement.query(By.css('#required-price-error-message'));
+        expect(requiredPriceErrorMessage).toBeTruthy();
       })
     })
 

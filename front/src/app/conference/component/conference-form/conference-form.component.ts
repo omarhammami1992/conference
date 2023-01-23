@@ -16,12 +16,12 @@ export class ConferenceFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.conferenceForm = this._formBuilder.group({
-      name: ['', Validators.required, Validators.minLength(1)],
+      name: ['', Validators.required],
       link: '',
-      price: '',
+      price: ['', [Validators.required, Validators.min(1)]],
       startDate: '',
       endDate: ''
-    }, {updateOn: 'submit'});
+    });
   }
 
   createConference() {

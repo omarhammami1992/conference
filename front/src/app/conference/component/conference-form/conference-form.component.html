@@ -2,10 +2,16 @@
 <form [formGroup]="conferenceForm" (ngSubmit)="createConference()">
   <input id="conference-name" formControlName="name"/>
   <span id="required-name-error-message" *ngIf="conferenceForm.controls.name.touched && conferenceForm.controls.name.errors !== null"> Required name </span>
+
   <input id="conference-link" formControlName="link" />
-  <input id="conference-price" formControlName="price" />
+
+  <input id="conference-price" type="number" formControlName="price" />
+  <span id="required-price-error-message" *ngIf="conferenceForm.controls.price.touched && conferenceForm.controls.price.errors !== null"> Price should be greater than 0 </span>
+
   <input type="date" id="conference-start-date" formControlName="startDate" />
+
   <input type="date" id="conference-end-date" formControlName="endDate" />
+
   <button type="submit" id="conference-submit-button">Submit</button>
 </form>
 

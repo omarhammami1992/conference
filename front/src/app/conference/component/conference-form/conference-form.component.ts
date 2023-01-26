@@ -28,8 +28,9 @@ export class ConferenceFormComponent implements OnInit {
       name: ['', Validators.required],
       link: ['', [Validators.required, Validators.pattern("^(http[s]?:\\/\\/){0,1}(www\\.){0,1}[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z]{2,5}[\\.]{0,1}\\/\\w+")]],
       price: ['', [Validators.required, Validators.min(1)]],
-      startDate: ['', [Validators.required, Validators.maxLength(10)]],
-      endDate: ['', [Validators.required]]
+      startDate: ['', [Validators.required,]],
+      endDate: ['', [Validators.required]],
+      pricingMode:['', [Validators.required]],
     }, {validators: this.dateValidator});
   }
 

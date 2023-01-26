@@ -6,6 +6,7 @@ import {ConferenceService} from "../../service/conference.service";
 import {ReactiveFormsModule} from '@angular/forms';
 import SpyObj = jasmine.SpyObj;
 
+
 describe('ConferenceFormComponent', () => {
   let component: ConferenceFormComponent;
   let fixture: ComponentFixture<ConferenceFormComponent>;
@@ -84,6 +85,17 @@ describe('ConferenceFormComponent', () => {
 
     });
 
+    it("should contain early bird pricing mode component when early bird selected", () => {
+      // when
+      fillFormInputs({pricingMode: 'earlyBird'});
+      fixture.detectChanges()
+
+      // then
+      const earlyBirdPricingMode = fixture.debugElement.query(By.css('app-early-bird-pricing-mode'));
+      expect(earlyBirdPricingMode).toBeTruthy();
+
+    });
+
     it('should contains submit button', () => {
       // when
       const conferenceSubmitButton = fixture.debugElement.query(By.css('#conference-submit-button'));
@@ -122,7 +134,8 @@ describe('ConferenceFormComponent', () => {
           price: 1000,
           link: "https://www.archihexa.com/conference",
           startDate: "2022-01-01",
-          endDate: "2022-01-03"
+          endDate: "2022-01-03",
+          pricingMode:'earlyBird'
         });
 
         // when
@@ -243,27 +256,32 @@ describe('ConferenceFormComponent', () => {
 
     })
 
-    function fillFormInputs(conference: any) {
-      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-name'));
-      conferenceNameInput.nativeElement.value = conference.name;
-      conferenceNameInput.nativeElement.dispatchEvent(new Event('input'));
 
-      const conferencePriceInput = fixture.debugElement.query(By.css('#conference-price'));
-      conferencePriceInput.nativeElement.value = conference.price;
-      conferencePriceInput.nativeElement.dispatchEvent(new Event('input'));
-
-      const conferenceLinkInput = fixture.debugElement.query(By.css('#conference-link'));
-      conferenceLinkInput.nativeElement.value = conference.link;
-      conferenceLinkInput.nativeElement.dispatchEvent(new Event('input'));
-
-      const conferenceStartDateInput = fixture.debugElement.query(By.css('#conference-start-date'));
-      conferenceStartDateInput.nativeElement.value = conference.startDate;
-      conferenceStartDateInput.nativeElement.dispatchEvent(new Event('input'));
-
-      const conferenceEndDateInput = fixture.debugElement.query(By.css('#conference-end-date'));
-      conferenceEndDateInput.nativeElement.value = conference.endDate;
-      conferenceEndDateInput.nativeElement.dispatchEvent(new Event('input'));
-    }
   })
 
+  function fillFormInputs(conference: any) {
+    const conferenceNameInput = fixture.debugElement.query(By.css('#conference-name'));
+    conferenceNameInput.nativeElement.value = conference.name;
+    conferenceNameInput.nativeElement.dispatchEvent(new Event('input'));
+
+    const conferencePriceInput = fixture.debugElement.query(By.css('#conference-price'));
+    conferencePriceInput.nativeElement.value = conference.price;
+    conferencePriceInput.nativeElement.dispatchEvent(new Event('input'));
+
+    const conferenceLinkInput = fixture.debugElement.query(By.css('#conference-link'));
+    conferenceLinkInput.nativeElement.value = conference.link;
+    conferenceLinkInput.nativeElement.dispatchEvent(new Event('input'));
+
+    const conferenceStartDateInput = fixture.debugElement.query(By.css('#conference-start-date'));
+    conferenceStartDateInput.nativeElement.value = conference.startDate;
+    conferenceStartDateInput.nativeElement.dispatchEvent(new Event('input'));
+
+    const conferenceEndDateInput = fixture.debugElement.query(By.css('#conference-end-date'));
+    conferenceEndDateInput.nativeElement.value = conference.endDate;
+    conferenceEndDateInput.nativeElement.dispatchEvent(new Event('input'));
+
+    const conferencePricingModeInput = fixture.debugElement.query(By.css('#conference-pricing-mode'));
+    conferencePricingModeInput.nativeElement.value = conference.pricingMode;
+    conferencePricingModeInput.nativeElement.dispatchEvent(new Event('change'));
+  }
 });

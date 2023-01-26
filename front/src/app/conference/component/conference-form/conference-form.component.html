@@ -16,13 +16,14 @@
 
   <br>
 
-  <select id="conference-pricing-mode">
+  <select id="conference-pricing-mode" formControlName="pricingMode">
     <option value=""></option>
     <option value="earlyBird">Early Bird</option>
     <option value="group">Group</option>
     <option value="attendingDays">Attending days</option>
   </select>
 
+  <app-early-bird-pricing-mode *ngIf="conferenceForm.controls.pricingMode.value === 'earlyBird'"></app-early-bird-pricing-mode>
 
   <br>
   <button type="submit" id="conference-submit-button">Submit</button>

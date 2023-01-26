@@ -4,13 +4,15 @@ import {ConferenceFormComponent} from './conference-form.component';
 import {By} from "@angular/platform-browser";
 import {ConferenceService} from "../../service/conference.service";
 import {ReactiveFormsModule} from '@angular/forms';
+import SpyObj = jasmine.SpyObj;
 
 describe('ConferenceFormComponent', () => {
   let component: ConferenceFormComponent;
   let fixture: ComponentFixture<ConferenceFormComponent>;
-  let mockConferenceService = jasmine.createSpyObj(ConferenceService, ["createConference"]);
+  let mockConferenceService: SpyObj<ConferenceService>;
 
   beforeEach(async () => {
+    mockConferenceService = jasmine.createSpyObj(ConferenceService, ["createConference"]);
     await TestBed.configureTestingModule({
       declarations: [ConferenceFormComponent],
       providers: [
@@ -19,6 +21,10 @@ describe('ConferenceFormComponent', () => {
       imports: [ReactiveFormsModule]
     })
       .compileComponents();
+  });
+
+  afterEach(() => {
+    mockConferenceService.createConference.calls.reset();
   });
 
   beforeEach(() => {
@@ -82,13 +88,14 @@ describe('ConferenceFormComponent', () => {
       it("should be called when clicked on submit button", () => {
         // given
         const conferenceSubmitButton = fixture.debugElement.query(By.css('#conference-submit-button'));
-        spyOn(component, "createConference");
+        var spy = spyOn(component, "createConference");
 
         // when
         conferenceSubmitButton.nativeElement.click();
 
         // then
         expect(component.createConference).toHaveBeenCalledTimes(1);
+        spy.calls.reset();
       });
 
       it("should call conference service to create conference with appropriated data", () => {
@@ -96,21 +103,21 @@ describe('ConferenceFormComponent', () => {
         const conference = {
           name: "conference",
           price: 1000,
-          link: "archi hexa",
+          link: "https://www.archihexa.com/conference",
           startDate: new Date("2022-01-01"),
           endDate: new Date("2022-01-03")
         }
         fillFormInputs({
           name: "conference",
           price: 1000,
-          link: "archi hexa",
+          link: "https://www.archihexa.com/conference",
           startDate: "2022-01-01",
           endDate: "2022-01-03"
         });
-        fixture.detectChanges();
 
         // when
         component.createConference();
+        fixture.detectChanges();
 
         // then
         expect(mockConferenceService.createConference).toHaveBeenCalledOnceWith(conference);
@@ -155,6 +162,27 @@ describe('ConferenceFormComponent', () => {
         expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
         expect(component.conferenceForm.controls.price.errors).not.toEqual(null);
         const requiredPriceErrorMessage = fixture.debugElement.query(By.css('#required-price-error-message'));
+        expect(requiredPriceErrorMessage).toBeTruthy();
+      })
+
+      it("should not call conference service when link is not valid", () => {
+        // given
+        fillFormInputs({
+          name: "devoxx",
+          price: 1,
+          link: "archi hexa",
+          startDate: "2022-01-01",
+          endDate: "2022-01-03"
+        });
+
+        // when
+        component.createConference();
+        fixture.detectChanges();
+
+        // then
+        expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
+        expect(component.conferenceForm.controls.link.errors).not.toEqual(null);
+        const requiredPriceErrorMessage = fixture.debugElement.query(By.css('#required-link-error-message'));
         expect(requiredPriceErrorMessage).toBeTruthy();
       })
     })

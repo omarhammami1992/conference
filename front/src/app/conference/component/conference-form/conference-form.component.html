@@ -20,8 +20,11 @@
     <option *ngFor="let pricingMode of pricingModes" [value]="pricingMode.value">{{pricingMode.label}}</option>
   </select>
 
-  <app-early-bird-pricing-mode *ngIf="conferenceForm.controls.pricingMode.value === 'earlyBird'"></app-early-bird-pricing-mode>
-  <app-group-pricing-mode *ngIf="conferenceForm.controls.pricingMode.value === 'group'"></app-group-pricing-mode>
+  <div [ngSwitch]="conferenceForm.controls.pricingMode.value">
+    <app-early-bird-pricing-mode *ngSwitchCase="'earlyBird'"></app-early-bird-pricing-mode>
+    <app-group-pricing-mode *ngSwitchCase="'group'"></app-group-pricing-mode>
+    <app-attending-days-pricing-mode *ngSwitchCase="'attendingDays'"></app-attending-days-pricing-mode>
+  </div>
 
   <br>
   <button type="submit" id="conference-submit-button">Submit</button>

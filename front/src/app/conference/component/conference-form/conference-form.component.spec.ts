@@ -93,6 +93,10 @@ describe('ConferenceFormComponent', () => {
       // then
       const earlyBirdPricingMode = fixture.debugElement.query(By.css('app-early-bird-pricing-mode'));
       expect(earlyBirdPricingMode).toBeTruthy();
+      const groupPricingMode = fixture.debugElement.query(By.css('app-group-pricing-mode'));
+      expect(groupPricingMode).toBeNull();
+      const attendingDaysPricingModeMode = fixture.debugElement.query(By.css('app-attending-days-pricing-mode'));
+      expect(attendingDaysPricingModeMode).toBeNull();
 
     });
 
@@ -104,7 +108,24 @@ describe('ConferenceFormComponent', () => {
       // then
       const groupPricingMode = fixture.debugElement.query(By.css('app-group-pricing-mode'));
       expect(groupPricingMode).toBeTruthy();
+      const earlyBirdPricingMode = fixture.debugElement.query(By.css('app-early-bird-pricing-mode'));
+      expect(earlyBirdPricingMode).toBeNull();
+      const attendingDaysPricingModeMode = fixture.debugElement.query(By.css('app-attending-days-pricing-mode'));
+      expect(attendingDaysPricingModeMode).toBeNull();
+    });
 
+    it("should contain attending days pricing mode component when attending days selected", () => {
+      // when
+      fillFormInputs({pricingMode: 'attendingDays'});
+      fixture.detectChanges()
+
+      // then
+      const attendingDaysPricingMode = fixture.debugElement.query(By.css('app-attending-days-pricing-mode'));
+      expect(attendingDaysPricingMode).toBeTruthy();
+      const earlyBirdPricingMode = fixture.debugElement.query(By.css('app-early-bird-pricing-mode'));
+      expect(earlyBirdPricingMode).toBeNull();
+      const groupPricingMode = fixture.debugElement.query(By.css('app-group-pricing-mode'));
+      expect(groupPricingMode).toBeNull();
     });
 
     it('should contains submit button', () => {

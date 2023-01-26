@@ -1,5 +1,3 @@
-import {PricingMode} from "./pricing-mode";
-
 export interface Conference {
   name: string;
   link: string;

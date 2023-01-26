@@ -14,6 +14,19 @@
   <input type="date" id="conference-end-date" formControlName="endDate" />
   <span id="required-valid-dates-error-message" *ngIf="conferenceForm.errors && conferenceForm.controls.startDate.touched && conferenceForm.controls.endDate.touched">Dates not valid</span>
 
+  <br>
+
+  <select id="conference-pricing-mode">
+    <option value=""></option>
+    <option value="earlyBird">Early Bird</option>
+    <option value="group">Group</option>
+    <option value="attendingDays">Attending days</option>
+  </select>
+
+
+  <br>
   <button type="submit" id="conference-submit-button">Submit</button>
+
+
 </form>
 

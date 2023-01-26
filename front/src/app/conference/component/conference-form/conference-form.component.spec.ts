@@ -34,7 +34,8 @@ describe('ConferenceFormComponent', () => {
   });
 
   describe('template', () => {
-    it('should contains conference name input', () => {
+
+    it('should contain conference name input', () => {
       // when
       const conferenceNameInput = fixture.debugElement.query(By.css('#conference-name'));
 
@@ -42,7 +43,7 @@ describe('ConferenceFormComponent', () => {
       expect(conferenceNameInput).toBeTruthy();
     });
 
-    it('should contains conference link input', () => {
+    it('should contain conference link input', () => {
       // when
       const conferenceNameInput = fixture.debugElement.query(By.css('#conference-link'));
 
@@ -50,7 +51,7 @@ describe('ConferenceFormComponent', () => {
       expect(conferenceNameInput).toBeTruthy();
     });
 
-    it('should contains conference price input', () => {
+    it('should contain conference price input', () => {
       // when
       const conferenceNameInput = fixture.debugElement.query(By.css('#conference-price'));
 
@@ -58,7 +59,7 @@ describe('ConferenceFormComponent', () => {
       expect(conferenceNameInput).toBeTruthy();
     });
 
-    it('should contains conference start date input', () => {
+    it('should contain conference start date input', () => {
       // when
       const conferenceNameInput = fixture.debugElement.query(By.css('#conference-start-date'));
 
@@ -66,12 +67,21 @@ describe('ConferenceFormComponent', () => {
       expect(conferenceNameInput).toBeTruthy();
     });
 
-    it('should contains conference end date input', () => {
+    it('should contain conference end date input', () => {
       // when
       const conferenceNameInput = fixture.debugElement.query(By.css('#conference-end-date'));
 
       // then
       expect(conferenceNameInput).toBeTruthy();
+    });
+
+    it("should contain conference pricing mode input", () => {
+      // when
+      const conferencePricingModeInput = fixture.debugElement.query(By.css('#conference-pricing-mode'));
+
+      // then
+      expect(conferencePricingModeInput).toBeTruthy();
+
     });
 
     it('should contains submit button', () => {

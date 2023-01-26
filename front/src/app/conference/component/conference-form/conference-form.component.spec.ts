@@ -96,6 +96,17 @@ describe('ConferenceFormComponent', () => {
 
     });
 
+    it("should contain group pricing mode component when group selected", () => {
+      // when
+      fillFormInputs({pricingMode: 'group'});
+      fixture.detectChanges()
+
+      // then
+      const groupPricingMode = fixture.debugElement.query(By.css('app-group-pricing-mode'));
+      expect(groupPricingMode).toBeTruthy();
+
+    });
+
     it('should contains submit button', () => {
       // when
       const conferenceSubmitButton = fixture.debugElement.query(By.css('#conference-submit-button'));

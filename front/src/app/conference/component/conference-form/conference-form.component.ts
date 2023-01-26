@@ -10,6 +10,24 @@ import {Conference} from '../../model/conference';
 })
 export class ConferenceFormComponent implements OnInit {
 
+  pricingModes = [
+    {
+      value: '',
+      label: ''
+    },
+    {
+      value: 'earlyBird',
+      label: 'Early bird'
+    },
+    {
+      value: 'group',
+      label: 'Group'
+    },
+    {
+      value: 'attendingDays',
+      label: 'Attending days'
+    }
+  ];
   conferenceForm: FormGroup = new FormGroup({});
   dateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const start = control.get('startDate');

@@ -76,7 +76,7 @@ describe('ConferenceFormComponent', () => {
       expect(conferenceNameInput).toBeTruthy();
     });
 
-    it("should contain conference pricing mode input", () => {
+    it("should contain conference pricing mode select", () => {
       // when
       const conferencePricingModeInput = fixture.debugElement.query(By.css('#conference-pricing-mode'));
 
@@ -85,47 +85,34 @@ describe('ConferenceFormComponent', () => {
 
     });
 
-    it("should contain early bird pricing mode component when early bird selected", () => {
-      // when
-      fillFormInputs({pricingMode: 'earlyBird'});
-      fixture.detectChanges()
+    describe('pricing modes', () => {
+      it("should contain early bird pricing mode component when early bird selected", () => {
+        // when
+        fillFormInputs({pricingMode: 'earlyBird'});
+        fixture.detectChanges()
+        // then
+        checkPriceModeSelector('app-early-bird-pricing-mode');
 
-      // then
-      const earlyBirdPricingMode = fixture.debugElement.query(By.css('app-early-bird-pricing-mode'));
-      expect(earlyBirdPricingMode).toBeTruthy();
-      const groupPricingMode = fixture.debugElement.query(By.css('app-group-pricing-mode'));
-      expect(groupPricingMode).toBeNull();
-      const attendingDaysPricingModeMode = fixture.debugElement.query(By.css('app-attending-days-pricing-mode'));
-      expect(attendingDaysPricingModeMode).toBeNull();
+      });
 
-    });
+      it("should contain group pricing mode component when group selected", () => {
+        // when
+        fillFormInputs({pricingMode: 'group'});
+        fixture.detectChanges()
 
-    it("should contain group pricing mode component when group selected", () => {
-      // when
-      fillFormInputs({pricingMode: 'group'});
-      fixture.detectChanges()
+        // then
 
-      // then
-      const groupPricingMode = fixture.debugElement.query(By.css('app-group-pricing-mode'));
-      expect(groupPricingMode).toBeTruthy();
-      const earlyBirdPricingMode = fixture.debugElement.query(By.css('app-early-bird-pricing-mode'));
-      expect(earlyBirdPricingMode).toBeNull();
-      const attendingDaysPricingModeMode = fixture.debugElement.query(By.css('app-attending-days-pricing-mode'));
-      expect(attendingDaysPricingModeMode).toBeNull();
-    });
+        checkPriceModeSelector('app-group-pricing-mode');
+      });
 
-    it("should contain attending days pricing mode component when attending days selected", () => {
-      // when
-      fillFormInputs({pricingMode: 'attendingDays'});
-      fixture.detectChanges()
+      it("should contain attending days pricing mode component when attending days selected", () => {
+        // when
+        fillFormInputs({pricingMode: 'attendingDays'});
+        fixture.detectChanges()
 
-      // then
-      const attendingDaysPricingMode = fixture.debugElement.query(By.css('app-attending-days-pricing-mode'));
-      expect(attendingDaysPricingMode).toBeTruthy();
-      const earlyBirdPricingMode = fixture.debugElement.query(By.css('app-early-bird-pricing-mode'));
-      expect(earlyBirdPricingMode).toBeNull();
-      const groupPricingMode = fixture.debugElement.query(By.css('app-group-pricing-mode'));
-      expect(groupPricingMode).toBeNull();
+        // then
+        checkPriceModeSelector('app-attending-days-pricing-mode');
+      });
     });
 
     it('should contains submit button', () => {
@@ -167,7 +154,7 @@ describe('ConferenceFormComponent', () => {
           link: "https://www.archihexa.com/conference",
           startDate: "2022-01-01",
           endDate: "2022-01-03",
-          pricingMode:'earlyBird'
+          pricingMode: 'earlyBird'
         });
 
         // when
@@ -284,11 +271,7 @@ describe('ConferenceFormComponent', () => {
           expect(requiredPriceErrorMessage).toBeTruthy();
         })
       });
-
-
     })
-
-
   })
 
   function fillFormInputs(conference: any) {
@@ -315,5 +298,29 @@ describe('ConferenceFormComponent', () => {
     const conferencePricingModeInput = fixture.debugElement.query(By.css('#conference-pricing-mode'));
     conferencePricingModeInput.nativeElement.value = conference.pricingMode;
     conferencePricingModeInput.nativeElement.dispatchEvent(new Event('change'));
+  }
+
+  function checkPriceModeSelector(selector: string) {
+
+    const earlyBirdPricingMode = fixture.debugElement.query(By.css('app-early-bird-pricing-mode'));
+    if (selector === 'app-early-bird-pricing-mode') {
+      expect(earlyBirdPricingMode).toBeTruthy();
+    } else {
+      expect(earlyBirdPricingMode).toBeNull();
+    }
+
+    const groupPricingMode = fixture.debugElement.query(By.css('app-group-pricing-mode'));
+    if (selector === 'app-group-pricing-mode') {
+      expect(groupPricingMode).toBeTruthy();
+    } else {
+      expect(groupPricingMode).toBeNull();
+    }
+
+    const attendingDaysPricingModeMode = fixture.debugElement.query(By.css('app-attending-days-pricing-mode'));
+    if (selector === 'app-attending-days-pricing-mode') {
+      expect(attendingDaysPricingModeMode).toBeTruthy();
+    } else {
+      expect(attendingDaysPricingModeMode).toBeNull();
+    }
   }
 });

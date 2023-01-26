@@ -123,68 +123,114 @@ describe('ConferenceFormComponent', () => {
         expect(mockConferenceService.createConference).toHaveBeenCalledOnceWith(conference);
       })
 
-      it("should not call conference service when name is not filled and should display error message", () => {
-        // given
-        fillFormInputs({
-          name: "",
-          price: 1000,
-          link: "archi hexa",
-          startDate: "2022-01-01",
-          endDate: "2022-01-03"
-        });
+      describe("should not call conference service and display error message when ", () => {
 
-        // when
-        component.createConference();
-        fixture.detectChanges();
+        it("name is not filled", () => {
+          // given
+          fillFormInputs({
+            name: "",
+            price: 1000,
+            link: "archi hexa",
+            startDate: "2022-01-01",
+            endDate: "2022-01-03"
+          });
 
-        // then
-        expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
-        expect(component.conferenceForm.controls.name.errors).not.toEqual(null);
-        const requiredNameErrorMessage = fixture.debugElement.query(By.css('#required-name-error-message'));
-        expect(requiredNameErrorMessage).toBeTruthy();
-      })
+          // when
+          component.createConference();
+          fixture.detectChanges();
 
-      it("should not call conference service when price is equal to 0 and should display error message", () => {
-        // given
-        fillFormInputs({
-          name: "devoxx",
-          price: 0,
-          link: "archi hexa",
-          startDate: "2022-01-01",
-          endDate: "2022-01-03"
-        });
+          // then
+          expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
+          expect(component.conferenceForm.controls.name.errors).not.toEqual(null);
+          const requiredNameErrorMessage = fixture.debugElement.query(By.css('#required-name-error-message'));
+          expect(requiredNameErrorMessage).toBeTruthy();
+        })
 
-        // when
-        component.createConference();
-        fixture.detectChanges();
+        it("price is equal to 0", () => {
+          // given
+          fillFormInputs({
+            name: "devoxx",
+            price: 0,
+            link: "archi hexa",
+            startDate: "2022-01-01",
+            endDate: "2022-01-03"
+          });
 
-        // then
-        expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
-        expect(component.conferenceForm.controls.price.errors).not.toEqual(null);
-        const requiredPriceErrorMessage = fixture.debugElement.query(By.css('#required-price-error-message'));
-        expect(requiredPriceErrorMessage).toBeTruthy();
-      })
+          // when
+          component.createConference();
+          fixture.detectChanges();
 
-      it("should not call conference service when link is not valid", () => {
-        // given
-        fillFormInputs({
-          name: "devoxx",
-          price: 1,
-          link: "archi hexa",
-          startDate: "2022-01-01",
-          endDate: "2022-01-03"
-        });
+          // then
+          expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
+          expect(component.conferenceForm.controls.price.errors).not.toEqual(null);
+          const requiredPriceErrorMessage = fixture.debugElement.query(By.css('#required-price-error-message'));
+          expect(requiredPriceErrorMessage).toBeTruthy();
+        })
 
-        // when
-        component.createConference();
-        fixture.detectChanges();
+        it("link is not valid", () => {
+          // given
+          fillFormInputs({
+            name: "devoxx",
+            price: 1,
+            link: "archi hexa",
+            startDate: "2022-01-01",
+            endDate: "2022-01-03"
+          });
 
-        // then
-        expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
-        expect(component.conferenceForm.controls.link.errors).not.toEqual(null);
-        const requiredPriceErrorMessage = fixture.debugElement.query(By.css('#required-link-error-message'));
-        expect(requiredPriceErrorMessage).toBeTruthy();
-      })
+          // when
+          component.createConference();
+          fixture.detectChanges();
+
+          // then
+          expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
+          expect(component.conferenceForm.controls.link.errors).not.toEqual(null);
+          const linkErrorMessage = fixture.debugElement.query(By.css('#required-link-error-message'));
+          expect(linkErrorMessage).toBeTruthy();
+        })
+
+        it("dates are empty", () => {
+          fillFormInputs({
+            name: "devoxx",
+            price: 1,
+            link: "archi hexa",
+            startDate: "",
+            endDate: ""
+          });
+
+          // when
+          component.createConference();
+          fixture.detectChanges();
+
+          // then
+          expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
+          expect(component.conferenceForm.controls.startDate.errors).not.toEqual(null);
+          expect(component.conferenceForm.controls.endDate.errors).not.toEqual(null);
+          const dateValuesErrorMessage = fixture.debugElement.query(By.css('#required-valid-dates-error-message'));
+          expect(dateValuesErrorMessage).toBeTruthy();
+        })
+
+        it("start date after end date", () => {
+          fillFormInputs({
+            name: "devoxx",
+            price: 1,
+            link: "archi hexa",
+            startDate: "2022-01-10",
+            endDate: "2022-01-03"
+          });
+
+          // when
+          component.createConference();
+          fixture.detectChanges();
+
+          // then
+          expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
+          expect(component.conferenceForm.errors).not.toEqual(null);
+          const requiredPriceErrorMessage = fixture.debugElement.query(By.css('#required-valid-dates-error-message'));
+          expect(requiredPriceErrorMessage).toBeTruthy();
+        })
+      });
+
+
     })
 
     function fillFormInputs(conference: any) {

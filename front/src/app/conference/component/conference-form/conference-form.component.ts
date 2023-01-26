@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ConferenceService } from '../../service/conference.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import { Conference } from '../../model/conference';
+import {Component, OnInit} from '@angular/core';
+import {ConferenceService} from '../../service/conference.service';
+import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {Conference} from '../../model/conference';
 
 @Component({
   selector: 'app-conference-form',
@@ -11,17 +11,26 @@ import { Conference } from '../../model/conference';
 export class ConferenceFormComponent implements OnInit {
 
   conferenceForm: FormGroup = new FormGroup({});
+  dateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const start = control.get('startDate');
+    const end = control.get('endDate');
+    return start?.value !== null && end?.value !== null && start?.value < end?.value
+      ? null : {dateValid: true};
+  }
 
-  constructor(private _conferenceService: ConferenceService, private _formBuilder: FormBuilder) { }
+
+  constructor(private _conferenceService: ConferenceService, private _formBuilder: FormBuilder) {
+  }
+
 
   ngOnInit(): void {
     this.conferenceForm = this._formBuilder.group({
       name: ['', Validators.required],
       link: ['', [Validators.required, Validators.pattern("^(http[s]?:\\/\\/){0,1}(www\\.){0,1}[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z]{2,5}[\\.]{0,1}\\/\\w+")]],
       price: ['', [Validators.required, Validators.min(1)]],
-      startDate: '',
-      endDate: ''
-    });
+      startDate: ['', [Validators.required, Validators.maxLength(10)]],
+      endDate: ['', [Validators.required]]
+    }, {validators: this.dateValidator});
   }
 
   createConference() {

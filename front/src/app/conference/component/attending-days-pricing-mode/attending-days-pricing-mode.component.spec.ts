@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AttendingDaysPricingModeComponent } from './attending-days-pricing-mode.component';
+import {By} from "@angular/platform-browser";
 
 describe('AttendingDaysPricingModeComponent', () => {
   let component: AttendingDaysPricingModeComponent;

@@ -56,6 +56,16 @@ describe('EarlyBirdPricingModeComponent', () => {
       // then
       expect(addPriceRangeButtonInput).toBeTruthy();
     });
+
+    it('when clicking on button should add price range form', () => {
+      // when
+      const addPriceRangeButtonInput = fixture.debugElement.query(By.css('#add-price-range-btn'));
+      addPriceRangeButtonInput.nativeElement.click();
+      fixture.detectChanges();
+
+      const priceRangeForms = fixture.debugElement.queryAll(By.css('.price-range-form'));
+      expect(priceRangeForms.length).toEqual(2)
+    });
   });
 
 

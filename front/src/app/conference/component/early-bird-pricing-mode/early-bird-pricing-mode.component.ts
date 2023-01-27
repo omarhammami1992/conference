@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-early-bird-pricing-mode',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EarlyBirdPricingModeComponent implements OnInit {
 
-  constructor() { }
+  formGroup: FormGroup = new FormGroup({});
+
+  constructor(private _formBuilder: FormBuilder) {
+  }
 
   ngOnInit(): void {
+    this.formGroup = this._formBuilder.group({ranges: this._formBuilder.array([])});
   }
 
 }

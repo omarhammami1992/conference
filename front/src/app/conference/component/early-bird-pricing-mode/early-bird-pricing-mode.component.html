@@ -3,4 +3,19 @@
   <input type="date" class="end-date"/>
   <input type="number" class="price"/>
 </div>
-<button id="add-price-range-btn"> Add price range</button>
+<button type="button" id="add-price-range-btn" (click)="addPriceRangeForm()"> Add price range</button>
+<div [formGroup]="formGroup">
+  <ng-container *ngFor="let priceRange of ranges.controls; let index = index">
+    <div class="price-range-form" [formGroupName]="index">
+<!--      <input type="date" class="start-date" [formControl]="priceRange['startDate']"/>-->
+<!--      <input type="date" class="end-date" [formControl]="priceRange['endDate']"/>-->
+<!--      <input type="number" class="price" [formControl]="priceRange['price']"/>-->
+
+
+      <input type="date" class="start-date"/>
+      <input type="date" class="end-date"/>
+      <input type="number" class="price"/>
+
+    </div>
+  </ng-container>
+</div>

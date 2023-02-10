@@ -17,6 +17,7 @@ export class EarlyBirdPricingModeComponent implements OnInit {
       ranges: this._formBuilder.array([])
     });
 
+    this.addPriceRangeForm();
   }
 
   get ranges() {
@@ -30,5 +31,9 @@ export class EarlyBirdPricingModeComponent implements OnInit {
       price: [''],
     });
     this.ranges.push(priceRangeForm);
+  }
+
+  deletePriceRangeForm(index: number) {
+    this.ranges.removeAt(index);
   }
 }

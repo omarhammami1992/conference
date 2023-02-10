@@ -1,22 +1,12 @@
-<div class="price-range-form">
-  <input type="date" class="start-date"/>
-  <input type="date" class="end-date"/>
-  <input type="number" class="price"/>
-</div>
 <button type="button" id="add-price-range-btn" (click)="addPriceRangeForm()"> Add price range</button>
 <div [formGroup]="formGroup">
   <div formArrayName="ranges" *ngFor="let priceRangeForm of ranges.controls; let index = index">
     <ng-container [formGroupName]="index">
       <div class="price-range-form" >
-
-  <!--      <input type="date" class="start-date" [formControl]="priceRange['startDate']"/>-->
-  <!--      <input type="date" class="end-date" [formControl]="priceRange['endDate']"/>-->
-  <!--      <input type="number" class="price" [formControl]="priceRange['price']"/>-->
-
-
-         <input type="date" class="start-date"/>
-         <input type="date" class="end-date"/>
-         <input type="number" class="price"/>
+        <input type="date" class="start-date"/>
+        <input type="date" class="end-date"/>
+        <input type="number" class="price"/>
+        <button *ngIf="index!== 0" type="button" [id]="'delete-btn-' + index" (click)="deletePriceRangeForm(index)">Delete</button>
       </div>
     </ng-container>
   </div>

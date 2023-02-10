@@ -9,31 +9,26 @@ import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
 export class EarlyBirdPricingModeComponent implements OnInit {
 
   formGroup: FormGroup = new FormGroup({});
-  //ranges: FormArray = new FormArray([]);
 
   constructor(private _formBuilder: FormBuilder) {
   }
-
-  get ranges() {
-    return this.formGroup.controls["ranges"] as FormArray;
-  }
-
   ngOnInit(): void {
-    // this.ranges = this._formBuilder.array([
-    // ])
     this.formGroup = this._formBuilder.group({
-      ranges: this._formBuilder.array([
-      ])
+      ranges: this._formBuilder.array([])
     });
 
   }
 
+  get ranges() {
+    return this.formGroup.controls['ranges'] as FormArray;
+  }
+
   addPriceRangeForm() {
-    const ranges = this.formGroup.controls.ranges as FormArray
-    ranges.push(this._formBuilder.group({
+    const priceRangeForm = this._formBuilder.group({
       startDate: [''],
       endDate: [''],
       price: [''],
-    }));
+    });
+    this.ranges.push(priceRangeForm);
   }
 }

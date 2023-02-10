@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EarlyBirdPricingModeComponent } from './early-bird-pricing-mode.component';
 import {By} from "@angular/platform-browser";
+import {ReactiveFormsModule} from "@angular/forms";
 
 describe('EarlyBirdPricingModeComponent', () => {
   let component: EarlyBirdPricingModeComponent;
@@ -9,7 +10,8 @@ describe('EarlyBirdPricingModeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EarlyBirdPricingModeComponent ]
+      declarations: [ EarlyBirdPricingModeComponent ],
+      imports: [ReactiveFormsModule]
     })
     .compileComponents();
   });

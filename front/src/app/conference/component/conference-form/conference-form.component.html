@@ -1,16 +1,21 @@
 <p>conference-form works!</p>
 <form [formGroup]="conferenceForm" (ngSubmit)="createConference()">
+  <label id="conference-name-label" for="conference-name">Nom de la conférence</label>
   <input id="conference-name" formControlName="name"/>
   <span id="required-name-error-message" *ngIf="conferenceForm.controls.name.touched && conferenceForm.controls.name.errors !== null">Required name</span>
   <br>
+  <label id="conference-link-label" for="conference-link">Lien de la conférence</label>
   <input id="conference-link" formControlName="link" />
   <span id="required-link-error-message" *ngIf="conferenceForm.controls.link.touched && conferenceForm.controls.link.errors !== null">Link is required and be should be valid</span>
   <br>
+  <label id="conference-price-label" for="conference-price">Prix de la conférence</label>
   <input id="conference-price" type="number" formControlName="price" />
   <span id="required-price-error-message" *ngIf="conferenceForm.controls.price.touched && conferenceForm.controls.price.errors !== null"> Price should be greater than 0 </span>
   <br>
 
+  <label id="conference-start-date-label" for="conference-start-date">Date de début de la conférence</label>
   <input type="date" id="conference-start-date" formControlName="startDate" />
+  <label id="conference-end-date-label" for="conference-end-date">Date de fin de la conférence</label>
   <input type="date" id="conference-end-date" formControlName="endDate" />
   <span id="required-valid-dates-error-message" *ngIf="conferenceForm.errors && conferenceForm.controls.startDate.touched && conferenceForm.controls.endDate.touched">Dates not valid</span>
 

@@ -36,12 +36,32 @@ describe('ConferenceFormComponent', () => {
 
   describe('template', () => {
 
+    it('should contain conference name label', () => {
+      // when
+      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-name-label'));
+
+      // then
+      expect(conferenceNameInput).toBeTruthy();
+      expect(conferenceNameInput.attributes['for']).toEqual('conference-name');
+      expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
+    });
+
     it('should contain conference name input', () => {
       // when
       const conferenceNameInput = fixture.debugElement.query(By.css('#conference-name'));
 
       // then
       expect(conferenceNameInput).toBeTruthy();
+    });
+
+    it('should contain conference link label', () => {
+      // when
+      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-link-label'));
+
+      // then
+      expect(conferenceNameInput).toBeTruthy();
+      expect(conferenceNameInput.attributes['for']).toEqual('conference-link');
+      expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
     });
 
     it('should contain conference link input', () => {
@@ -52,12 +72,32 @@ describe('ConferenceFormComponent', () => {
       expect(conferenceNameInput).toBeTruthy();
     });
 
+    it('should contain conference price label', () => {
+      // when
+      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-price-label'));
+
+      // then
+      expect(conferenceNameInput).toBeTruthy();
+      expect(conferenceNameInput.attributes['for']).toEqual('conference-price');
+      expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
+    });
+
     it('should contain conference price input', () => {
       // when
       const conferenceNameInput = fixture.debugElement.query(By.css('#conference-price'));
 
       // then
       expect(conferenceNameInput).toBeTruthy();
+    });
+
+    it('should contain conference start-date label', () => {
+      // when
+      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-start-date-label'));
+
+      // then
+      expect(conferenceNameInput).toBeTruthy();
+      expect(conferenceNameInput.attributes['for']).toEqual('conference-start-date');
+      expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
     });
 
     it('should contain conference start date input', () => {
@@ -68,6 +108,15 @@ describe('ConferenceFormComponent', () => {
       expect(conferenceNameInput).toBeTruthy();
     });
 
+    it('should contain conference end-date label', () => {
+      // when
+      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-end-date-label'));
+
+      // then
+      expect(conferenceNameInput).toBeTruthy();
+      expect(conferenceNameInput.attributes['for']).toEqual('conference-end-date');
+      expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
+    });
     it('should contain conference end date input', () => {
       // when
       const conferenceNameInput = fixture.debugElement.query(By.css('#conference-end-date'));

@@ -5,6 +5,7 @@ import {By} from "@angular/platform-browser";
 import {ConferenceService} from "../../service/conference.service";
 import {ReactiveFormsModule} from '@angular/forms';
 import SpyObj = jasmine.SpyObj;
+import {EarlyBirdPricingModeComponent} from "../early-bird-pricing-mode/early-bird-pricing-mode.component";
 
 
 describe('ConferenceFormComponent', () => {
@@ -15,7 +16,7 @@ describe('ConferenceFormComponent', () => {
   beforeEach(async () => {
     mockConferenceService = jasmine.createSpyObj(ConferenceService, ["createConference"]);
     await TestBed.configureTestingModule({
-      declarations: [ConferenceFormComponent],
+      declarations: [ConferenceFormComponent, EarlyBirdPricingModeComponent],
       providers: [
         {provide: ConferenceService, useValue: mockConferenceService}
       ],

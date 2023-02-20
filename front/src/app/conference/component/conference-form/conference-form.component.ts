@@ -44,7 +44,7 @@ export class ConferenceFormComponent implements OnInit {
   ngOnInit(): void {
     this.conferenceForm = this._formBuilder.group({
       name: ['', Validators.required],
-      link: ['', [Validators.required, Validators.pattern("^(http[s]?:\\/\\/){0,1}(www\\.){0,1}[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z]{2,5}[\\.]{0,1}(\\/\\w)*")]],
+      link: ['', [Validators.required, Validators.pattern("^(http[s]?:\\/\\/){0,1}(www\\.){0,1}[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z]{2,5}[\\.]{0,1}[\\w\\/]*")]],
       price: ['', [Validators.required, Validators.min(1)]],
       startDate: ['', [Validators.required,]],
       endDate: ['', [Validators.required]],

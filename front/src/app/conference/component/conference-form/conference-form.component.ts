@@ -29,6 +29,7 @@ export class ConferenceFormComponent implements OnInit {
     }
   ];
   conferenceForm: FormGroup = new FormGroup({});
+
   dateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const start = control.get('startDate');
     const end = control.get('endDate');
@@ -38,6 +39,7 @@ export class ConferenceFormComponent implements OnInit {
 
 
   constructor(private _conferenceService: ConferenceService, private _formBuilder: FormBuilder) {
+
   }
 
 
@@ -49,7 +51,14 @@ export class ConferenceFormComponent implements OnInit {
       startDate: ['', [Validators.required,]],
       endDate: ['', [Validators.required]],
       pricingMode:['', [Validators.required]],
+      earlyBirdForm: this._formBuilder.group({
+        ranges: this._formBuilder.array([])
+      })
     }, {validators: this.dateValidator});
+  }
+
+  get earlyBirdForm(): FormGroup {
+    return this.conferenceForm.controls.earlyBirdForm as FormGroup;
   }
 
   createConference() {
@@ -64,6 +73,7 @@ export class ConferenceFormComponent implements OnInit {
       startDate: new Date(this.conferenceForm.controls.startDate.value),
       endDate: new Date(this.conferenceForm.controls.endDate.value)
     }
+    console.log(this.conferenceForm.controls.earlyBirdForm.value);
 
     this._conferenceService.createConference(conference);
   }

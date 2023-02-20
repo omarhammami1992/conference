@@ -26,7 +26,7 @@
   </select>
 
   <div [ngSwitch]="conferenceForm.controls.pricingMode.value">
-    <app-early-bird-pricing-mode *ngSwitchCase="'earlyBird'"></app-early-bird-pricing-mode>
+    <app-early-bird-pricing-mode [formGroup]="earlyBirdForm" *ngSwitchCase="'earlyBird'"></app-early-bird-pricing-mode>
     <app-group-pricing-mode *ngSwitchCase="'group'"></app-group-pricing-mode>
     <app-attending-days-pricing-mode *ngSwitchCase="'attendingDays'"></app-attending-days-pricing-mode>
   </div>

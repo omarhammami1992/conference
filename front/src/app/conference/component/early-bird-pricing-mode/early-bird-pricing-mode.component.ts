@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
@@ -8,15 +8,11 @@ import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
 })
 export class EarlyBirdPricingModeComponent implements OnInit {
 
-  formGroup: FormGroup = new FormGroup({});
+  @Input() formGroup: FormGroup = new FormGroup({});
 
   constructor(private _formBuilder: FormBuilder) {
   }
   ngOnInit(): void {
-    this.formGroup = this._formBuilder.group({
-      ranges: this._formBuilder.array([])
-    });
-
     this.addPriceRangeForm();
   }
 

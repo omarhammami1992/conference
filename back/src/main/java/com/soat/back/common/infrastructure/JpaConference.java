@@ -1,12 +1,8 @@
 package com.soat.back.common.infrastructure;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.*;
-
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "conference")
@@ -36,7 +32,7 @@ public class JpaConference {
     @OneToOne(mappedBy = "conference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private JpaPriceGroup priceGroup;
 
-    public JpaConference(Integer id, String name, String link, Float price,  LocalDate startDate, LocalDate endDate) {
+    public JpaConference(Integer id, String name, String link, Float price, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.name = name;
         this.link = link;

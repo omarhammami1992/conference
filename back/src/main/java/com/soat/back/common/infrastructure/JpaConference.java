@@ -1,12 +1,14 @@
 package com.soat.back.common.infrastructure;
 
+import com.soat.back.conference.query.domain.Conference;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Table(name = "conference")
-public class JpaConference {
+public class JpaConference implements Conference {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -51,6 +53,14 @@ public class JpaConference {
 
     public JpaConference() {
 
+    }
+
+    public JpaConference(int i, String name, LocalDate startDate, LocalDate endDate, Float price) {
+        this.id = i;
+        this.name = name;
+        this.price = price;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Integer getId() {
@@ -103,5 +113,57 @@ public class JpaConference {
 
     public void setPriceAttendingDays(List<JpaPriceAttendingDay> priceAttendingDays) {
         this.priceAttendingDays = priceAttendingDays;
+    }
+
+    @Override
+    public Integer id() {
+        return id;
+    }
+
+    @Override
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public LocalDate startDate() {
+        return startDate;
+    }
+
+    @Override
+    public LocalDate endDate() {
+        return endDate;
+    }
+
+    @Override
+    public float fullPrice() {
+        return getPrice().floatValue();
+    }
+
+    @Override
+    public Boolean isOnline() {
+        return fullPrice() == 0;
+    }
+
+    @Override
+    public String city() {
+        return "Paris";
+    }
+
+    @Override
+    public String country() {
+        return "France";
+    }
+
+    @Override
+    public String toString() {
+        return "JpaConference{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", link='" + link + '\'' +
+                ", price=" + price +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
     }
 }

@@ -18,23 +18,16 @@ public class ConferenceAdapter implements ConferencePort {
 
     @Override
     public List<Conference> getAll() {
-
         return jpaConferenceRepository.findAll()
                 .stream()
-                .map(conf -> new ConferenceDto(conf.getId(),
-                        conf.getName(),
-                        conf.getStartDate(),
-                        conf.getEndDate(),
-                        conf.getPrice(),
-                        conf.getPrice() == 0,
-                        "Paris",
-                        "France"))
-                .map(conf -> (Conference) conf)
+                .map(Conference.class::cast)
                 .toList();
     }
 
     @Override
     public Optional<Conference> getById(Integer id) {
-        return Optional.empty();
+        return jpaConferenceRepository.findById(id)
+                .map(Conference.class::cast);
     }
+
 }

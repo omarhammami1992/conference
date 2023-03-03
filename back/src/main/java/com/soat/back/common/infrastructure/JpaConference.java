@@ -127,6 +127,11 @@ public class JpaConference implements Conference {
     }
 
     @Override
+    public String link() {
+        return link;
+    }
+
+    @Override
     public LocalDate startDate() {
         return startDate;
     }

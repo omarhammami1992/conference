@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/conference")
-public class ConferenceController {
+public class ConferenceCommandController {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     private final CreateConference createConference;
 
-    public ConferenceController(CreateConference createConference) {
+    public ConferenceCommandController(CreateConference createConference) {
         this.createConference = createConference;
     }
 

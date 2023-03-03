@@ -7,6 +7,7 @@ public interface Conference {
     Integer id();
 
     String name();
+    String link();
 
     LocalDate startDate();
 

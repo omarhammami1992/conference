@@ -210,6 +210,7 @@ public class ConferenceSteps extends AcceptanceTest {
 
     private JpaConference buildJpaConferences(Map<String, String> entry) {
         return new JpaConference(
+                Integer.parseInt(entry.get("id")),
                 entry.get("name"),
                 entry.get("link"),
                 Float.valueOf(entry.get("price")),
@@ -221,6 +222,7 @@ public class ConferenceSteps extends AcceptanceTest {
         return new com.soat.back.conference.query.application.ConferenceJson(
                 Integer.parseInt(entry.get("id")),
                 entry.get("name"),
+                entry.get("link"),
                 LocalDate.parse(entry.get("startDate"), DATE_TIME_FORMATTER),
                 LocalDate.parse(entry.get("endDate"), DATE_TIME_FORMATTER),
                 Float.valueOf(entry.get("fullPrice")),
@@ -258,14 +260,17 @@ public class ConferenceSteps extends AcceptanceTest {
         executeGet("/" + id);
     }
 
-    @Then("la conférence récupérée devrait contenir le nom {string}, le lien {string}, ayant le prix {float} et qui dure entre le {string} et le {string}")
-    public void laConférenceRécupéréeDevraitContenirLeNomLeLienAyantLePrixEtQuiDureEntreLeEtLe(String name, String link, float price, String startDate, String endDate) {
-        var expectedConference = new ConferenceJson(name, link, LocalDate.parse(startDate, DATE_TIME_FORMATTER), LocalDate.parse(endDate, DATE_TIME_FORMATTER),price,null,null,null);
+    @Then("la conférence récupérée devrait contenir l id {int}, le nom {string}, le lien {string}, ayant le prix {int} et qui dure entre le {string} et le {string} et qui aura lieu à {string} \\({string}) {string}")
+    public void laConférenceRécupéréeDevraitContenirLeNomLeLienAyantLePrixEtQuiDureEntreLeEtLe(int id, String name, String link, float price, String startDate, String endDate, String city, String country, String isOnLineValueAsString) {
+        final boolean isOnLine = !isOnLineValueAsString.equals("en présentielle");
+        var expectedConference = new com.soat.back.conference.query.application.ConferenceJson(id, name, link, LocalDate.parse(startDate, DATE_TIME_FORMATTER), LocalDate.parse(endDate, DATE_TIME_FORMATTER),price, isOnLine,city,country);
 
         var conference = response.then()
                 .extract()
-                .as(ConferenceJson.class);
+                .as(com.soat.back.conference.query.application.ConferenceJson.class);
 
-        assertThat(conference).usingRecursiveComparison().ignoringFields("priceGroup", "priceRanges", "attendingDays").isEqualTo(expectedConference);
+        assertThat(conference).usingRecursiveComparison()
+                .ignoringFields("priceGroup", "priceRanges", "attendingDays")
+                .isEqualTo(expectedConference);
     }
 }

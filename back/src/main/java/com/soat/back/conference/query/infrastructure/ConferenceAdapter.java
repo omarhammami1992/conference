@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+
 @Repository("ConferenceAdapterQuery")
 public class ConferenceAdapter implements ConferencePort {
     private final JpaConferenceRepository jpaConferenceRepository;
@@ -29,5 +30,4 @@ public class ConferenceAdapter implements ConferencePort {
         return jpaConferenceRepository.findById(id)
                 .map(Conference.class::cast);
     }
-
 }

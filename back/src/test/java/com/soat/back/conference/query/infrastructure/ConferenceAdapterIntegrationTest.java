@@ -28,14 +28,14 @@ class ConferenceAdapterIntegrationTest {
     @Test
     void should_return_all_conferences() {
         List<Conference> conferences = conferenceAdapter.getAll();
-        assertThat(conferences).usingRecursiveFieldByFieldElementComparatorIgnoringFields("link").containsExactly(new JpaConference(
+        assertThat(conferences).containsExactlyElementsOf(List.of(new JpaConference(
                 1,
                 "conference aaa",
-                //"link to aaa",
+                "link to aaa",
+                100f,
                 LocalDate.of(2023, 5, 15),
-                LocalDate.of(2023, 5, 19),
-                100f
-                ));
+                LocalDate.of(2023, 5, 19)
+        )));
     }
 
     @Test
@@ -52,10 +52,10 @@ class ConferenceAdapterIntegrationTest {
         assertThat(maybeConference).contains(new JpaConference(
                 1,
                 "conference aaa",
-                //"link to aaa",
+                "link to aaa",
+                100f,
                 LocalDate.of(2023, 5, 15),
-                LocalDate.of(2023, 5, 19),
-                100f
+                LocalDate.of(2023, 5, 19)
         ));
     }
 }

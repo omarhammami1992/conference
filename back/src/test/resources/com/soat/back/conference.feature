@@ -43,3 +43,11 @@ Feature: Gestion des conférences
       | id | name          | fullPrice | startDate  | endDate    | isOnline | city  | country |
       | 1  | Devoxx        | 300       | 01-09-2022 | 30-09-2022 | False    | Paris | France  |
       | 2  | DataOps Rocks | 0         | 01-12-2022 | 30-12-2022 | True     | Paris | France  |
+
+  Scenario: Récupérer Une conférence avec id
+    Given une liste de conférences enregistrées
+      | name          | link                               | price | startDate  | endDate    |
+      | Devoxx        | https://www.devoxx                 | 300   | 01-09-2022 | 30-09-2022 |
+      | DataOps Rocks | https://summit-2022.dataops.rocks/ | 0     | 01-12-2022 | 30-12-2022 |
+    When l'utilisateur consulte le détail de la conférence 1
+    Then la conférence récupérée devrait contenir le nom "Devoxx", le lien "https://www.devoxx", ayant le prix 300 et qui dure entre le "01-09-2022" et le "30-09-2022"

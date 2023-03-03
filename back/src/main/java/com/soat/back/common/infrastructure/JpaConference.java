@@ -5,6 +5,7 @@ import com.soat.back.conference.query.domain.Conference;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "conference")
@@ -165,5 +166,18 @@ public class JpaConference implements Conference {
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JpaConference that = (JpaConference) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(link, that.link) && Objects.equals(price, that.price) && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, link, price, startDate, endDate);
     }
 }

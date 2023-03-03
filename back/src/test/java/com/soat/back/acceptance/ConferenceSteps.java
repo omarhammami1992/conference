@@ -12,6 +12,7 @@ import io.restassured.RestAssured;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -249,5 +251,21 @@ public class ConferenceSteps extends AcceptanceTest {
         assertThat(Arrays.stream(conferences).toList())
                 .containsExactlyInAnyOrder(expectedConferences.toArray(com.soat.back.conference.query.application.ConferenceJson[]::new));
 
+    }
+
+    @When("l'utilisateur consulte le détail de la conférence {int}")
+    public void lUtilisateurConsulteLeDétailDeLaConférence(int id) {
+        executeGet("/" + id);
+    }
+
+    @Then("la conférence récupérée devrait contenir le nom {string}, le lien {string}, ayant le prix {float} et qui dure entre le {string} et le {string}")
+    public void laConférenceRécupéréeDevraitContenirLeNomLeLienAyantLePrixEtQuiDureEntreLeEtLe(String name, String link, float price, String startDate, String endDate) {
+        var expectedConference = new ConferenceJson(name, link, LocalDate.parse(startDate, DATE_TIME_FORMATTER), LocalDate.parse(endDate, DATE_TIME_FORMATTER),price,null,null,null);
+
+        var conference = response.then()
+                .extract()
+                .as(ConferenceJson.class);
+
+        assertThat(conference).usingRecursiveComparison().ignoringFields("priceGroup", "priceRanges", "attendingDays").isEqualTo(expectedConference);
     }
 }

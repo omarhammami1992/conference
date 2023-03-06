@@ -12,7 +12,6 @@ import io.restassured.RestAssured;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.soat.back.common.infrastructure.JpaConference;
 import com.soat.back.common.infrastructure.JpaConferenceRepository;
 import com.soat.back.common.infrastructure.JpaPriceAttendingDay;
@@ -59,6 +57,8 @@ public class ConferenceSteps extends AcceptanceTest {
     private LocalDate endDate;
     private float price;
     private PriceGroupJson priceGroupJson;
+    private String city;
+    private String country;
 
     @Before
     public void before() {
@@ -77,8 +77,8 @@ public class ConferenceSteps extends AcceptanceTest {
     }
 
     @When("l utilisateur tente de l enregistrer")
-    public void lUtilisateurTenteDeLEnregistrer() throws JsonProcessingException {
-        conferenceJson = new ConferenceJson(name, link, startDate, endDate, price, priceRangeJsons, priceGroupJson, priceAttendingDaysJsons);
+    public void lUtilisateurTenteDeLEnregistrer() {
+        conferenceJson = new ConferenceJson(name, link, startDate, endDate, price, priceRangeJsons, priceGroupJson, priceAttendingDaysJsons, city, country);
         executePost("", conferenceJson);
     }
 
@@ -99,7 +99,9 @@ public class ConferenceSteps extends AcceptanceTest {
                 conferenceJson.link(),
                 defaultPrice,
                 conferenceJson.startDate(),
-                conferenceJson.endDate()
+                conferenceJson.endDate(),
+                conferenceJson.city(),
+                conferenceJson.country()
         );
 
         assertThat(jpaConference).usingRecursiveComparison()
@@ -158,8 +160,10 @@ public class ConferenceSteps extends AcceptanceTest {
                 conferenceJson.link(),
                 price,
                 conferenceJson.startDate(),
-                conferenceJson.endDate()
-        );
+                conferenceJson.endDate(),
+                conferenceJson.city(),
+                conferenceJson.country()
+                );
 
         assertThat(jpaConference).isNotNull()
                 .usingRecursiveComparison()
@@ -190,8 +194,10 @@ public class ConferenceSteps extends AcceptanceTest {
                 conferenceJson.link(),
                 price,
                 conferenceJson.startDate(),
-                conferenceJson.endDate()
-        );
+                conferenceJson.endDate(),
+                conferenceJson.city(),
+                conferenceJson.country()
+                );
 
         assertThat(jpaConference).usingRecursiveComparison()
                 .ignoringFields("priceRanges", "priceGroup", "priceAttendingDays")
@@ -216,7 +222,9 @@ public class ConferenceSteps extends AcceptanceTest {
                 entry.get("link"),
                 Float.valueOf(entry.get("price")),
                 LocalDate.parse(entry.get("startDate"), DATE_TIME_FORMATTER),
-                LocalDate.parse(entry.get("endDate"), DATE_TIME_FORMATTER));
+                LocalDate.parse(entry.get("endDate"), DATE_TIME_FORMATTER),
+                null,
+                null);
     }
 
     private com.soat.back.conference.query.application.ConferenceJson buildConferencesDto(Map<String, String> entry) {
@@ -264,7 +272,7 @@ public class ConferenceSteps extends AcceptanceTest {
     @Then("la conférence récupérée devrait contenir l id {int}, le nom {string}, le lien {string}, ayant le prix {int} et qui dure entre le {string} et le {string} et qui aura lieu à {string} \\({string}) {string}")
     public void laConférenceRécupéréeDevraitContenirLeNomLeLienAyantLePrixEtQuiDureEntreLeEtLe(int id, String name, String link, float price, String startDate, String endDate, String city, String country, String isOnLineValueAsString) {
         final boolean isOnLine = !isOnLineValueAsString.equals("en présentielle");
-        var expectedConference = new com.soat.back.conference.query.application.ConferenceJson(id, name, link, LocalDate.parse(startDate, DATE_TIME_FORMATTER), LocalDate.parse(endDate, DATE_TIME_FORMATTER),price, isOnLine,city,country);
+        var expectedConference = new com.soat.back.conference.query.application.ConferenceJson(id, name, link, LocalDate.parse(startDate, DATE_TIME_FORMATTER), LocalDate.parse(endDate, DATE_TIME_FORMATTER), price, isOnLine, city, country);
 
         var conference = response.then()
                 .extract()
@@ -278,5 +286,15 @@ public class ConferenceSteps extends AcceptanceTest {
     @Then("la conférence n'existe pas")
     public void laConférenceNExistePas() {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Given("une conférence ayant le nom {string}, le lien {string} et qui dure entre le {string} et le {string} et qui aura lieu à {string} en {string}")
+    public void uneConférenceAyantLeNomLeLienEtQuiDureEntreLeEtLeEtQuiAuraLieuÀEn(String name, String link, String startDate, String endDate, String city, String country) {
+        this.name = name;
+        this.link = link;
+        this.startDate = LocalDate.parse(startDate, DATE_TIME_FORMATTER);
+        this.endDate = LocalDate.parse(endDate, DATE_TIME_FORMATTER);
+        this.city = city;
+        this.country = country;
     }
 }

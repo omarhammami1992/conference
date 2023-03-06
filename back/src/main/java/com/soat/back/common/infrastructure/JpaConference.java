@@ -35,7 +35,7 @@ public class JpaConference implements Conference {
     @OneToOne(mappedBy = "conference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private JpaPriceGroup priceGroup;
 
-    public JpaConference(Integer id, String name, String link, Float price, LocalDate startDate, LocalDate endDate) {
+    public JpaConference(Integer id, String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country) {
         this.id = id;
         this.name = name;
         this.link = link;

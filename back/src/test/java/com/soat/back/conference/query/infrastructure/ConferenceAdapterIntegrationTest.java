@@ -34,8 +34,10 @@ class ConferenceAdapterIntegrationTest {
                 "link to aaa",
                 100f,
                 LocalDate.of(2023, 5, 15),
-                LocalDate.of(2023, 5, 19)
-        )));
+                LocalDate.of(2023, 5, 19),
+                "Paris",
+                "France"
+                )));
     }
 
     @Test
@@ -55,7 +57,8 @@ class ConferenceAdapterIntegrationTest {
                 "link to aaa",
                 100f,
                 LocalDate.of(2023, 5, 15),
-                LocalDate.of(2023, 5, 19)
-        ));
+                LocalDate.of(2023, 5, 19),
+                "Paris",
+                "France"));
     }
 }

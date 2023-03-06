@@ -1,12 +1,13 @@
 Feature: Gestion des conférences
 
   Scenario: Création d'une conférence avec un système de tarification early bird
-    Given une conférence ayant le nom "Devoxx", le lien "https://www.devoxx" et qui dure entre le "01-12-2022" et le "03-12-2022"
+    Given une conférence ayant le nom "Devoxx", le lien "https://www.devoxx" et qui dure entre le "01-12-2022" et le "03-12-2022" et qui aura lieu à "Paris" en "France"
     And qu'elle a un système de tarification early bird à 150 € avant le "31-08-2022"
     And qu'elle a un système de tarification early bird à 200 € entre le "01-09-2022" et le "30-09-2022"
     And qu'elle a un système de tarification early bird à 250 € entre le "01-10-2022" et le "31-10-2022"
     And qu'elle a une tarification pleine à 300 €
     When l utilisateur tente de l enregistrer
+    # TODO : normalement ça ne devrait pas passer
     Then la conférence est enregistée avec le prix 300 € et  les intervalles de réduction early bird
       | price | startDate  | endDate    |
       | 150   | null       | 31-08-2022 |

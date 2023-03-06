@@ -36,20 +36,20 @@ public class ConferenceQueryController {
 
     @GetMapping("{id}")
     public ResponseEntity<ConferenceJson> getById(@PathVariable("id") Integer id){
-        final Conference conference = getConferenceById.execute(id);
-        final ConferenceJson conferenceJson = toConferenceJson(conference);
-        return new ResponseEntity<>(conferenceJson, HttpStatus.OK);
+        final var conference = getConferenceById.execute(id);
+        return conference.map(c -> new ResponseEntity<>(toConferenceJson(c), HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     private ConferenceJson toConferenceJson(Conference conference) {
-        return new ConferenceJson(conference.id(),
-                conference.name(),
-                conference.link(),
-                conference.startDate(),
-                conference.endDate(),
-                conference.fullPrice(),
-                conference.isOnline(),
-                conference.city(),
-                conference.country());
+        return new ConferenceJson(conference.getId(),
+                conference.getName(),
+                conference.getLink(),
+                conference.getStartDate(),
+                conference.getEndDate(),
+                conference.getPrice(),
+                conference.getIsOnline(),
+                conference.getCity(),
+                conference.getCountry());
     }
 }

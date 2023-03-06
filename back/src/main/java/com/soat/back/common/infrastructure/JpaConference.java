@@ -53,15 +53,6 @@ public class JpaConference implements Conference {
     }
 
     public JpaConference() {
-
-    }
-
-    public JpaConference(int i, String name, LocalDate startDate, LocalDate endDate, Float price) {
-        this.id = i;
-        this.name = name;
-        this.price = price;
-        this.startDate = startDate;
-        this.endDate = endDate;
     }
 
     public Integer getId() {
@@ -80,16 +71,31 @@ public class JpaConference implements Conference {
         return price;
     }
 
-    public JpaPriceGroup getPriceGroup() {
-        return priceGroup;
-    }
-
     public LocalDate getStartDate() {
         return startDate;
     }
 
     public LocalDate getEndDate() {
         return endDate;
+    }
+
+    @Override
+    public Boolean getIsOnline() {
+        return price.equals(0f);
+    }
+
+    @Override
+    public String getCity() {
+        return "Paris";
+    }
+
+    @Override
+    public String getCountry() {
+        return "France";
+    }
+
+    public JpaPriceGroup getPriceGroup() {
+        return priceGroup;
     }
 
     public List<JpaPriceRange> getPriceRanges() {
@@ -114,51 +120,6 @@ public class JpaConference implements Conference {
 
     public void setPriceAttendingDays(List<JpaPriceAttendingDay> priceAttendingDays) {
         this.priceAttendingDays = priceAttendingDays;
-    }
-
-    @Override
-    public Integer id() {
-        return id;
-    }
-
-    @Override
-    public String name() {
-        return name;
-    }
-
-    @Override
-    public String link() {
-        return link;
-    }
-
-    @Override
-    public LocalDate startDate() {
-        return startDate;
-    }
-
-    @Override
-    public LocalDate endDate() {
-        return endDate;
-    }
-
-    @Override
-    public float fullPrice() {
-        return getPrice().floatValue();
-    }
-
-    @Override
-    public Boolean isOnline() {
-        return fullPrice() == 0;
-    }
-
-    @Override
-    public String city() {
-        return "Paris";
-    }
-
-    @Override
-    public String country() {
-        return "France";
     }
 
     @Override

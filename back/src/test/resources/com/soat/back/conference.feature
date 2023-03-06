@@ -35,9 +35,9 @@ Feature: Gestion des conférences
 
   Scenario: Récupérer la liste de toutes les conférences
     Given une liste de conférences enregistrées
-      | name          | link                               | price | startDate  | endDate    |
-      | Devoxx        | https://www.devoxx                 | 300   | 01-09-2022 | 30-09-2022 |
-      | DataOps Rocks | https://summit-2022.dataops.rocks/ | 0     | 01-12-2022 | 30-12-2022 |
+      | id | name          | link                               | price | startDate  | endDate    |
+      | 1  | Devoxx        | https://www.devoxx                 | 300   | 01-09-2022 | 30-09-2022 |
+      | 2  | DataOps Rocks | https://summit-2022.dataops.rocks/ | 0     | 01-12-2022 | 30-12-2022 |
     When l'utilisateur consulte la liste de conferences
     Then les conférences à venir s'affichent
       | id | name          | link                               | fullPrice | startDate  | endDate    | isOnline | city  | country |

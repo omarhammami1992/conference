@@ -4,20 +4,13 @@ import java.time.LocalDate;
 
 public interface Conference {
 
-    Integer id();
-
-    String name();
-    String link();
-
-    LocalDate startDate();
-
-    LocalDate endDate();
-
-    float fullPrice();
-
-    Boolean isOnline();
-
-    String city();
-
-    String country();
+    Integer getId();
+    String getName();
+    String getLink();
+    LocalDate getStartDate();
+    LocalDate getEndDate();
+    Float getPrice();
+    Boolean getIsOnline();
+    String getCity();
+    String getCountry();
 }

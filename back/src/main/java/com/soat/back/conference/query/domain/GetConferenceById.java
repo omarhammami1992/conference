@@ -3,6 +3,8 @@ package com.soat.back.conference.query.domain;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class GetConferenceById {
 
@@ -12,8 +14,7 @@ public class GetConferenceById {
         this.conferencePort = conferencePort;
     }
 
-    public Conference execute(Integer id) {
-        // TODO gèrer l'optional
-        return conferencePort.getById(id).get();
+    public Optional<Conference> execute(Integer id) {
+        return conferencePort.getById(id);
     }
 }

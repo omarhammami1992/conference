@@ -24,6 +24,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -272,5 +273,10 @@ public class ConferenceSteps extends AcceptanceTest {
         assertThat(conference).usingRecursiveComparison()
                 .ignoringFields("priceGroup", "priceRanges", "attendingDays")
                 .isEqualTo(expectedConference);
+    }
+
+    @Then("la conférence n'existe pas")
+    public void laConférenceNExistePas() {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 }

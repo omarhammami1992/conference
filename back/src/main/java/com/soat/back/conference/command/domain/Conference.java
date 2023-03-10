@@ -18,16 +18,20 @@ public final class Conference {
     private final LocalDate endDate;
 
     private final List<PriceRange> priceRanges;
+    private String city;
+    private String country;
     private final PriceGroup priceGroup;
     private final List<PriceAttendingDay> priceAttendingDays;
 
-    private Conference(String name, String link, Float price, List<PriceRange> priceRanges, LocalDate startDate, LocalDate endDate) {
+    private Conference(String name, String link, Float price, List<PriceRange> priceRanges, LocalDate startDate, LocalDate endDate, String city, String country) {
         this.name = name;
         this.link = link;
         this.price = price;
         this.startDate = startDate;
         this.endDate = endDate;
         this.priceRanges = priceRanges;
+        this.city = city;
+        this.country = country;
         this.priceGroup = null;
         this.priceAttendingDays = emptyList();
     }
@@ -54,9 +58,9 @@ public final class Conference {
         this.priceAttendingDays = priceAttendingDays;
     }
 
-    public static Conference createWithPriceRanges(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceRange> priceRanges) throws InvalidIntervalException, InvalidPricesException {
+    public static Conference createWithPriceRanges(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceRange> priceRanges, String city, String country) throws InvalidIntervalException, InvalidPricesException {
         checkIntervals(priceRanges, price);
-        return new Conference(name, link, price, priceRanges, startDate, endDate);
+        return new Conference(name, link, price, priceRanges, startDate, endDate, city, country);
     }
 
     public static Conference createPriceGroup(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup) throws InvalidPricesException, InvalidThresholdException {
@@ -143,11 +147,11 @@ public final class Conference {
         }
     }
 
-    public String name() {
+    public String getName() {
         return name;
     }
 
-    public String link() {
+    public String getLink() {
         return link;
     }
 
@@ -155,15 +159,15 @@ public final class Conference {
         return price;
     }
 
-    public LocalDate startDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public LocalDate endDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public List<PriceRange> priceRanges() {
+    public List<PriceRange> getPriceRanges() {
         return priceRanges;
     }
 
@@ -173,6 +177,14 @@ public final class Conference {
 
     public List<PriceAttendingDay> getPriceAttendingDays() {
         return priceAttendingDays;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getCountry() {
+        return country;
     }
 
     @Override

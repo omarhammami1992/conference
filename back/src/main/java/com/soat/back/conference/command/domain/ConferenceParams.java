@@ -10,6 +10,6 @@ public record ConferenceParams(String name,
                                Float price,
                                List<PriceRangeParams> priceRanges,
                                PriceGroupParams priceGroupParams,
-                               List<PriceAttendingDaysParams> priceAttendingDaysParams
-) {
+                               List<PriceAttendingDaysParams> priceAttendingDaysParams,
+                               String city, String country) {
 }

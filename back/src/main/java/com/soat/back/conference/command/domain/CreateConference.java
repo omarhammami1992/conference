@@ -17,41 +17,40 @@ public class CreateConference {
         final List<PriceAttendingDay> priceAttendingDays = buildPriceAttendingDays(conferenceParams);
 
         Conference conference;
-        if (checkMinimumPriceGreaterThanZero(priceRanges))
-        {
+        if (checkMinimumPriceGreaterThanZero(priceRanges)) {
             throw new InvalidPricesException("Price range greater than zero");
         }
 
-        if (checkUniquenessPriceInPriceRange(priceRanges))
-        {
+        if (checkUniquenessPriceInPriceRange(priceRanges)) {
             throw new InvalidPricesException("Non unique price range");
         }
 
         if (hasPriceGroups(priceRanges, priceAttendingDays)) {
             conference = Conference.createPriceGroup(
-                  conferenceParams.name(),
-                  conferenceParams.link(),
-                  conferenceParams.price(),
-                  conferenceParams.startDate(),
-                  conferenceParams.endDate(),
-                  priceGroup);
+                    conferenceParams.name(),
+                    conferenceParams.link(),
+                    conferenceParams.price(),
+                    conferenceParams.startDate(),
+                    conferenceParams.endDate(),
+                    priceGroup);
         } else if (priceAttendingDays.isEmpty()) {
             conference = Conference.createWithPriceRanges(
-                  conferenceParams.name(),
-                  conferenceParams.link(),
-                  conferenceParams.price(),
-                  conferenceParams.startDate(),
-                  conferenceParams.endDate(),
-                  priceRanges);
-        }
-        else {
+                    conferenceParams.name(),
+                    conferenceParams.link(),
+                    conferenceParams.price(),
+                    conferenceParams.startDate(),
+                    conferenceParams.endDate(),
+                    priceRanges,
+                    conferenceParams.city(),
+                    conferenceParams.country());
+        } else {
             conference = Conference.createWithPriceAttendingDays(
-                  conferenceParams.name(),
-                  conferenceParams.link(),
-                  conferenceParams.price(),
-                  conferenceParams.startDate(),
-                  conferenceParams.endDate(),
-                  priceAttendingDays
+                    conferenceParams.name(),
+                    conferenceParams.link(),
+                    conferenceParams.price(),
+                    conferenceParams.startDate(),
+                    conferenceParams.endDate(),
+                    priceAttendingDays
             );
         }
 
@@ -78,8 +77,8 @@ public class CreateConference {
 
     private List<PriceAttendingDay> buildPriceAttendingDays(ConferenceParams conferenceParams) {
         return conferenceParams.priceAttendingDaysParams().stream()
-              .map(priceAttendingDay -> new PriceAttendingDay(priceAttendingDay.price(), priceAttendingDay.attendingDays()))
-              .toList();
+                .map(priceAttendingDay -> new PriceAttendingDay(priceAttendingDay.price(), priceAttendingDay.attendingDays()))
+                .toList();
     }
 
     private static PriceGroup buildPriceGroup(PriceGroupParams priceGroupParams) {
@@ -92,7 +91,7 @@ public class CreateConference {
 
     private static List<PriceRange> buildPriceRanges(ConferenceParams conferenceParams) {
         return conferenceParams.priceRanges().stream()
-              .map(priceRange -> new PriceRange(priceRange.price(), new DateInterval(priceRange.startDate(), priceRange.endDate())))
+                .map(priceRange -> new PriceRange(priceRange.price(), new DateInterval(priceRange.startDate(), priceRange.endDate())))
                 .toList();
     }
 

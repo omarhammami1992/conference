@@ -11,57 +11,58 @@ import java.util.List;
 
 @Repository
 public class ConferenceJpaAdapter implements ConferencePort {
-   private final JpaConferenceRepository jpaConferenceRepository;
+    private final JpaConferenceRepository jpaConferenceRepository;
 
-   public ConferenceJpaAdapter(JpaConferenceRepository jpaConferenceRepository) {
-      this.jpaConferenceRepository = jpaConferenceRepository;
-   }
+    public ConferenceJpaAdapter(JpaConferenceRepository jpaConferenceRepository) {
+        this.jpaConferenceRepository = jpaConferenceRepository;
+    }
 
-   @Override
-   public Integer save(Conference conferenceToSave) {
-      JpaConference jpaConference = toJpaConference(conferenceToSave);
-      JpaConference conference = jpaConferenceRepository.save(jpaConference);
-      return conference.getId();
-   }
+    @Override
+    public Integer save(Conference conferenceToSave) {
+        JpaConference jpaConference = toJpaConference(conferenceToSave);
+        JpaConference conference = jpaConferenceRepository.save(jpaConference);
+        return conference.getId();
+    }
 
-   //TODO: move to specific utility class add UTs
-   private JpaConference toJpaConference(Conference conference) {
-      JpaConference jpaConference = new JpaConference(
-            conference.name(),
-            conference.link(),
-            conference.getPrice(),
-            conference.startDate(),
-            conference.endDate()
-      );
-      List<JpaPriceRange> jpaPriceRanges = conference.priceRanges()
-            .stream()
-            .map(priceRange -> toJpaPriceRange(jpaConference, priceRange))
-            .toList();
-      jpaConference.setPriceRanges(jpaPriceRanges);
+    //TODO: move to specific utility class add UTs
+    private JpaConference toJpaConference(Conference conference) {
+        JpaConference jpaConference = new JpaConference(
+                conference.getName(),
+                conference.getLink(),
+                conference.getPrice(),
+                conference.getStartDate(),
+                conference.getEndDate(),
+                conference.getCity(),
+                conference.getCountry());
+        List<JpaPriceRange> jpaPriceRanges = conference.getPriceRanges()
+                .stream()
+                .map(priceRange -> toJpaPriceRange(jpaConference, priceRange))
+                .toList();
+        jpaConference.setPriceRanges(jpaPriceRanges);
 
-      if (conference.getPriceGroup() != null) {
-         final var jpaPriceGroup = new JpaPriceGroup(conference.getPriceGroup().price(), conference.getPriceGroup().threshold(), jpaConference);
-         jpaConference.setPriceGroup(jpaPriceGroup);
-      }
+        if (conference.getPriceGroup() != null) {
+            final var jpaPriceGroup = new JpaPriceGroup(conference.getPriceGroup().price(), conference.getPriceGroup().threshold(), jpaConference);
+            jpaConference.setPriceGroup(jpaPriceGroup);
+        }
 
-      List<JpaPriceAttendingDay> jpaPriceAttendingDays = conference.getPriceAttendingDays()
-            .stream()
-            .map(priceAttendingDay -> toJpaPriceAttendingDay(priceAttendingDay, jpaConference))
-            .toList();
-      jpaConference.setPriceAttendingDays(jpaPriceAttendingDays);
+        List<JpaPriceAttendingDay> jpaPriceAttendingDays = conference.getPriceAttendingDays()
+                .stream()
+                .map(priceAttendingDay -> toJpaPriceAttendingDay(priceAttendingDay, jpaConference))
+                .toList();
+        jpaConference.setPriceAttendingDays(jpaPriceAttendingDays);
 
-      return jpaConference;
-   }
+        return jpaConference;
+    }
 
-   private JpaPriceAttendingDay toJpaPriceAttendingDay(PriceAttendingDay priceAttendingDay, JpaConference conference) {
-      return new JpaPriceAttendingDay(priceAttendingDay.price(), priceAttendingDay.attendingDay(), conference);
-   }
+    private JpaPriceAttendingDay toJpaPriceAttendingDay(PriceAttendingDay priceAttendingDay, JpaConference conference) {
+        return new JpaPriceAttendingDay(priceAttendingDay.price(), priceAttendingDay.attendingDay(), conference);
+    }
 
-   private JpaPriceRange toJpaPriceRange(JpaConference jpaConference, PriceRange priceRange) {
-      return new JpaPriceRange(
-            priceRange.price(),
-            priceRange.dateInterval().startDate(),
-            priceRange.dateInterval().endDate(), jpaConference
-      );
-   }
+    private JpaPriceRange toJpaPriceRange(JpaConference jpaConference, PriceRange priceRange) {
+        return new JpaPriceRange(
+                priceRange.price(),
+                priceRange.dateInterval().startDate(),
+                priceRange.dateInterval().endDate(), jpaConference
+        );
+    }
 }

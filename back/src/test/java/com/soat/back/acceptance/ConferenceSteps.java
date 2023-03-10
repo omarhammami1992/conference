@@ -163,7 +163,7 @@ public class ConferenceSteps extends AcceptanceTest {
                 conferenceJson.endDate(),
                 conferenceJson.city(),
                 conferenceJson.country()
-                );
+        );
 
         assertThat(jpaConference).isNotNull()
                 .usingRecursiveComparison()
@@ -197,7 +197,7 @@ public class ConferenceSteps extends AcceptanceTest {
                 conferenceJson.endDate(),
                 conferenceJson.city(),
                 conferenceJson.country()
-                );
+        );
 
         assertThat(jpaConference).usingRecursiveComparison()
                 .ignoringFields("priceRanges", "priceGroup", "priceAttendingDays")

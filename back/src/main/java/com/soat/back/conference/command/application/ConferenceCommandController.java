@@ -40,25 +40,27 @@ public class ConferenceCommandController {
                 .toList();
         var priceGroupParams = toPriceGroupParams(conferenceJson);
         List<PriceAttendingDaysParams> priceAttendingDaysParams = conferenceJson.attendingDays().stream()
-              .map(this::toPriceAttendingDaysParams)
-              .toList();
+                .map(this::toPriceAttendingDaysParams)
+                .toList();
 
         return new ConferenceParams(
-              conferenceJson.name(),
-              conferenceJson.link(),
-              conferenceJson.startDate(),
-              conferenceJson.endDate(),
-              conferenceJson.price(),
-              priceRangeParams,
-              priceGroupParams,
-              priceAttendingDaysParams
+                conferenceJson.name(),
+                conferenceJson.link(),
+                conferenceJson.startDate(),
+                conferenceJson.endDate(),
+                conferenceJson.price(),
+                priceRangeParams,
+                priceGroupParams,
+                priceAttendingDaysParams,
+                conferenceJson.city(),
+                conferenceJson.country()
         );
     }
 
     private static PriceGroupParams toPriceGroupParams(ConferenceJson conferenceJson) {
         PriceGroupParams priceGroupParams = null;
         if (conferenceJson.priceGroup() != null) {
-            priceGroupParams = new PriceGroupParams(conferenceJson.priceGroup().price(), conferenceJson.priceGroup().participantsThreshold() );
+            priceGroupParams = new PriceGroupParams(conferenceJson.priceGroup().price(), conferenceJson.priceGroup().participantsThreshold());
         }
         return priceGroupParams;
     }
@@ -73,14 +75,14 @@ public class ConferenceCommandController {
 
     private PriceAttendingDaysParams toPriceAttendingDaysParams(PriceAttendingDaysJson priceAttendingDaysJson) {
         return new PriceAttendingDaysParams(
-              priceAttendingDaysJson.price(),
-              priceAttendingDaysJson.attendingDays()
+                priceAttendingDaysJson.price(),
+                priceAttendingDaysJson.attendingDays()
         );
     }
 
     private LocalDate toLocalDate(String dateValue) {
         return ofNullable(dateValue)
-              .map(startDate -> LocalDate.parse(startDate, DATE_TIME_FORMATTER))
-              .orElse(null);
+                .map(startDate -> LocalDate.parse(startDate, DATE_TIME_FORMATTER))
+                .orElse(null);
     }
 }

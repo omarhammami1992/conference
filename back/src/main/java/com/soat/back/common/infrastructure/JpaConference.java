@@ -25,6 +25,10 @@ public class JpaConference implements Conference {
 
     @Column
     private LocalDate endDate;
+    @Column
+    private String city;
+    @Column
+    private String country;
 
     @OneToMany(mappedBy = "conference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<JpaPriceRange> priceRanges;
@@ -42,14 +46,18 @@ public class JpaConference implements Conference {
         this.price = price;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.city = city;
+        this.country = country;
     }
 
-    public JpaConference(String name, String link, Float price, LocalDate startDate, LocalDate endDate) {
+    public JpaConference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country) {
         this.name = name;
         this.link = link;
         this.price = price;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.city = city;
+        this.country = country;
     }
 
     public JpaConference() {
@@ -86,12 +94,12 @@ public class JpaConference implements Conference {
 
     @Override
     public String getCity() {
-        return "Paris";
+        return city;
     }
 
     @Override
     public String getCountry() {
-        return "France";
+        return country;
     }
 
     public JpaPriceGroup getPriceGroup() {

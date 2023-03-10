@@ -37,7 +37,7 @@ class ConferenceAdapterIntegrationTest {
                 LocalDate.of(2023, 5, 19),
                 "Paris",
                 "France"
-                )));
+        )));
     }
 
     @Test
@@ -59,6 +59,7 @@ class ConferenceAdapterIntegrationTest {
                 LocalDate.of(2023, 5, 15),
                 LocalDate.of(2023, 5, 19),
                 "Paris",
-                "France"));
+                "France"
+        ));
     }
 }

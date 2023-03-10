@@ -14,7 +14,7 @@ Feature: Gestion des conférences
       | 250   | 01-10-2022 | 31-10-2022 |
 
   Scenario: Création d'une conférence avec un système tarification par groupe
-    Given une conférence ayant le nom "Devoxx", le lien "https://www.devoxx" et qui dure entre le "01-12-2022" et le "03-12-2022"
+    Given une conférence ayant le nom "Devoxx", le lien "https://www.devoxx" et qui dure entre le "01-12-2022" et le "03-12-2022" et qui aura lieu à "Paris" en "France"
     And qu'elle a un système de tarification de groupe à 150 € par personne lorsqu on réserve à partir de 10 billets
     And qu'elle a une tarification pleine à 300 €
     When l utilisateur tente de l enregistrer

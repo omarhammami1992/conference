@@ -32,7 +32,9 @@ public class CreateConference {
                     conferenceParams.price(),
                     conferenceParams.startDate(),
                     conferenceParams.endDate(),
-                    priceGroup);
+                    priceGroup,
+                    conferenceParams.city(),
+                    conferenceParams.country());
         } else if (priceAttendingDays.isEmpty()) {
             conference = Conference.createWithPriceRanges(
                     conferenceParams.name(),

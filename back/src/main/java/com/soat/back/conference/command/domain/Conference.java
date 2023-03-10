@@ -36,12 +36,14 @@ public final class Conference {
         this.priceAttendingDays = emptyList();
     }
 
-    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup) {
+    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country, PriceGroup priceGroup) {
         this.name = name;
         this.link = link;
         this.price = price;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.city = city;
+        this.country = country;
         this.priceRanges = emptyList();
         this.priceGroup = priceGroup;
         this.priceAttendingDays = emptyList();
@@ -63,10 +65,10 @@ public final class Conference {
         return new Conference(name, link, price, priceRanges, startDate, endDate, city, country);
     }
 
-    public static Conference createPriceGroup(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup) throws InvalidPricesException, InvalidThresholdException {
+    public static Conference createPriceGroup(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup, String city, String country) throws InvalidPricesException, InvalidThresholdException {
         checkPriceGroupAmount(price, priceGroup);
         checkPriceGroupThreshold(priceGroup);
-        return new Conference(name, link, price, startDate, endDate, priceGroup);
+        return new Conference(name, link, price, startDate, endDate,city, country , priceGroup);
     }
 
     public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays) throws InvalidAttendingDaysException {

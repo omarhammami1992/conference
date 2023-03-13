@@ -52,7 +52,9 @@ public class CreateConference {
                     conferenceParams.price(),
                     conferenceParams.startDate(),
                     conferenceParams.endDate(),
-                    priceAttendingDays
+                    priceAttendingDays,
+                    conferenceParams.city(),
+                    conferenceParams.country()
             );
         }
 

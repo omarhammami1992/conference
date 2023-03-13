@@ -49,6 +49,19 @@ public final class Conference {
         this.priceAttendingDays = emptyList();
     }
 
+    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays, String city, String country) {
+        this.name = name;
+        this.link = link;
+        this.price = price;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.city = city;
+        this.country = country;
+        this.priceGroup = null;
+        this.priceRanges = emptyList();
+        this.priceAttendingDays = priceAttendingDays;
+    }
+
     private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays) {
         this.name = name;
         this.link = link;
@@ -71,7 +84,7 @@ public final class Conference {
         return new Conference(name, link, price, startDate, endDate,city, country , priceGroup);
     }
 
-    public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays) throws InvalidAttendingDaysException {
+    public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays, String city, String country) throws InvalidAttendingDaysException {
         if (ifIsAttendingDays(startDate, endDate, priceAttendingDays))
             throw new InvalidAttendingDaysException("Attending days must be equal or less than conference duration");
 
@@ -82,7 +95,7 @@ public final class Conference {
         if (hasDuplicatedPrice(priceAttendingDays)) {
             throw new InvalidAttendingDaysException("Price must be unique for one conference");
         }
-        return new Conference(name, link, price, startDate, endDate, priceAttendingDays);
+        return new Conference(name, link, price, startDate, endDate, priceAttendingDays, city, country);
     }
 
     private static boolean hasDuplicatedAttendingDays(List<PriceAttendingDay> priceAttendingDays) {
@@ -106,7 +119,7 @@ public final class Conference {
                 .stream()
                 .max(Comparator.comparing(PriceAttendingDay::attendingDay))
                 .map(PriceAttendingDay::attendingDay)
-                .get();
+                .orElse(0f);
         return maxAttending > daysBetween;
     }
 

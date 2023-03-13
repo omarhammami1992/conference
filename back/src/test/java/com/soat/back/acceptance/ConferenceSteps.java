@@ -186,6 +186,7 @@ public class ConferenceSteps extends AcceptanceTest {
     @Then("la conférence est enregistée avec le prix {float} € et les prix réduits par jour de présence")
     @Transactional
     public void laConférenceEstEnregistéeAvecLePrix€EtLesPrixRéduitsParJourDePrésence(float price, DataTable dataTable) {
+        assertThat(response.statusCode()).isEqualTo(201);
         final Integer savedConferenceId = response.then().extract().as(Integer.class);
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
         JpaConference expectedJpaConference = new JpaConference(

@@ -21,7 +21,7 @@ Feature: Gestion des conférences
     Then la conférence est enregistée avec le prix 300 € et un prix réduit de 150 € à partir de 10 participants
 
   Scenario: Création d'une conférence avec un système de tarification par journée de présence
-    Given une conférence ayant le nom "Devoxx", le lien "https://www.devoxx" et qui dure entre le "01-12-2022" et le "03-12-2022" et qui aura lieu à "Paris" en "France"
+    Given une conférence ayant le nom "Devoxx", le lien "https://www.devoxx" et qui dure entre le "01-12-2022" et le "07-12-2022" et qui aura lieu à "Paris" en "France"
     And qu'elle a un système de tarification par journée de présence à 400 € les 2 jours
     And qu'elle a un système de tarification par journée de présence à 600 € les 2.5 jours
     And qu'elle a un système de tarification par journée de présence à 950 € les 4.5 jours

@@ -224,8 +224,8 @@ public class ConferenceSteps extends AcceptanceTest {
                 Float.valueOf(entry.get("price")),
                 LocalDate.parse(entry.get("startDate"), DATE_TIME_FORMATTER),
                 LocalDate.parse(entry.get("endDate"), DATE_TIME_FORMATTER),
-                null,
-                null);
+                entry.get("city"),
+                entry.get("country"));
     }
 
     private com.soat.back.conference.query.application.ConferenceJson buildConferencesDto(Map<String, String> entry) {

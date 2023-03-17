@@ -35,9 +35,9 @@ Feature: Gestion des conférences
 
   Scenario: Récupérer la liste de toutes les conférences
     Given une liste de conférences enregistrées
-      | id | name          | link                               | price | startDate  | endDate    |
-      | 1  | Devoxx        | https://www.devoxx                 | 300   | 01-09-2022 | 30-09-2022 |
-      | 2  | DataOps Rocks | https://summit-2022.dataops.rocks/ | 0     | 01-12-2022 | 30-12-2022 |
+      | id | name          | link                               | price | startDate  | endDate    | city  | country |
+      | 1  | Devoxx        | https://www.devoxx                 | 300   | 01-09-2022 | 30-09-2022 | Paris | France  |
+      | 2  | DataOps Rocks | https://summit-2022.dataops.rocks/ | 0     | 01-12-2022 | 30-12-2022 | Paris | France  |
     When l'utilisateur consulte la liste de conferences
     Then les conférences à venir s'affichent
       | id | name          | link                               | fullPrice | startDate  | endDate    | isOnline | city  | country |
@@ -46,9 +46,9 @@ Feature: Gestion des conférences
 
   Scenario: Récupérer une conférence existante
     Given une liste de conférences enregistrées
-      | id | name          | link                               | price | startDate  | endDate    |
-      | 1  | Devoxx        | https://www.devoxx                 | 300   | 01-09-2022 | 30-09-2022 |
-      | 2  | DataOps Rocks | https://summit-2022.dataops.rocks/ | 0     | 01-12-2022 | 30-12-2022 |
+      | id | name          | link                               | price | startDate  | endDate    | city  | country |
+      | 1  | Devoxx        | https://www.devoxx                 | 300   | 01-09-2022 | 30-09-2022 | Paris | France  |
+      | 2  | DataOps Rocks | https://summit-2022.dataops.rocks/ | 0     | 01-12-2022 | 30-12-2022 | Paris | France  |
     When l'utilisateur consulte le détail de la conférence 1
     Then la conférence récupérée devrait contenir l id 1, le nom "Devoxx", le lien "https://www.devoxx", ayant le prix 300 et qui dure entre le "01-09-2022" et le "30-09-2022" et qui aura lieu à "Paris" ("France") "en présentielle"
 

@@ -88,9 +88,9 @@ public class ConferenceSteps extends AcceptanceTest {
         priceRangeJsons.add(priceRangeJson);
     }
 
-    @Then("la conférence est enregistée avec le prix {float} € et  les intervalles de réduction early bird")
+    @Then("la conférence est enregistée avec le prix {float} € et les intervalles de réduction early bird à {string} en {string}")
     @Transactional
-    public void laConférenceEstEnregistéeAvecLePrix€EtLesIntervallesDeRéductionEarlyBird(float defaultPrice, DataTable dataTable) {
+    public void laConférenceEstEnregistéeAvecLePrix€EtLesIntervallesDeRéductionEarlyBird(float defaultPrice, String city, String country, DataTable dataTable) {
         final Integer savedConferenceId = response.then().extract().as(Integer.class);
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
         JpaConference expectedJpaConference = new JpaConference(
@@ -100,8 +100,8 @@ public class ConferenceSteps extends AcceptanceTest {
                 defaultPrice,
                 conferenceJson.startDate(),
                 conferenceJson.endDate(),
-                conferenceJson.city(),
-                conferenceJson.country()
+                city,
+                country
         );
 
         assertThat(jpaConference).usingRecursiveComparison()
@@ -150,19 +150,19 @@ public class ConferenceSteps extends AcceptanceTest {
         this.priceGroupJson = new PriceGroupJson(ticketPrice, participantThreshold);
     }
 
-    @Then("la conférence est enregistée avec le prix {float} € et un prix réduit de {float} € à partir de {int} participants")
-    public void laConférenceEstEnregistéeAvecLePrix€EtUnPrixRéduitDe€ÀPartirDeParticipants(float price, float groupPrice, int threshold) {
+    @Then("la conférence est enregistée avec le prix {int} € et un prix réduit de {int} € à partir de {int} participants à {string} en {string}")
+    public void laConférenceEstEnregistéeAvecLePrix€EtUnPrixRéduitDe€ÀPartirDeParticipantsÀEn(float price, int groupPrice, int threshold, String city, String country) {
         final Integer savedConferenceId = response.then().extract().as(Integer.class);
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
         JpaConference expectedJpaConference = new JpaConference(
                 savedConferenceId,
-                conferenceJson.name(),
-                conferenceJson.link(),
+                name,
+                link,
                 price,
-                conferenceJson.startDate(),
-                conferenceJson.endDate(),
-                conferenceJson.city(),
-                conferenceJson.country()
+                startDate,
+                endDate,
+                city,
+                country
         );
 
         assertThat(jpaConference).isNotNull()
@@ -183,9 +183,9 @@ public class ConferenceSteps extends AcceptanceTest {
 
     }
 
-    @Then("la conférence est enregistée avec le prix {float} € et les prix réduits par jour de présence")
+    @Then("la conférence est enregistée avec le prix {int} € et les prix réduits par jour de présence à {string} en {string}")
     @Transactional
-    public void laConférenceEstEnregistéeAvecLePrix€EtLesPrixRéduitsParJourDePrésence(float price, DataTable dataTable) {
+    public void laConférenceEstEnregistéeAvecLePrix€EtLesPrixRéduitsParJourDePrésenceÀEn(float price, String city, String country, DataTable dataTable) {
         assertThat(response.statusCode()).isEqualTo(201);
         final Integer savedConferenceId = response.then().extract().as(Integer.class);
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
@@ -196,8 +196,8 @@ public class ConferenceSteps extends AcceptanceTest {
                 price,
                 conferenceJson.startDate(),
                 conferenceJson.endDate(),
-                conferenceJson.city(),
-                conferenceJson.country()
+                city,
+                country
         );
 
         assertThat(jpaConference).usingRecursiveComparison()

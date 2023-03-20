@@ -1,4 +1,4 @@
-package com.soat.back.conference.command.domain;
+package com.soat.back.conference.command.use_case;
 
 import java.time.LocalDate;
 

@@ -7,6 +7,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.soat.back.conference.command.domain.*;
+import com.soat.back.conference.command.use_case.ConferenceParams;
+import com.soat.back.conference.command.use_case.CreateConference;
+import com.soat.back.conference.command.use_case.PriceAttendingDaysParams;
+import com.soat.back.conference.command.use_case.PriceGroupParams;
+import com.soat.back.conference.command.use_case.PriceRangeParams;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

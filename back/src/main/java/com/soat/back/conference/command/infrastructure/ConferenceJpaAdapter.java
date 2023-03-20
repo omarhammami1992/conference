@@ -2,7 +2,7 @@ package com.soat.back.conference.command.infrastructure;
 
 import com.soat.back.common.infrastructure.*;
 import com.soat.back.conference.command.domain.Conference;
-import com.soat.back.conference.command.domain.ConferencePort;
+import com.soat.back.conference.command.use_case.ConferencePort;
 import com.soat.back.conference.command.domain.PriceAttendingDay;
 import com.soat.back.conference.command.domain.PriceRange;
 import org.springframework.stereotype.Repository;

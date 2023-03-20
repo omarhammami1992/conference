@@ -3,8 +3,8 @@ package com.soat.back.conference.command.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.soat.back.conference.command.domain.ConferencePort;
-import com.soat.back.conference.command.domain.CreateConference;
+import com.soat.back.conference.command.use_case.ConferencePort;
+import com.soat.back.conference.command.use_case.CreateConference;
 
 @Configuration
 public class BackAppConfig {

@@ -1,7 +1,17 @@
-package com.soat.back.conference.command.domain;
+package com.soat.back.conference.command.use_case;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.soat.back.conference.command.domain.Conference;
+import com.soat.back.conference.command.domain.DateInterval;
+import com.soat.back.conference.command.domain.InvalidAttendingDaysException;
+import com.soat.back.conference.command.domain.InvalidIntervalException;
+import com.soat.back.conference.command.domain.InvalidPricesException;
+import com.soat.back.conference.command.domain.InvalidThresholdException;
+import com.soat.back.conference.command.domain.PriceAttendingDay;
+import com.soat.back.conference.command.domain.PriceGroup;
+import com.soat.back.conference.command.domain.PriceRange;
 
 public class CreateConference {
 

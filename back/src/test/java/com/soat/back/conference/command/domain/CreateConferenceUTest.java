@@ -7,6 +7,12 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.soat.back.conference.command.use_case.ConferenceParams;
+import com.soat.back.conference.command.use_case.ConferencePort;
+import com.soat.back.conference.command.use_case.CreateConference;
+import com.soat.back.conference.command.use_case.PriceAttendingDaysParams;
+import com.soat.back.conference.command.use_case.PriceGroupParams;
+import com.soat.back.conference.command.use_case.PriceRangeParams;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

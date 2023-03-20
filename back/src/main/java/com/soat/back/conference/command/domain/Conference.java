@@ -114,8 +114,8 @@ public final class Conference {
     }
 
         private static boolean ifIsAttendingDays(LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays) {
-        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
-        var maxAttending = priceAttendingDays
+        float daysBetween = ChronoUnit.DAYS.between(startDate, endDate) + 1f;
+        float maxAttending = priceAttendingDays
                 .stream()
                 .max(Comparator.comparing(PriceAttendingDay::attendingDay))
                 .map(PriceAttendingDay::attendingDay)

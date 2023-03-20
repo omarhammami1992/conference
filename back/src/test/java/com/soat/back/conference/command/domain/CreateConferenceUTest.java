@@ -224,6 +224,32 @@ class CreateConferenceUTest {
     @Nested
     class CreateWithAttendingDays {
         @Test
+        void execute_should_create_conference() throws InvalidIntervalException, InvalidPricesException, InvalidAttendingDaysException, InvalidThresholdException {
+            // given
+            final List<PriceAttendingDaysParams> priceAttendingDayList = List.of(
+                    new PriceAttendingDaysParams(300f, 3f)
+            );
+            ConferenceParams conferenceParams = new ConferenceParams(
+                    "devoxx",
+                    "link",
+                    LocalDate.of(2022, 12, 1),
+                    LocalDate.of(2022, 12, 3),
+                    300f,
+                    of(),
+                    null,
+                    priceAttendingDayList,
+                    null,
+                    null
+            );
+
+            // when
+            Integer id = createConference.execute(conferenceParams);
+
+            // then
+            assertThat(id).isEqualTo(GENERATED_CONFERENCE_ID);
+        }
+
+        @Test
         void execute_should_throw_exception_when_attending_days_is_more_than_conference_duration() {
             // given
             final List<PriceAttendingDaysParams> priceAttendingDayList = List.of(

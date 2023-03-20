@@ -11,5 +11,6 @@ public record ConferenceParams(String name,
                                List<PriceRangeParams> priceRanges,
                                PriceGroupParams priceGroupParams,
                                List<PriceAttendingDaysParams> priceAttendingDaysParams,
-                               String city, String country) {
+                               String city,
+                               String country) {
 }

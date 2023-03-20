@@ -1,5 +1,9 @@
 package com.soat.back.acceptance;
 
+import com.soat.back.conference.command.use_case.ConferenceParams;
+import com.soat.back.conference.command.use_case.PriceAttendingDaysParams;
+import com.soat.back.conference.command.use_case.PriceGroupParams;
+import com.soat.back.conference.command.use_case.PriceRangeParams;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
@@ -31,10 +35,6 @@ import com.soat.back.common.infrastructure.JpaConferenceRepository;
 import com.soat.back.common.infrastructure.JpaPriceAttendingDay;
 import com.soat.back.common.infrastructure.JpaPriceGroup;
 import com.soat.back.common.infrastructure.JpaPriceRange;
-import com.soat.back.conference.command.application.ConferenceJson;
-import com.soat.back.conference.command.application.PriceAttendingDaysJson;
-import com.soat.back.conference.command.application.PriceGroupJson;
-import com.soat.back.conference.command.application.PriceRangeJson;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext
@@ -42,12 +42,12 @@ import com.soat.back.conference.command.application.PriceRangeJson;
 @ActiveProfiles("AcceptanceTest")
 public class ConferenceSteps extends AcceptanceTest {
 
-    private static final List<PriceAttendingDaysJson> priceAttendingDaysJsons = new ArrayList<>();
-    private static List<PriceRangeJson> priceRangeJsons = new ArrayList<>();
+    private static final List<PriceAttendingDaysParams> priceAttendingDaysParams = new ArrayList<>();
+    private static List<PriceRangeParams> priceRangeParams = new ArrayList<>();
 
     private static final String API_CONFERENCE = "/conference";
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    private ConferenceJson conferenceJson;
+    private ConferenceParams conferenceParams;
 
     @Autowired
     private JpaConferenceRepository jpaConferenceRepository;
@@ -56,7 +56,7 @@ public class ConferenceSteps extends AcceptanceTest {
     private LocalDate startDate;
     private LocalDate endDate;
     private float price;
-    private PriceGroupJson priceGroupJson;
+    private PriceGroupParams priceGroupParams;
     private String city;
     private String country;
 
@@ -64,8 +64,8 @@ public class ConferenceSteps extends AcceptanceTest {
     public void before() {
         RestAssured.port = port;
         RestAssured.basePath = API_CONFERENCE;
-        priceGroupJson = null;
-        priceRangeJsons = new ArrayList<>();
+        priceGroupParams = null;
+        priceRangeParams = new ArrayList<>();
     }
 
     @Given("une conférence ayant le nom {string}, le lien {string} et qui dure entre le {string} et le {string}")
@@ -78,14 +78,15 @@ public class ConferenceSteps extends AcceptanceTest {
 
     @When("l utilisateur tente de l enregistrer")
     public void lUtilisateurTenteDeLEnregistrer() {
-        conferenceJson = new ConferenceJson(name, link, startDate, endDate, price, priceRangeJsons, priceGroupJson, priceAttendingDaysJsons, city, country);
-        executePost("", conferenceJson);
+        conferenceParams = new ConferenceParams(name, link, startDate, endDate, price, priceRangeParams, priceGroupParams, priceAttendingDaysParams, city, country);
+        executePost("", conferenceParams);
     }
 
     @And("qu'elle a un système de tarification early bird à {float} € avant le {string}")
     public void quElleAUnSystèmeDetarificationEarlyBirdÀ€Avant(float price, String endDate) {
-        PriceRangeJson priceRangeJson = new PriceRangeJson(price, null, endDate);
-        priceRangeJsons.add(priceRangeJson);
+        LocalDate end = LocalDate.parse(endDate, DATE_TIME_FORMATTER);
+        var priceRange = new PriceRangeParams(price, null, end);
+        priceRangeParams.add(priceRange);
     }
 
     @Then("la conférence est enregistée avec le prix {float} € et les intervalles de réduction early bird à {string} en {string}")
@@ -95,11 +96,11 @@ public class ConferenceSteps extends AcceptanceTest {
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
         JpaConference expectedJpaConference = new JpaConference(
                 savedConferenceId,
-                conferenceJson.name(),
-                conferenceJson.link(),
+                conferenceParams.name(),
+                conferenceParams.link(),
                 defaultPrice,
-                conferenceJson.startDate(),
-                conferenceJson.endDate(),
+                conferenceParams.startDate(),
+                conferenceParams.endDate(),
                 city,
                 country
         );
@@ -118,8 +119,8 @@ public class ConferenceSteps extends AcceptanceTest {
 
     @And("qu'elle a un système de tarification early bird à {float} € entre le {string} et le {string}")
     public void quElleAUnSystèmeDetarificationEarlyBirdÀ€EntreEt(float price, String startDate, String endDate) {
-        PriceRangeJson priceRangeJson = new PriceRangeJson(price, startDate, endDate);
-        priceRangeJsons.add(priceRangeJson);
+        var priceRange = new PriceRangeParams(price, LocalDate.parse(startDate, DATE_TIME_FORMATTER), LocalDate.parse(endDate, DATE_TIME_FORMATTER));
+        priceRangeParams.add(priceRange);
     }
 
     @And("qu'elle a une tarification pleine à {float} €")
@@ -147,7 +148,7 @@ public class ConferenceSteps extends AcceptanceTest {
 
     @And("qu'elle a un système de tarification de groupe à {float} € par personne lorsqu on réserve à partir de {int} billets")
     public void quElleAUnSystèmeDeTarificationDeGroupeÀ€ParPersonneLorsquOnRéserveÀPartirDeBillets(float ticketPrice, int participantThreshold) {
-        this.priceGroupJson = new PriceGroupJson(ticketPrice, participantThreshold);
+        this.priceGroupParams = new PriceGroupParams(ticketPrice, participantThreshold);
     }
 
     @Then("la conférence est enregistée avec le prix {int} € et un prix réduit de {int} € à partir de {int} participants à {string} en {string}")
@@ -178,8 +179,8 @@ public class ConferenceSteps extends AcceptanceTest {
 
     @And("qu'elle a un système de tarification par journée de présence à {float} € les {float} jours")
     public void quElleAUnSystèmeDeTarificationParJournéeDePrésenceÀ€LesJours(float price, float attendingDays) {
-        PriceAttendingDaysJson priceAttendingDaysJson = new PriceAttendingDaysJson(price, attendingDays);
-        priceAttendingDaysJsons.add(priceAttendingDaysJson);
+        var priceAttendingDays = new PriceAttendingDaysParams(price, attendingDays);
+        priceAttendingDaysParams.add(priceAttendingDays);
 
     }
 
@@ -191,11 +192,11 @@ public class ConferenceSteps extends AcceptanceTest {
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
         JpaConference expectedJpaConference = new JpaConference(
                 savedConferenceId,
-                conferenceJson.name(),
-                conferenceJson.link(),
+                conferenceParams.name(),
+                conferenceParams.link(),
                 price,
-                conferenceJson.startDate(),
-                conferenceJson.endDate(),
+                conferenceParams.startDate(),
+                conferenceParams.endDate(),
                 city,
                 country
         );

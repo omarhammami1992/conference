@@ -1,4 +1,4 @@
-package com.soat.back.conference.command.config;
+package com.soat.back.conference.command.application.config;
 
 
 import org.springframework.context.annotation.Bean;

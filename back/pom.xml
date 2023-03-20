@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.2</version>
+		<version>3.0.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.soat.</groupId>
@@ -15,9 +15,9 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
-		<cucumber.version>7.6.0</cucumber.version>
+		<cucumber.version>7.11.1</cucumber.version>
 		<rest-assured.version>5.0.1</rest-assured.version>
-        <flyway-core.version>8.5.13</flyway-core.version>
+        <flyway-core.version>9.16.0</flyway-core.version>
 	</properties>
 	<build>
 		<plugins>

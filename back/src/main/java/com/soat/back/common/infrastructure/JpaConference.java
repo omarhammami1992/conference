@@ -2,7 +2,7 @@ package com.soat.back.common.infrastructure;
 
 import com.soat.back.conference.query.domain.Conference;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -30,13 +30,13 @@ public class JpaConference implements Conference {
     @Column
     private String country;
 
-    @OneToMany(mappedBy = "conference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "conference", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<JpaPriceRange> priceRanges;
 
-    @OneToMany(mappedBy = "conference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "conference", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<JpaPriceAttendingDay> priceAttendingDays;
 
-    @OneToOne(mappedBy = "conference", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "conference", cascade = CascadeType.ALL)
     private JpaPriceGroup priceGroup;
 
     public JpaConference(Integer id, String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country) {

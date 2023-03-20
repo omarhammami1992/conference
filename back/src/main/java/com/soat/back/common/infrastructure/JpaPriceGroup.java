@@ -1,6 +1,6 @@
 package com.soat.back.common.infrastructure;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "price_group")

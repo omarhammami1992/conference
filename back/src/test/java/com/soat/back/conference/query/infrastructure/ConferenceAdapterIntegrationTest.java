@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @SqlGroup({
         @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, value = "classpath:/delete-conference-entries.sql"),
-        @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = "classpath:/insert-conference-entries.sql")})
+        @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = { "classpath:/delete-conference-entries.sql", "classpath:/insert-conference-entries.sql" })})
 
 //@DataJpaTest
 class ConferenceAdapterIntegrationTest {

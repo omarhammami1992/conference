@@ -1,21 +1,24 @@
 package com.soat.back.conference.command.domain;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public final class PriceRanges {
-    private final List<PriceRange> priceRanges;
+    private final List<PriceRange> values;
 
-    public PriceRanges(List<PriceRange> priceRanges) throws InvalidPricesException {
-        if (checkMinimumPriceGreaterThanZero(priceRanges)) {
+    public PriceRanges() {
+        values = List.of();
+    }
+
+    public PriceRanges(List<PriceRange> values) throws InvalidPricesException {
+        if (checkMinimumPriceGreaterThanZero(values)) {
             throw new InvalidPricesException("Price range greater than zero");
         }
 
-        if (checkUniquenessPriceInPriceRange(priceRanges)) {
+        if (checkUniquenessPriceInPriceRange(values)) {
             throw new InvalidPricesException("Non unique price range");
         }
-        this.priceRanges = priceRanges;
+        this.values = values;
     }
 
     private static boolean checkMinimumPriceGreaterThanZero(List<PriceRange> priceRanges) {
@@ -29,31 +32,21 @@ public final class PriceRanges {
                 .stream()
                 .map(PriceRange::price)
                 .collect(Collectors.toSet())
-                .size() != priceRanges.stream().count();
+                .size() != (long) priceRanges.size();
     }
 
-    public List<PriceRange> getPriceRanges() {
-        return priceRanges;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (PriceRanges) obj;
-        return Objects.equals(this.priceRanges, that.priceRanges);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(priceRanges);
+    public List<PriceRange> getValues() {
+        return values;
     }
 
     @Override
     public String toString() {
         return "PriceRanges[" +
-                "priceRanges=" + priceRanges + ']';
+                "priceRanges=" + values + ']';
     }
 
+    public boolean isEmpty() {
+        return values.isEmpty();
+    }
 }
 

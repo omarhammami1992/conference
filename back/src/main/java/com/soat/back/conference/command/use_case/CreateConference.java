@@ -19,7 +19,7 @@ public class CreateConference {
 
         Conference conference;
 
-        if (hasPriceGroups(priceRanges.getPriceRanges(), priceAttendingDays)) {
+        if (hasPriceGroups(priceRanges, priceAttendingDays)) {
             conference = Conference.createPriceGroup(
                     conferenceParams.name(),
                     conferenceParams.link(),
@@ -36,7 +36,7 @@ public class CreateConference {
                     conferenceParams.price(),
                     conferenceParams.startDate(),
                     conferenceParams.endDate(),
-                    priceRanges.getPriceRanges(),
+                    priceRanges,
                     conferenceParams.city(),
                     conferenceParams.country());
         } else {
@@ -55,7 +55,7 @@ public class CreateConference {
         return conferencePort.save(conference);
     }
 
-    private static boolean hasPriceGroups(List<PriceRange> priceRanges, List<PriceAttendingDay> priceAttendingDays) {
+    private static boolean hasPriceGroups(PriceRanges priceRanges, List<PriceAttendingDay> priceAttendingDays) {
         return priceRanges.isEmpty() && priceAttendingDays.isEmpty();
     }
 

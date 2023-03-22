@@ -18,13 +18,13 @@ public final class Conference {
     private final LocalDate startDate;
     private final LocalDate endDate;
 
-    private final List<PriceRange> priceRanges;
+    private final PriceRanges priceRanges;
     private final String city;
     private final String country;
     private final PriceGroup priceGroup;
     private final List<PriceAttendingDay> priceAttendingDays;
 
-    private Conference(String name, String link, Float price, List<PriceRange> priceRanges, LocalDate startDate, LocalDate endDate, String city, String country) {
+    private Conference(String name, String link, Float price, PriceRanges priceRanges, LocalDate startDate, LocalDate endDate, String city, String country) {
         this.name = name;
         this.link = link;
         this.price = price;
@@ -45,7 +45,7 @@ public final class Conference {
         this.endDate = endDate;
         this.city = city;
         this.country = country;
-        this.priceRanges = emptyList();
+        this.priceRanges = new PriceRanges();
         this.priceGroup = priceGroup;
         this.priceAttendingDays = emptyList();
     }
@@ -59,12 +59,12 @@ public final class Conference {
         this.city = city;
         this.country = country;
         this.priceGroup = null;
-        this.priceRanges = emptyList();
+        this.priceRanges = null;
         this.priceAttendingDays = priceAttendingDays;
     }
 
-    public static Conference createWithPriceRanges(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceRange> priceRanges, String city, String country) throws InvalidIntervalException, InvalidPricesException {
-        checkIntervals(priceRanges, price);
+    public static Conference createWithPriceRanges(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceRanges priceRanges, String city, String country) throws InvalidIntervalException, InvalidPricesException {
+        checkIntervals(priceRanges.getValues(), price);
         return new Conference(name, link, price, priceRanges, startDate, endDate, city, country);
     }
 
@@ -172,7 +172,7 @@ public final class Conference {
         return endDate;
     }
 
-    public List<PriceRange> getPriceRanges() {
+    public PriceRanges getPriceRanges() {
         return priceRanges;
     }
 

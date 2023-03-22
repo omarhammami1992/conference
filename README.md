@@ -1,13 +1,25 @@
 # conference-manager
 
-Projet de gestion des conférence à soat.
+Projet de gestion des conférences à SOAT.
 
 ## Installation
 
-    cd backend
-    docker-compose up -d
+```
+cd backend
+docker-compose up -d
+```
+## Test back
+```
+cd backend
+mvn clean install
+```
 
-## Archirtecture du backend
+## Test front
+```
+cd front
+yarn test
+```
+## Architecture du backend
 * CQRS
 * Architecture hexagonale
 

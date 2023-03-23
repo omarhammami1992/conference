@@ -1,8 +1,6 @@
 package com.soat.back.conference.command.domain;
 
-import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 public final class Conference {
     private final String name;
@@ -16,7 +14,16 @@ public final class Conference {
     private final PriceGroup priceGroup;
     private final PriceAttendingDays priceAttendingDays;
 
-    private Conference(String name, String link, Float price, PriceRanges priceRanges, LocalDate startDate, LocalDate endDate, String city, String country) {
+    private Conference(String name,
+                      String link,
+                      Float price,
+                      LocalDate startDate,
+                      LocalDate endDate,
+                      String city,
+                      String country,
+                      PriceRanges priceRanges,
+                      PriceGroup priceGroup,
+                      PriceAttendingDays priceAttendingDays) {
         this.name = name;
         this.link = link;
         this.price = price;
@@ -25,50 +32,24 @@ public final class Conference {
         this.priceRanges = priceRanges;
         this.city = city;
         this.country = country;
-        this.priceGroup = null;
-        this.priceAttendingDays = PriceAttendingDays.createEmpty();
-    }
-
-    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country, PriceGroup priceGroup) {
-        this.name = name;
-        this.link = link;
-        this.price = price;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.city = city;
-        this.country = country;
-        this.priceRanges = PriceRanges.createEmpty();
         this.priceGroup = priceGroup;
-        this.priceAttendingDays = PriceAttendingDays.createEmpty();
-    }
-
-    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceAttendingDays priceAttendingDays, String city, String country) {
-        this.name = name;
-        this.link = link;
-        this.price = price;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.city = city;
-        this.country = country;
-        this.priceGroup = null;
-        this.priceRanges = PriceRanges.createEmpty();
         this.priceAttendingDays = priceAttendingDays;
     }
 
     public static Conference createWithPriceRanges(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceRanges priceRanges, String city, String country) throws InvalidIntervalException, InvalidPricesException {
         priceRanges.checkIntervals(price);
-        return new Conference(name, link, price, priceRanges, startDate, endDate, city, country);
+        return new Conference(name, link, price, startDate, endDate, city, country, priceRanges, null, PriceAttendingDays.createEmpty());
     }
 
     public static Conference createPriceGroup(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup, String city, String country) throws InvalidPricesException {
         priceGroup.checkPriceGroupAmount(price);
-        return new Conference(name, link, price, startDate, endDate, city, country, priceGroup);
+        return new Conference(name, link, price, startDate, endDate, city, country, PriceRanges.createEmpty(), priceGroup, PriceAttendingDays.createEmpty());
     }
 
     public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceAttendingDays priceAttendingDays, String city, String country) throws InvalidAttendingDaysException {
-        float period = ChronoUnit.DAYS.between(startDate, endDate) + 1f;
-        priceAttendingDays.checkAreAllBelow(period);
-        return new Conference(name, link, price, startDate, endDate, priceAttendingDays, city, country);
+        var interval = new DateInterval(startDate, endDate);
+        priceAttendingDays.checkAreAllBelow(interval.period());
+        return new Conference(name, link, price, startDate, endDate, city, country, PriceRanges.createEmpty(), null, priceAttendingDays);
     }
 
     public String getName() {

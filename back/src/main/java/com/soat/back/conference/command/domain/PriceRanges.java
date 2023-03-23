@@ -25,7 +25,7 @@ public final class PriceRanges {
         return new PriceRanges(values);
     }
 
-    public  void checkIntervals(Float price) throws InvalidIntervalException, InvalidPricesException {
+    void checkIntervals(Float price) throws InvalidIntervalException, InvalidPricesException {
         for (int i = 0; i < this.values.size() - 1; i++) {
             checkIntervalDates(i);
             checkIntervalsPrices(i);
@@ -33,7 +33,7 @@ public final class PriceRanges {
         checkPrices(price);
     }
 
-    private  void checkIntervalDates(int i) throws InvalidIntervalException {
+    private void checkIntervalDates(int i) throws InvalidIntervalException {
         if (!values.get(i + 1).dateInterval().startDate().minusDays(1).equals(values.get(i).dateInterval().endDate())) {
             throw new InvalidIntervalException();
         }

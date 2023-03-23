@@ -24,14 +24,12 @@ Feature: Gestion des conférences
     Given une conférence ayant le nom "Devoxx", le lien "https://www.devoxx" et qui dure entre le "01-12-2022" et le "07-12-2022" et qui aura lieu à "Paris" en "France"
     And qu'elle a un système de tarification par journée de présence à 400 € les 2 jours
     And qu'elle a un système de tarification par journée de présence à 600 € les 2.5 jours
-    And qu'elle a un système de tarification par journée de présence à 950 € les 7 jours
     And qu'elle a une tarification pleine à 1000 €
     When l utilisateur tente de l enregistrer
     Then la conférence est enregistée avec le prix 1000 € et les prix réduits par jour de présence à "Paris" en "France"
       | price | attendingDays |
       | 400   | 2             |
       | 600   | 2.5           |
-      | 950   | 7             |
 
   Scenario: Récupérer la liste de toutes les conférences
     Given une liste de conférences enregistrées

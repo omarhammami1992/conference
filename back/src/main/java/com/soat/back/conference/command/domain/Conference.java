@@ -2,6 +2,7 @@ package com.soat.back.conference.command.domain;
 
 import static java.util.Collections.emptyList;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
@@ -18,8 +19,8 @@ public final class Conference {
     private final LocalDate endDate;
 
     private final List<PriceRange> priceRanges;
-    private String city;
-    private String country;
+    private final String city;
+    private final String country;
     private final PriceGroup priceGroup;
     private final List<PriceAttendingDay> priceAttendingDays;
 
@@ -62,17 +63,6 @@ public final class Conference {
         this.priceAttendingDays = priceAttendingDays;
     }
 
-    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays) {
-        this.name = name;
-        this.link = link;
-        this.price = price;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.priceRanges = emptyList();
-        this.priceGroup = null;
-        this.priceAttendingDays = priceAttendingDays;
-    }
-
     public static Conference createWithPriceRanges(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceRange> priceRanges, String city, String country) throws InvalidIntervalException, InvalidPricesException {
         checkIntervals(priceRanges, price);
         return new Conference(name, link, price, priceRanges, startDate, endDate, city, country);
@@ -85,8 +75,9 @@ public final class Conference {
     }
 
     public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays, String city, String country) throws InvalidAttendingDaysException {
-        if (ifIsAttendingDays(startDate, endDate, priceAttendingDays))
-            throw new InvalidAttendingDaysException("Attending days must be equal or less than conference duration");
+        float period = ChronoUnit.DAYS.between(startDate, endDate) + 1f;
+        if (ifIsAttendingDays(priceAttendingDays, period))
+            throw new InvalidAttendingDaysException(MessageFormat.format("Attending days should be lower than conference period {0} days", period));
 
         if (hasDuplicatedAttendingDays(priceAttendingDays)) {
             throw new InvalidAttendingDaysException("Attending days must be unique for one conference");
@@ -113,14 +104,13 @@ public final class Conference {
                 .collect(Collectors.toSet()).size() < list.size();
     }
 
-        private static boolean ifIsAttendingDays(LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays) {
-        float daysBetween = ChronoUnit.DAYS.between(startDate, endDate) + 1f;
+        private static boolean ifIsAttendingDays(List<PriceAttendingDay> priceAttendingDays, float daysBetween) {
         float maxAttending = priceAttendingDays
                 .stream()
                 .max(Comparator.comparing(PriceAttendingDay::attendingDay))
                 .map(PriceAttendingDay::attendingDay)
                 .orElse(0f);
-        return maxAttending > daysBetween;
+        return maxAttending >= daysBetween;
     }
 
 

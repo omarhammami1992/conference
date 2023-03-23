@@ -250,33 +250,6 @@ class CreateConferenceUTest {
         }
 
         @Test
-        void execute_should_throw_exception_when_attending_days_is_more_than_conference_duration() {
-            // given
-            final List<PriceAttendingDaysParams> priceAttendingDayList = List.of(
-                    new PriceAttendingDaysParams(300f, 1000f)
-            );
-            ConferenceParams conferenceParams = new ConferenceParams(
-                    "devoxx",
-                    "link",
-                    LocalDate.of(2022, 12, 1),
-                    LocalDate.of(2022, 12, 3),
-                    300f,
-                    of(),
-                    null,
-                    priceAttendingDayList,
-                    null,
-                    null
-            );
-
-            // when
-            final Throwable throwable = catchThrowable(() -> createConference.execute(conferenceParams));
-
-            // then
-            assertThat(throwable).isInstanceOf(InvalidAttendingDaysException.class);
-            assertThat(throwable).hasMessage("Attending days must be equal or less than conference duration");
-        }
-
-        @Test
         void execute_should_throw_exception_when_we_have_conference_with_duplicated_attending_days() {
             // given
             final List<PriceAttendingDaysParams> priceAttendingDayList = List.of(

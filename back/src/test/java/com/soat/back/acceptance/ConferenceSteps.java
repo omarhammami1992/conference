@@ -1,5 +1,6 @@
 package com.soat.back.acceptance;
 
+import com.soat.back.common.infrastructure.*;
 import com.soat.back.conference.command.use_case.ConferenceParams;
 import com.soat.back.conference.command.use_case.PriceAttendingDaysParams;
 import com.soat.back.conference.command.use_case.PriceGroupParams;
@@ -12,9 +13,12 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
 import io.restassured.RestAssured;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,18 +27,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import jakarta.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import com.soat.back.common.infrastructure.JpaConference;
-import com.soat.back.common.infrastructure.JpaConferenceRepository;
-import com.soat.back.common.infrastructure.JpaPriceAttendingDay;
-import com.soat.back.common.infrastructure.JpaPriceGroup;
-import com.soat.back.common.infrastructure.JpaPriceRange;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext
@@ -42,8 +37,8 @@ import com.soat.back.common.infrastructure.JpaPriceRange;
 @ActiveProfiles("AcceptanceTest")
 public class ConferenceSteps extends AcceptanceTest {
 
-    private static final List<PriceAttendingDaysParams> priceAttendingDaysParams = new ArrayList<>();
-    private static List<PriceRangeParams> priceRangeParams = new ArrayList<>();
+    private List<PriceAttendingDaysParams> priceAttendingDaysParams = new ArrayList<>();
+    private List<PriceRangeParams> priceRangeParams = new ArrayList<>();
 
     private static final String API_CONFERENCE = "/conference";
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -66,6 +61,7 @@ public class ConferenceSteps extends AcceptanceTest {
         RestAssured.basePath = API_CONFERENCE;
         priceGroupParams = null;
         priceRangeParams = new ArrayList<>();
+        priceAttendingDaysParams = new ArrayList<>();
     }
 
     @Given("une conférence ayant le nom {string}, le lien {string} et qui dure entre le {string} et le {string}")

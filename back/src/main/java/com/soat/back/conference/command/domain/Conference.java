@@ -1,11 +1,8 @@
 package com.soat.back.conference.command.domain;
 
-import static java.util.Collections.emptyList;
-
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
 import java.util.List;
 
 public final class Conference {
@@ -74,21 +71,10 @@ public final class Conference {
 
     public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceAttendingDays priceAttendingDays, String city, String country) throws InvalidAttendingDaysException, InvalidPricesException {
         float period = ChronoUnit.DAYS.between(startDate, endDate) + 1f;
-        if (ifIsAttendingDays(priceAttendingDays, period))
+        if (priceAttendingDays.areAllBelow(period))
             throw new InvalidAttendingDaysException(MessageFormat.format("Attending days should be lower than conference period {0} days", period));
 
-
         return new Conference(name, link, price, startDate, endDate, priceAttendingDays, city, country);
-    }
-
-    private static boolean ifIsAttendingDays(PriceAttendingDays priceAttendingDays, float daysBetween) {
-        float maxAttending = priceAttendingDays
-                .getValues()
-                .stream()
-                .max(Comparator.comparing(PriceAttendingDay::attendingDay))
-                .map(PriceAttendingDay::attendingDay)
-                .orElse(0f);
-        return maxAttending >= daysBetween;
     }
 
 

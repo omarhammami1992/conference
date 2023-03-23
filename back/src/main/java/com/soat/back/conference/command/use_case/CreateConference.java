@@ -1,5 +1,6 @@
 package com.soat.back.conference.command.use_case;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +39,7 @@ public class CreateConference {
         }
         var conferencePeriodDay = DAYS.between(conferenceParams.startDate(), conferenceParams.endDate()) + 1.0;
         if (priceAttendingDays.stream().anyMatch(priceAttendingDay -> priceAttendingDay.attendingDay() == conferencePeriodDay)) {
-            throw new InvalidAttendingDaysException("Attending 7 days should be lower than conference period 7 days");
+            throw new InvalidAttendingDaysException(MessageFormat.format("Attending days should be lower than conference period {0} days", conferencePeriodDay));
         }
 
         if (hasPriceGroups(priceRanges, priceAttendingDays)) {

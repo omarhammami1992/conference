@@ -227,7 +227,7 @@ class CreateConferenceUTest {
         void execute_should_create_conference() throws InvalidIntervalException, InvalidPricesException, InvalidAttendingDaysException, InvalidThresholdException {
             // given
             final List<PriceAttendingDaysParams> priceAttendingDayList = List.of(
-                    new PriceAttendingDaysParams(300f, 3f)
+                    new PriceAttendingDaysParams(300f, 2f)
             );
             ConferenceParams conferenceParams = new ConferenceParams(
                     "devoxx",
@@ -358,7 +358,7 @@ class CreateConferenceUTest {
 
             // then
             assertThat(throwable).isInstanceOf(InvalidAttendingDaysException.class);
-            assertThat(throwable).hasMessage("Attending 7 days should be lower than conference period 7 days");
+            assertThat(throwable).hasMessage("Attending days should be lower than conference period 7 days");
         }
     }
 }

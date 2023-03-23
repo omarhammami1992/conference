@@ -1,20 +1,8 @@
 package com.soat.back.conference.command.use_case;
 
-import java.text.MessageFormat;
+import com.soat.back.conference.command.domain.*;
+
 import java.util.List;
-import java.util.stream.Collectors;
-
-import com.soat.back.conference.command.domain.Conference;
-import com.soat.back.conference.command.domain.DateInterval;
-import com.soat.back.conference.command.domain.InvalidAttendingDaysException;
-import com.soat.back.conference.command.domain.InvalidIntervalException;
-import com.soat.back.conference.command.domain.InvalidPricesException;
-import com.soat.back.conference.command.domain.InvalidThresholdException;
-import com.soat.back.conference.command.domain.PriceAttendingDay;
-import com.soat.back.conference.command.domain.PriceGroup;
-import com.soat.back.conference.command.domain.PriceRange;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 public class CreateConference {
 
@@ -25,20 +13,13 @@ public class CreateConference {
     }
 
     public Integer execute(ConferenceParams conferenceParams) throws InvalidIntervalException, InvalidPricesException, InvalidThresholdException, InvalidAttendingDaysException {
-        final List<PriceRange> priceRanges = buildPriceRanges(conferenceParams);
+        final PriceRanges priceRanges = buildPriceRanges(conferenceParams);
         final PriceGroup priceGroup = buildPriceGroup(conferenceParams.priceGroupParams());
         final List<PriceAttendingDay> priceAttendingDays = buildPriceAttendingDays(conferenceParams);
 
         Conference conference;
-        if (checkMinimumPriceGreaterThanZero(priceRanges)) {
-            throw new InvalidPricesException("Price range greater than zero");
-        }
 
-        if (checkUniquenessPriceInPriceRange(priceRanges)) {
-            throw new InvalidPricesException("Non unique price range");
-        }
-
-        if (hasPriceGroups(priceRanges, priceAttendingDays)) {
+        if (hasPriceGroups(priceRanges.getPriceRanges(), priceAttendingDays)) {
             conference = Conference.createPriceGroup(
                     conferenceParams.name(),
                     conferenceParams.link(),
@@ -55,7 +36,7 @@ public class CreateConference {
                     conferenceParams.price(),
                     conferenceParams.startDate(),
                     conferenceParams.endDate(),
-                    priceRanges,
+                    priceRanges.getPriceRanges(),
                     conferenceParams.city(),
                     conferenceParams.country());
         } else {
@@ -78,20 +59,6 @@ public class CreateConference {
         return priceRanges.isEmpty() && priceAttendingDays.isEmpty();
     }
 
-    private static boolean checkMinimumPriceGreaterThanZero(List<PriceRange> priceRanges) {
-        return priceRanges.stream()
-                .mapToDouble(PriceRange::price)
-                .anyMatch(price -> price < 0);
-    }
-
-    private static boolean checkUniquenessPriceInPriceRange(List<PriceRange> priceRanges) {
-        return priceRanges
-                .stream()
-                .map(PriceRange::price)
-                .collect(Collectors.toSet())
-                .size() != priceRanges.stream().count();
-    }
-
     private List<PriceAttendingDay> buildPriceAttendingDays(ConferenceParams conferenceParams) {
         return conferenceParams.priceAttendingDaysParams().stream()
                 .map(priceAttendingDay -> new PriceAttendingDay(priceAttendingDay.price(), priceAttendingDay.attendingDays()))
@@ -106,10 +73,10 @@ public class CreateConference {
         return priceGroup;
     }
 
-    private static List<PriceRange> buildPriceRanges(ConferenceParams conferenceParams) {
-        return conferenceParams.priceRanges().stream()
+    private static PriceRanges buildPriceRanges(ConferenceParams conferenceParams) throws InvalidPricesException {
+        return new PriceRanges(conferenceParams.priceRanges().stream()
                 .map(priceRange -> new PriceRange(priceRange.price(), new DateInterval(priceRange.startDate(), priceRange.endDate())))
-                .toList();
+                .toList());
     }
 
 }

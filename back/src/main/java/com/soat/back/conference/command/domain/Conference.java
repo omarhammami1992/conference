@@ -37,7 +37,7 @@ public final class Conference {
         this.priceAttendingDays = emptyList();
     }
 
-    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country, PriceGroup priceGroup) {
+    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country, PriceGroup priceGroup) throws InvalidPricesException {
         this.name = name;
         this.link = link;
         this.price = price;
@@ -45,12 +45,12 @@ public final class Conference {
         this.endDate = endDate;
         this.city = city;
         this.country = country;
-        this.priceRanges = new PriceRanges();
+        this.priceRanges = PriceRanges.createEmpty();
         this.priceGroup = priceGroup;
         this.priceAttendingDays = emptyList();
     }
 
-    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays, String city, String country) {
+    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays, String city, String country) throws InvalidPricesException {
         this.name = name;
         this.link = link;
         this.price = price;
@@ -59,7 +59,7 @@ public final class Conference {
         this.city = city;
         this.country = country;
         this.priceGroup = null;
-        this.priceRanges = null;
+        this.priceRanges = PriceRanges.createEmpty();
         this.priceAttendingDays = priceAttendingDays;
     }
 
@@ -74,7 +74,7 @@ public final class Conference {
         return new Conference(name, link, price, startDate, endDate,city, country , priceGroup);
     }
 
-    public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays, String city, String country) throws InvalidAttendingDaysException {
+    public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays, String city, String country) throws InvalidAttendingDaysException, InvalidPricesException {
         float period = ChronoUnit.DAYS.between(startDate, endDate) + 1f;
         if (ifIsAttendingDays(priceAttendingDays, period))
             throw new InvalidAttendingDaysException(MessageFormat.format("Attending days should be lower than conference period {0} days", period));

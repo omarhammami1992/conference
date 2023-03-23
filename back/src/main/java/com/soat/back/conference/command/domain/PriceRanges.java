@@ -6,11 +6,15 @@ import java.util.stream.Collectors;
 public final class PriceRanges {
     private final List<PriceRange> values;
 
-    public PriceRanges() {
-        values = List.of();
+    private PriceRanges(List<PriceRange> values) {
+        this.values = values;
     }
 
-    public PriceRanges(List<PriceRange> values) throws InvalidPricesException {
+    public static PriceRanges createEmpty() {
+        return new PriceRanges(List.of());
+    }
+
+    public static PriceRanges create(List<PriceRange> values) throws InvalidPricesException {
         if (checkMinimumPriceGreaterThanZero(values)) {
             throw new InvalidPricesException("Price range greater than zero");
         }
@@ -18,7 +22,7 @@ public final class PriceRanges {
         if (checkUniquenessPriceInPriceRange(values)) {
             throw new InvalidPricesException("Non unique price range");
         }
-        this.values = values;
+        return new PriceRanges(values);
     }
 
     private static boolean checkMinimumPriceGreaterThanZero(List<PriceRange> priceRanges) {

@@ -74,7 +74,7 @@ public class CreateConference {
     }
 
     private static PriceRanges buildPriceRanges(ConferenceParams conferenceParams) throws InvalidPricesException {
-        return new PriceRanges(conferenceParams.priceRanges().stream()
+        return PriceRanges.create(conferenceParams.priceRanges().stream()
                 .map(priceRange -> new PriceRange(priceRange.price(), new DateInterval(priceRange.startDate(), priceRange.endDate())))
                 .toList());
     }

@@ -3,10 +3,10 @@ package com.soat.back.conference.command.infrastructure;
 import com.soat.back.common.infrastructure.JpaConferenceRepository;
 import com.soat.back.conference.command.domain.Conference;
 import com.soat.back.conference.command.domain.InvalidAttendingDaysException;
+import com.soat.back.conference.command.domain.InvalidPricesException;
 import com.soat.back.conference.command.domain.PriceAttendingDay;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
@@ -24,7 +24,7 @@ class ConferenceJpaAdapterITest {
     JpaConferenceRepository jpaConferenceRepository;
 
     @Test
-    void save_data() throws InvalidAttendingDaysException {
+    void save_data() throws InvalidAttendingDaysException, InvalidPricesException {
         Conference conference = Conference.createWithPriceAttendingDays(
                 "conference aaa",
                 "link to aaa",

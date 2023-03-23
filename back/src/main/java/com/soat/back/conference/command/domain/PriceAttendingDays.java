@@ -1,5 +1,6 @@
 package com.soat.back.conference.command.domain;
 
+import java.text.MessageFormat;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -50,13 +51,15 @@ public class PriceAttendingDays {
         return values;
     }
 
-    public boolean areAllBelow(float conferencePeriod) {
+    public void checkAreAllBelow(float conferencePeriod) throws InvalidAttendingDaysException {
         float maxAttending = this.values
                 .stream()
                 .max(Comparator.comparing(PriceAttendingDay::attendingDay))
                 .map(PriceAttendingDay::attendingDay)
                 .orElse(0f);
 
-        return maxAttending >= conferencePeriod;
+        if (maxAttending>= conferencePeriod) {
+            throw new InvalidAttendingDaysException(MessageFormat.format("Attending days should be lower than conference period {0} days", conferencePeriod));
+        }
     }
 }

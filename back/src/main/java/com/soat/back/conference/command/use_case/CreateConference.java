@@ -73,10 +73,10 @@ public class CreateConference {
                 .toList());
     }
 
-    private static PriceGroup buildPriceGroup(PriceGroupParams priceGroupParams) {
+    private static PriceGroup buildPriceGroup(PriceGroupParams priceGroupParams) throws InvalidThresholdException {
         PriceGroup priceGroup = null;
         if (priceGroupParams != null) {
-            priceGroup = new PriceGroup(priceGroupParams.priceGroup(), priceGroupParams.participantsThreshold());
+            priceGroup = PriceGroup.create(priceGroupParams.priceGroup(), priceGroupParams.participantsThreshold());
         }
         return priceGroup;
     }

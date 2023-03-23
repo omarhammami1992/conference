@@ -3,7 +3,6 @@ package com.soat.back.conference.command.domain;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 public final class Conference {
     private final String name;
@@ -30,7 +29,7 @@ public final class Conference {
         this.priceAttendingDays = PriceAttendingDays.createEmpty();
     }
 
-    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country, PriceGroup priceGroup) throws InvalidPricesException {
+    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country, PriceGroup priceGroup) {
         this.name = name;
         this.link = link;
         this.price = price;
@@ -43,7 +42,7 @@ public final class Conference {
         this.priceAttendingDays = PriceAttendingDays.createEmpty();
     }
 
-    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceAttendingDays priceAttendingDays, String city, String country) throws InvalidPricesException {
+    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceAttendingDays priceAttendingDays, String city, String country) {
         this.name = name;
         this.link = link;
         this.price = price;
@@ -61,40 +60,16 @@ public final class Conference {
         return new Conference(name, link, price, priceRanges, startDate, endDate, city, country);
     }
 
-    public static Conference createPriceGroup(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup, String city, String country) throws InvalidPricesException, InvalidThresholdException {
-        checkPriceGroupAmount(price, priceGroup);
-        checkPriceGroupThreshold(priceGroup);
+    public static Conference createPriceGroup(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup, String city, String country) throws InvalidPricesException {
+        priceGroup.checkPriceGroupAmount(price);
         return new Conference(name, link, price, startDate, endDate, city, country, priceGroup);
     }
 
-    public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceAttendingDays priceAttendingDays, String city, String country) throws InvalidAttendingDaysException, InvalidPricesException {
+    public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceAttendingDays priceAttendingDays, String city, String country) throws InvalidAttendingDaysException {
         float period = ChronoUnit.DAYS.between(startDate, endDate) + 1f;
-        if (priceAttendingDays.areAllBelow(period))
-            throw new InvalidAttendingDaysException(MessageFormat.format("Attending days should be lower than conference period {0} days", period));
-
+        priceAttendingDays.checkAreAllBelow(period);
         return new Conference(name, link, price, startDate, endDate, priceAttendingDays, city, country);
     }
-
-
-    private static void checkPriceGroupThreshold(PriceGroup priceGroup) throws InvalidThresholdException {
-        if (priceGroup.threshold() < 2) {
-            throw new InvalidThresholdException("Price group threshold must be greater than 1");
-        }
-    }
-
-    private static void checkPriceGroupAmount(Float price, PriceGroup priceGroup) throws InvalidPricesException {
-        if (priceGroup.price() > price) {
-            throw new InvalidPricesException("Price group is greater than default price");
-        }
-    }
-
-
-
-
-
-
-
-
 
     public String getName() {
         return name;

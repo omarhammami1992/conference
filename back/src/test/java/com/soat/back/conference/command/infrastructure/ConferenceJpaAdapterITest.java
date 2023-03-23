@@ -5,6 +5,7 @@ import com.soat.back.conference.command.domain.Conference;
 import com.soat.back.conference.command.domain.InvalidAttendingDaysException;
 import com.soat.back.conference.command.domain.InvalidPricesException;
 import com.soat.back.conference.command.domain.PriceAttendingDay;
+import com.soat.back.conference.command.domain.PriceAttendingDays;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,7 +32,7 @@ class ConferenceJpaAdapterITest {
                 100f,
                 LocalDate.of(2023, 5, 15),
                 LocalDate.of(2023, 5, 19),
-                List.of(new PriceAttendingDay(100f, 1f)),
+                PriceAttendingDays.create(List.of(new PriceAttendingDay(100f, 1f))),
                 "city",
                 "country"
         );

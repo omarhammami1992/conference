@@ -7,8 +7,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public final class Conference {
     private final String name;
@@ -22,7 +20,7 @@ public final class Conference {
     private final String city;
     private final String country;
     private final PriceGroup priceGroup;
-    private final List<PriceAttendingDay> priceAttendingDays;
+    private final PriceAttendingDays priceAttendingDays;
 
     private Conference(String name, String link, Float price, PriceRanges priceRanges, LocalDate startDate, LocalDate endDate, String city, String country) {
         this.name = name;
@@ -34,7 +32,7 @@ public final class Conference {
         this.city = city;
         this.country = country;
         this.priceGroup = null;
-        this.priceAttendingDays = emptyList();
+        this.priceAttendingDays = PriceAttendingDays.createEmpty();
     }
 
     private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country, PriceGroup priceGroup) throws InvalidPricesException {
@@ -47,10 +45,10 @@ public final class Conference {
         this.country = country;
         this.priceRanges = PriceRanges.createEmpty();
         this.priceGroup = priceGroup;
-        this.priceAttendingDays = emptyList();
+        this.priceAttendingDays = PriceAttendingDays.createEmpty();
     }
 
-    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays, String city, String country) throws InvalidPricesException {
+    private Conference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceAttendingDays priceAttendingDays, String city, String country) throws InvalidPricesException {
         this.name = name;
         this.link = link;
         this.price = price;
@@ -71,41 +69,21 @@ public final class Conference {
     public static Conference createPriceGroup(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup, String city, String country) throws InvalidPricesException, InvalidThresholdException {
         checkPriceGroupAmount(price, priceGroup);
         checkPriceGroupThreshold(priceGroup);
-        return new Conference(name, link, price, startDate, endDate,city, country , priceGroup);
+        return new Conference(name, link, price, startDate, endDate, city, country, priceGroup);
     }
 
-    public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, List<PriceAttendingDay> priceAttendingDays, String city, String country) throws InvalidAttendingDaysException, InvalidPricesException {
+    public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceAttendingDays priceAttendingDays, String city, String country) throws InvalidAttendingDaysException, InvalidPricesException {
         float period = ChronoUnit.DAYS.between(startDate, endDate) + 1f;
         if (ifIsAttendingDays(priceAttendingDays, period))
             throw new InvalidAttendingDaysException(MessageFormat.format("Attending days should be lower than conference period {0} days", period));
 
-        if (hasDuplicatedAttendingDays(priceAttendingDays)) {
-            throw new InvalidAttendingDaysException("Attending days must be unique for one conference");
-        }
 
-        if (hasDuplicatedPrice(priceAttendingDays)) {
-            throw new InvalidAttendingDaysException("Price must be unique for one conference");
-        }
         return new Conference(name, link, price, startDate, endDate, priceAttendingDays, city, country);
     }
 
-    private static boolean hasDuplicatedAttendingDays(List<PriceAttendingDay> priceAttendingDays) {
-        return hasDuplicatedProperty(priceAttendingDays,PriceAttendingDay::attendingDay);
-    }
-
-    private static boolean hasDuplicatedPrice(List<PriceAttendingDay> priceAttendingDays) {
-        return hasDuplicatedProperty(priceAttendingDays,PriceAttendingDay::price);
-    }
-
-    private static <R> boolean hasDuplicatedProperty(List<PriceAttendingDay> list, Function<PriceAttendingDay, ? extends R> mapper) {
-        return list
-                .stream()
-                .map(mapper)
-                .collect(Collectors.toSet()).size() < list.size();
-    }
-
-        private static boolean ifIsAttendingDays(List<PriceAttendingDay> priceAttendingDays, float daysBetween) {
+    private static boolean ifIsAttendingDays(PriceAttendingDays priceAttendingDays, float daysBetween) {
         float maxAttending = priceAttendingDays
+                .getValues()
                 .stream()
                 .max(Comparator.comparing(PriceAttendingDay::attendingDay))
                 .map(PriceAttendingDay::attendingDay)
@@ -180,7 +158,7 @@ public final class Conference {
         return priceGroup;
     }
 
-    public List<PriceAttendingDay> getPriceAttendingDays() {
+    public PriceAttendingDays getPriceAttendingDays() {
         return priceAttendingDays;
     }
 

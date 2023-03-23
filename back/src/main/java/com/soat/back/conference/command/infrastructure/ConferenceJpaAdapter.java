@@ -47,6 +47,7 @@ public class ConferenceJpaAdapter implements ConferencePort {
         }
 
         List<JpaPriceAttendingDay> jpaPriceAttendingDays = conference.getPriceAttendingDays()
+                .getValues()
                 .stream()
                 .map(priceAttendingDay -> toJpaPriceAttendingDay(priceAttendingDay, jpaConference))
                 .toList();

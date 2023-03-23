@@ -1,8 +1,16 @@
 package com.soat.back.conference.command.use_case;
 
-import com.soat.back.conference.command.domain.*;
-
-import java.util.List;
+import com.soat.back.conference.command.domain.Conference;
+import com.soat.back.conference.command.domain.DateInterval;
+import com.soat.back.conference.command.domain.InvalidAttendingDaysException;
+import com.soat.back.conference.command.domain.InvalidIntervalException;
+import com.soat.back.conference.command.domain.InvalidPricesException;
+import com.soat.back.conference.command.domain.InvalidThresholdException;
+import com.soat.back.conference.command.domain.PriceAttendingDay;
+import com.soat.back.conference.command.domain.PriceAttendingDays;
+import com.soat.back.conference.command.domain.PriceGroup;
+import com.soat.back.conference.command.domain.PriceRange;
+import com.soat.back.conference.command.domain.PriceRanges;
 
 public class CreateConference {
 
@@ -15,7 +23,7 @@ public class CreateConference {
     public Integer execute(ConferenceParams conferenceParams) throws InvalidIntervalException, InvalidPricesException, InvalidThresholdException, InvalidAttendingDaysException {
         final PriceRanges priceRanges = buildPriceRanges(conferenceParams);
         final PriceGroup priceGroup = buildPriceGroup(conferenceParams.priceGroupParams());
-        final List<PriceAttendingDay> priceAttendingDays = buildPriceAttendingDays(conferenceParams);
+        final PriceAttendingDays priceAttendingDays = buildPriceAttendingDays(conferenceParams);
 
         Conference conference;
 
@@ -55,14 +63,14 @@ public class CreateConference {
         return conferencePort.save(conference);
     }
 
-    private static boolean hasPriceGroups(PriceRanges priceRanges, List<PriceAttendingDay> priceAttendingDays) {
+    private static boolean hasPriceGroups(PriceRanges priceRanges, PriceAttendingDays priceAttendingDays) {
         return priceRanges.isEmpty() && priceAttendingDays.isEmpty();
     }
 
-    private List<PriceAttendingDay> buildPriceAttendingDays(ConferenceParams conferenceParams) {
-        return conferenceParams.priceAttendingDaysParams().stream()
+    private PriceAttendingDays buildPriceAttendingDays(ConferenceParams conferenceParams) throws InvalidAttendingDaysException {
+        return PriceAttendingDays.create(conferenceParams.priceAttendingDaysParams().stream()
                 .map(priceAttendingDay -> new PriceAttendingDay(priceAttendingDay.price(), priceAttendingDay.attendingDays()))
-                .toList();
+                .toList());
     }
 
     private static PriceGroup buildPriceGroup(PriceGroupParams priceGroupParams) {

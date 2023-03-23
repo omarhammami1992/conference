@@ -25,6 +25,32 @@ public final class PriceRanges {
         return new PriceRanges(values);
     }
 
+    public  void checkIntervals(Float price) throws InvalidIntervalException, InvalidPricesException {
+        for (int i = 0; i < this.values.size() - 1; i++) {
+            checkIntervalDates(i);
+            checkIntervalsPrices(i);
+        }
+        checkPrices(price);
+    }
+
+    private  void checkIntervalDates(int i) throws InvalidIntervalException {
+        if (!values.get(i + 1).dateInterval().startDate().minusDays(1).equals(values.get(i).dateInterval().endDate())) {
+            throw new InvalidIntervalException();
+        }
+    }
+
+    private void checkIntervalsPrices(int i) throws InvalidPricesException {
+        if (values.get(i).price() > values.get(i + 1).price()) {
+            throw new InvalidPricesException("Price range should be strictly ascending");
+        }
+    }
+
+    private void checkPrices(Float price) throws InvalidPricesException {
+        if (values != null && price < values.get(values.size() - 1).price()) {
+            throw new InvalidPricesException("Price range must be lower than default price");
+        }
+    }
+
     private static boolean checkMinimumPriceGreaterThanZero(List<PriceRange> priceRanges) {
         return priceRanges.stream()
                 .mapToDouble(PriceRange::price)

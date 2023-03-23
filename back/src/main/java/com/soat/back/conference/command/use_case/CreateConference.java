@@ -38,7 +38,7 @@ public class CreateConference {
             throw new InvalidPricesException("Non unique price range");
         }
         var conferencePeriodDay = DAYS.between(conferenceParams.startDate(), conferenceParams.endDate()) + 1.0;
-        if (priceAttendingDays.stream().anyMatch(priceAttendingDay -> priceAttendingDay.attendingDay() == conferencePeriodDay)) {
+        if (priceAttendingDays.stream().anyMatch(priceAttendingDay -> priceAttendingDay.attendingDay() >= conferencePeriodDay)) {
             throw new InvalidAttendingDaysException(MessageFormat.format("Attending days should be lower than conference period {0} days", conferencePeriodDay));
         }
 

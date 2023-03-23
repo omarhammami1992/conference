@@ -333,12 +333,40 @@ class CreateConferenceUTest {
         }
 
         @Test
-        void execute_should_throw_exception_when_attending_7_days_lower_than_conference_7_days() {
+        void execute_should_throw_exception_when_attending_days_equal_to_conference_period() {
             // given
             final List<PriceAttendingDaysParams> priceAttendingDayList = List.of(
                     new PriceAttendingDaysParams(200f, 1f),
                     new PriceAttendingDaysParams(300f, 2f),
                     new PriceAttendingDaysParams(800f, 7f)
+            );
+            ConferenceParams conferenceParams = new ConferenceParams(
+                    "devoxx",
+                    "link",
+                    LocalDate.of(2022, 12, 1),
+                    LocalDate.of(2022, 12, 7),
+                    1000f,
+                    of(),
+                    null,
+                    priceAttendingDayList,
+                    "Paris",
+                    "France"
+            );
+
+            // when
+            final Throwable throwable = catchThrowable(() -> createConference.execute(conferenceParams));
+
+            // then
+            assertThat(throwable).isInstanceOf(InvalidAttendingDaysException.class);
+            assertThat(throwable).hasMessage("Attending days should be lower than conference period 7 days");
+        }
+        @Test
+        void execute_should_throw_exception_when_attending_days_higher_than_conference_period() {
+            // given
+            final List<PriceAttendingDaysParams> priceAttendingDayList = List.of(
+                    new PriceAttendingDaysParams(200f, 1f),
+                    new PriceAttendingDaysParams(300f, 2f),
+                    new PriceAttendingDaysParams(800f, 10f)
             );
             ConferenceParams conferenceParams = new ConferenceParams(
                     "devoxx",

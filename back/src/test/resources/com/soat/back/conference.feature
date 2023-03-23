@@ -31,7 +31,7 @@ Feature: Gestion des conférences
       | price | attendingDays |
       | 400   | 2             |
       | 600   | 2.5           |
-      | 950   | 7           |
+      | 950   | 7             |
 
   Scenario: Récupérer la liste de toutes les conférences
     Given une liste de conférences enregistrées
@@ -51,7 +51,6 @@ Feature: Gestion des conférences
       | 2  | DataOps Rocks | https://summit-2022.dataops.rocks/ | 0     | 01-12-2022 | 30-12-2022 | Paris | France  |
     When l'utilisateur consulte le détail de la conférence 1
     Then la conférence récupérée devrait contenir l id 1, le nom "Devoxx", le lien "https://www.devoxx", ayant le prix 300 et qui dure entre le "01-09-2022" et le "30-09-2022" et qui aura lieu à "Paris" ("France") "en présentielle"
-
 
   Scenario: Récupérer une conférence inexistante
     Given une liste de conférences enregistrées

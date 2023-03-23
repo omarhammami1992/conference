@@ -13,6 +13,8 @@ import com.soat.back.conference.command.domain.PriceAttendingDay;
 import com.soat.back.conference.command.domain.PriceGroup;
 import com.soat.back.conference.command.domain.PriceRange;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 public class CreateConference {
 
     private final ConferencePort conferencePort;
@@ -33,6 +35,10 @@ public class CreateConference {
 
         if (checkUniquenessPriceInPriceRange(priceRanges)) {
             throw new InvalidPricesException("Non unique price range");
+        }
+        var conferencePeriodDay = DAYS.between(conferenceParams.startDate(), conferenceParams.endDate()) + 1.0;
+        if (priceAttendingDays.stream().anyMatch(priceAttendingDay -> priceAttendingDay.attendingDay() == conferencePeriodDay)) {
+            throw new InvalidAttendingDaysException("Attending 7 days should be lower than conference period 7 days");
         }
 
         if (hasPriceGroups(priceRanges, priceAttendingDays)) {

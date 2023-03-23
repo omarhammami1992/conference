@@ -109,12 +109,12 @@ public class ConferenceSteps extends AcceptanceTest {
                 .ignoringFields("priceRanges", "priceGroup", "priceAttendingDays")
                 .isEqualTo(expectedJpaConference);
 
-        List<JpaPriceRange> jpaPriceRanges = dataTableTransformEntries(dataTable, this::buildJpaPriceRange);
+        List<JpaPriceRange> expectedJpaPriceRanges = dataTableTransformEntries(dataTable, this::buildJpaPriceRange);
 
         assert jpaConference != null;
         assertThat(jpaConference.getPriceRanges())
                 .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id", "conference")
-                .containsExactlyInAnyOrder(jpaPriceRanges.toArray(JpaPriceRange[]::new));
+                .containsExactlyInAnyOrder(expectedJpaPriceRanges.toArray(JpaPriceRange[]::new));
     }
 
     @And("qu'elle a un système de tarification early bird à {float} € entre le {string} et le {string}")

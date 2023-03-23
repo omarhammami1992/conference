@@ -331,5 +331,34 @@ class CreateConferenceUTest {
             assertThat(throwable).isInstanceOf(InvalidAttendingDaysException.class);
             assertThat(throwable).hasMessage("Price must be unique for one conference");
         }
+
+        @Test
+        void execute_should_throw_exception_when_attending_7_days_lower_than_conference_7_days() {
+            // given
+            final List<PriceAttendingDaysParams> priceAttendingDayList = List.of(
+                    new PriceAttendingDaysParams(200f, 1f),
+                    new PriceAttendingDaysParams(300f, 2f),
+                    new PriceAttendingDaysParams(800f, 7f)
+            );
+            ConferenceParams conferenceParams = new ConferenceParams(
+                    "devoxx",
+                    "link",
+                    LocalDate.of(2022, 12, 1),
+                    LocalDate.of(2022, 12, 7),
+                    1000f,
+                    of(),
+                    null,
+                    priceAttendingDayList,
+                    "Paris",
+                    "France"
+            );
+
+            // when
+            final Throwable throwable = catchThrowable(() -> createConference.execute(conferenceParams));
+
+            // then
+            assertThat(throwable).isInstanceOf(InvalidAttendingDaysException.class);
+            assertThat(throwable).hasMessage("Attending 7 days should be lower than conference period 7 days");
+        }
     }
 }

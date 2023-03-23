@@ -36,20 +36,60 @@ public final class Conference {
         this.priceAttendingDays = priceAttendingDays;
     }
 
-    public static Conference createWithPriceRanges(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceRanges priceRanges, String city, String country) throws InvalidIntervalException, InvalidPricesException {
+    private static Conference createWithPriceRanges(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceRanges priceRanges, String city, String country) throws InvalidIntervalException, InvalidPricesException {
         priceRanges.checkIntervals(price);
         return new Conference(name, link, price, startDate, endDate, city, country, priceRanges, null, PriceAttendingDays.createEmpty());
     }
 
-    public static Conference createPriceGroup(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup, String city, String country) throws InvalidPricesException {
+    private static Conference createPriceGroup(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup, String city, String country) throws InvalidPricesException {
         priceGroup.checkPriceGroupAmount(price);
         return new Conference(name, link, price, startDate, endDate, city, country, PriceRanges.createEmpty(), priceGroup, PriceAttendingDays.createEmpty());
     }
 
-    public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceAttendingDays priceAttendingDays, String city, String country) throws InvalidAttendingDaysException {
+    private static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceAttendingDays priceAttendingDays, String city, String country) throws InvalidAttendingDaysException {
         var interval = new DateInterval(startDate, endDate);
         priceAttendingDays.checkAreAllBelow(interval.period());
         return new Conference(name, link, price, startDate, endDate, city, country, PriceRanges.createEmpty(), null, priceAttendingDays);
+    }
+
+    public static Conference create(String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country, PriceRanges priceRanges, PriceGroup priceGroup, PriceAttendingDays priceAttendingDays) throws InvalidPricesException, InvalidIntervalException, InvalidAttendingDaysException {
+        if (hasPriceGroups(priceRanges, priceAttendingDays)) {
+            return Conference.createPriceGroup(
+                    name,
+                    link,
+                    price,
+                    startDate,
+                    endDate,
+                    priceGroup,
+                    city,
+                    country);
+        } else if (priceAttendingDays.isEmpty()) {
+            return Conference.createWithPriceRanges(
+                    name,
+                    link,
+                    price,
+                    startDate,
+                    endDate,
+                    priceRanges,
+                    city,
+                    country);
+        } else {
+            return Conference.createWithPriceAttendingDays(
+                    name,
+                    link,
+                    price,
+                    startDate,
+                    endDate,
+                    priceAttendingDays,
+                    city,
+                    country
+            );
+        }
+
+    }
+
+    private static boolean hasPriceGroups(PriceRanges priceRanges, PriceAttendingDays priceAttendingDays) {
+        return priceRanges.isEmpty() && priceAttendingDays.isEmpty();
     }
 
     public String getName() {

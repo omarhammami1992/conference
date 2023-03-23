@@ -1,11 +1,7 @@
 package com.soat.back.conference.command.infrastructure;
 
 import com.soat.back.common.infrastructure.JpaConferenceRepository;
-import com.soat.back.conference.command.domain.Conference;
-import com.soat.back.conference.command.domain.InvalidAttendingDaysException;
-import com.soat.back.conference.command.domain.InvalidPricesException;
-import com.soat.back.conference.command.domain.PriceAttendingDay;
-import com.soat.back.conference.command.domain.PriceAttendingDays;
+import com.soat.back.conference.command.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,16 +21,18 @@ class ConferenceJpaAdapterITest {
     JpaConferenceRepository jpaConferenceRepository;
 
     @Test
-    void save_data() throws InvalidAttendingDaysException, InvalidPricesException {
-        Conference conference = Conference.createWithPriceAttendingDays(
+    void save_data() throws InvalidAttendingDaysException, InvalidIntervalException, InvalidPricesException {
+        Conference conference = Conference.create(
                 "conference aaa",
                 "link to aaa",
                 100f,
                 LocalDate.of(2023, 5, 15),
                 LocalDate.of(2023, 5, 19),
-                PriceAttendingDays.create(List.of(new PriceAttendingDay(100f, 1f))),
                 "city",
-                "country"
+                "country",
+                PriceRanges.createEmpty(),
+                null,
+                PriceAttendingDays.create(List.of(new PriceAttendingDay(100f, 1f)))
         );
         var id = conferenceAdapter.save(conference);
         assertThat(id).isNotNull();

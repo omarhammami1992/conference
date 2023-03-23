@@ -1,16 +1,6 @@
 package com.soat.back.conference.command.use_case;
 
-import com.soat.back.conference.command.domain.Conference;
-import com.soat.back.conference.command.domain.DateInterval;
-import com.soat.back.conference.command.domain.InvalidAttendingDaysException;
-import com.soat.back.conference.command.domain.InvalidIntervalException;
-import com.soat.back.conference.command.domain.InvalidPricesException;
-import com.soat.back.conference.command.domain.InvalidThresholdException;
-import com.soat.back.conference.command.domain.PriceAttendingDay;
-import com.soat.back.conference.command.domain.PriceAttendingDays;
-import com.soat.back.conference.command.domain.PriceGroup;
-import com.soat.back.conference.command.domain.PriceRange;
-import com.soat.back.conference.command.domain.PriceRanges;
+import com.soat.back.conference.command.domain.*;
 
 public class CreateConference {
 
@@ -25,46 +15,20 @@ public class CreateConference {
         final PriceGroup priceGroup = buildPriceGroup(conferenceParams.priceGroupParams());
         final PriceAttendingDays priceAttendingDays = buildPriceAttendingDays(conferenceParams);
 
-        Conference conference;
-
-        if (hasPriceGroups(priceRanges, priceAttendingDays)) {
-            conference = Conference.createPriceGroup(
-                    conferenceParams.name(),
-                    conferenceParams.link(),
-                    conferenceParams.price(),
-                    conferenceParams.startDate(),
-                    conferenceParams.endDate(),
-                    priceGroup,
-                    conferenceParams.city(),
-                    conferenceParams.country());
-        } else if (priceAttendingDays.isEmpty()) {
-            conference = Conference.createWithPriceRanges(
-                    conferenceParams.name(),
-                    conferenceParams.link(),
-                    conferenceParams.price(),
-                    conferenceParams.startDate(),
-                    conferenceParams.endDate(),
-                    priceRanges,
-                    conferenceParams.city(),
-                    conferenceParams.country());
-        } else {
-            conference = Conference.createWithPriceAttendingDays(
-                    conferenceParams.name(),
-                    conferenceParams.link(),
-                    conferenceParams.price(),
-                    conferenceParams.startDate(),
-                    conferenceParams.endDate(),
-                    priceAttendingDays,
-                    conferenceParams.city(),
-                    conferenceParams.country()
-            );
-        }
+        Conference conference = Conference.create(
+                conferenceParams.name(),
+                conferenceParams.link(),
+                conferenceParams.price(),
+                conferenceParams.startDate(),
+                conferenceParams.endDate(),
+                conferenceParams.city(),
+                conferenceParams.country(),
+                priceRanges,
+                priceGroup,
+                priceAttendingDays
+        );
 
         return conferencePort.save(conference);
-    }
-
-    private static boolean hasPriceGroups(PriceRanges priceRanges, PriceAttendingDays priceAttendingDays) {
-        return priceRanges.isEmpty() && priceAttendingDays.isEmpty();
     }
 
     private PriceAttendingDays buildPriceAttendingDays(ConferenceParams conferenceParams) throws InvalidAttendingDaysException {

@@ -2,7 +2,7 @@ package com.soat.back.conference.command.domain;
 
 import java.time.LocalDate;
 
-public final class Conference {
+public class Conference {
     private final String name;
     private final String link;
     private final Float price;
@@ -36,17 +36,17 @@ public final class Conference {
         this.priceAttendingDays = priceAttendingDays;
     }
 
-    private static Conference createWithPriceRanges(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceRanges priceRanges, String city, String country) throws InvalidIntervalException, InvalidPricesException {
+    public static Conference createWithPriceRanges(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceRanges priceRanges, String city, String country) throws InvalidIntervalException, InvalidPricesException {
         priceRanges.checkIntervals(price);
         return new Conference(name, link, price, startDate, endDate, city, country, priceRanges, null, PriceAttendingDays.createEmpty());
     }
 
-    private static Conference createPriceGroup(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup, String city, String country) throws InvalidPricesException {
+    public static Conference createPriceGroup(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceGroup priceGroup, String city, String country) throws InvalidPricesException {
         priceGroup.checkPriceGroupAmount(price);
         return new Conference(name, link, price, startDate, endDate, city, country, PriceRanges.createEmpty(), priceGroup, PriceAttendingDays.createEmpty());
     }
 
-    private static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceAttendingDays priceAttendingDays, String city, String country) throws InvalidAttendingDaysException {
+    public static Conference createWithPriceAttendingDays(String name, String link, Float price, LocalDate startDate, LocalDate endDate, PriceAttendingDays priceAttendingDays, String city, String country) throws InvalidAttendingDaysException {
         var interval = new DateInterval(startDate, endDate);
         priceAttendingDays.checkAreAllBelow(interval.period());
         return new Conference(name, link, price, startDate, endDate, city, country, PriceRanges.createEmpty(), null, priceAttendingDays);
@@ -88,6 +88,11 @@ public final class Conference {
 
     }
 
+    public static ConferenceBuilder builder() {
+        return new ConferenceBuilder();
+    }
+
+    // TODO : delete this method if we use factory
     private static boolean hasPriceGroups(PriceRanges priceRanges, PriceAttendingDays priceAttendingDays) {
         return priceRanges.isEmpty() && priceAttendingDays.isEmpty();
     }
@@ -143,5 +148,80 @@ public final class Conference {
                 ", priceRanges=" + priceRanges +
                 ", priceGroup=" + priceGroup +
                 '}';
+    }
+
+
+    public static final class ConferenceBuilder {
+        private String name;
+        private String link;
+        private Float price;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private PriceRanges priceRanges;
+        private String city;
+        private String country;
+        private PriceGroup priceGroup;
+        private PriceAttendingDays priceAttendingDays;
+
+        private ConferenceBuilder() {
+        }
+
+        public ConferenceBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public ConferenceBuilder link(String link) {
+            this.link = link;
+            return this;
+        }
+
+        public ConferenceBuilder price(Float price) {
+            this.price = price;
+            return this;
+        }
+
+        public ConferenceBuilder startDate(LocalDate startDate) {
+            this.startDate = startDate;
+            return this;
+        }
+
+        public ConferenceBuilder endDate(LocalDate endDate) {
+            this.endDate = endDate;
+            return this;
+        }
+
+        public ConferenceBuilder priceRanges(PriceRanges priceRanges) throws InvalidIntervalException, InvalidPricesException {
+            priceRanges.checkIntervals(price);
+            this.priceRanges = priceRanges;
+            return this;
+        }
+
+        public ConferenceBuilder city(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public ConferenceBuilder country(String country) {
+            this.country = country;
+            return this;
+        }
+
+        public ConferenceBuilder priceGroup(PriceGroup priceGroup, Float price) throws InvalidPricesException {
+            priceGroup.checkPriceGroupAmount(price);
+            this.priceGroup = priceGroup;
+            return this;
+        }
+
+        public ConferenceBuilder priceAttendingDays(PriceAttendingDays priceAttendingDays) throws InvalidAttendingDaysException {
+            var interval = new DateInterval(startDate, endDate);
+            priceAttendingDays.checkAreAllBelow(interval.period());
+            this.priceAttendingDays = priceAttendingDays;
+            return this;
+        }
+
+        public Conference build() {
+            return new Conference(name, link, price, startDate, endDate, city, country, priceRanges, priceGroup, priceAttendingDays);
+        }
     }
 }

@@ -15,7 +15,7 @@ public class CreateConference {
         final PriceGroup priceGroup = buildPriceGroup(conferenceParams.priceGroupParams());
         final PriceAttendingDays priceAttendingDays = buildPriceAttendingDays(conferenceParams);
 
-        Conference conference = Conference.create(
+        Conference conference = ConferenceFactory.create(
                 conferenceParams.name(),
                 conferenceParams.link(),
                 conferenceParams.price(),

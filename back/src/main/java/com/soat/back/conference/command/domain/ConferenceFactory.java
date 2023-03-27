@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 public class ConferenceFactory {
 
-    public Conference create(String name, String link, Float price, LocalDate startDate, java.time.LocalDate endDate,
-                             String city, String country, PriceRanges priceRanges, PriceGroup priceGroup, PriceAttendingDays priceAttendingDays)
+    public static Conference create(String name, String link, Float price, LocalDate startDate, java.time.LocalDate endDate,
+                                    String city, String country, PriceRanges priceRanges, PriceGroup priceGroup, PriceAttendingDays priceAttendingDays)
             throws InvalidPricesException, InvalidIntervalException, InvalidAttendingDaysException {
 
         Conference.ConferenceBuilder conferenceBuilder = Conference.builder()
@@ -18,30 +18,26 @@ public class ConferenceFactory {
                 .country(country);
 
         if (hasPriceGroups(priceRanges, priceAttendingDays)) {
-            return conferenceBuilder.priceRanges(priceRanges).build();
+            return conferenceBuilder
+                    .priceGroup(priceGroup, price)
+                    .priceRanges(PriceRanges.createEmpty())
+                    .priceAttendingDays(PriceAttendingDays.createEmpty())
+                    .build();
 
         }
+
         if (priceAttendingDays.isEmpty()) {
-            return Conference.createWithPriceRanges(
-                    name,
-                    link,
-                    price,
-                    startDate,
-                    endDate,
-                    priceRanges,
-                    city,
-                    country);
+            return conferenceBuilder
+                    .priceRanges(priceRanges)
+                    .priceAttendingDays(PriceAttendingDays.createEmpty())
+                    .build();
         }
-        return Conference.createWithPriceAttendingDays(
-                name,
-                link,
-                price,
-                startDate,
-                endDate,
-                priceAttendingDays,
-                city,
-                country
-        );
+
+        return conferenceBuilder
+                .priceAttendingDays(priceAttendingDays)
+                .priceRanges(PriceRanges.createEmpty())
+                .build();
+
     }
 
     private static boolean hasPriceGroups(PriceRanges priceRanges, PriceAttendingDays priceAttendingDays) {

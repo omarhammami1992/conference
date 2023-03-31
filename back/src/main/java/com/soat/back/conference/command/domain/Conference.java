@@ -157,11 +157,11 @@ public class Conference {
         private Float price;
         private LocalDate startDate;
         private LocalDate endDate;
-        private PriceRanges priceRanges;
+        private PriceRanges priceRanges = PriceRanges.createEmpty();
         private String city;
         private String country;
-        private PriceGroup priceGroup;
-        private PriceAttendingDays priceAttendingDays;
+        private PriceGroup priceGroup = PriceGroup.createEmpty();
+        private PriceAttendingDays priceAttendingDays = PriceAttendingDays.createEmpty();
 
         private ConferenceBuilder() {
         }

@@ -2,9 +2,9 @@ package com.soat.back.conference.command.infrastructure;
 
 import com.soat.back.common.infrastructure.*;
 import com.soat.back.conference.command.domain.Conference;
-import com.soat.back.conference.command.use_case.ConferencePort;
 import com.soat.back.conference.command.domain.PriceAttendingDay;
 import com.soat.back.conference.command.domain.PriceRange;
+import com.soat.back.conference.command.use_case.ConferencePort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -41,10 +41,8 @@ public class ConferenceJpaAdapter implements ConferencePort {
                 .toList();
         jpaConference.setPriceRanges(jpaPriceRanges);
 
-        if (conference.getPriceGroup() != null) {
-            final var jpaPriceGroup = new JpaPriceGroup(conference.getPriceGroup().price(), conference.getPriceGroup().threshold(), jpaConference);
-            jpaConference.setPriceGroup(jpaPriceGroup);
-        }
+        final var jpaPriceGroup = new JpaPriceGroup(conference.getPriceGroup().price(), conference.getPriceGroup().threshold(), jpaConference);
+        jpaConference.setPriceGroup(jpaPriceGroup);
 
         List<JpaPriceAttendingDay> jpaPriceAttendingDays = conference.getPriceAttendingDays()
                 .getValues()

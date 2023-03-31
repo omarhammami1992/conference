@@ -16,6 +16,10 @@ public final class PriceGroup {
         return new PriceGroup(price, threshold);
     }
 
+    public static PriceGroup createEmpty() {
+        return new PriceGroup(0F, 0);
+    }
+
     public void checkPriceGroupAmount(Float price) throws InvalidPricesException {
         if (this.price > price) {
             throw new InvalidPricesException("Price group is greater than default price");

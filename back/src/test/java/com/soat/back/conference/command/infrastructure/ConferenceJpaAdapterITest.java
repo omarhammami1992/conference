@@ -31,7 +31,7 @@ class ConferenceJpaAdapterITest {
                 "city",
                 "country",
                 PriceRanges.createEmpty(),
-                null,
+                PriceGroup.createEmpty(),
                 PriceAttendingDays.create(List.of(new PriceAttendingDay(100f, 1f)))
         );
         var id = conferenceAdapter.save(conference);

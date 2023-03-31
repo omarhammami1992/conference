@@ -1,5 +1,7 @@
 package com.soat.back.conference.command.domain;
 
+import org.springframework.util.CollectionUtils;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +48,7 @@ public final class PriceRanges {
     }
 
     private void checkPrices(Float price) throws InvalidPricesException {
-        if (values != null && price < values.get(values.size() - 1).price()) {
+        if (!CollectionUtils.isEmpty(values) && price < values.get(values.size() - 1).price()) {
             throw new InvalidPricesException("Price range must be lower than default price");
         }
     }

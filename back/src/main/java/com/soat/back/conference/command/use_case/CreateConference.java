@@ -12,7 +12,7 @@ public class CreateConference {
 
     public Integer execute(ConferenceParams conferenceParams) throws InvalidIntervalException, InvalidPricesException, InvalidThresholdException, InvalidAttendingDaysException {
         final PriceRanges priceRanges = buildPriceRanges(conferenceParams);
-        final PriceGroup priceGroup = buildPriceGroup(conferenceParams.priceGroupParams());
+        final PriceGroup priceGroup = conferenceParams.priceGroup();
         final PriceAttendingDays priceAttendingDays = buildPriceAttendingDays(conferenceParams);
 
         Conference.ConferenceBuilder conferenceBuilder = Conference.builder()

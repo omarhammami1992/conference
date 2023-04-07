@@ -2,6 +2,8 @@ package com.soat.back.conference.command.use_case;
 
 import com.soat.back.conference.command.domain.*;
 
+import java.util.Objects;
+
 public class CreateConference {
 
     private final ConferencePort conferencePort;
@@ -11,9 +13,9 @@ public class CreateConference {
     }
 
     public Integer execute(ConferenceParams conferenceParams) throws InvalidIntervalException, InvalidPricesException, InvalidThresholdException, InvalidAttendingDaysException {
-        final PriceRanges priceRanges = buildPriceRanges(conferenceParams);
+        final PriceRanges priceRanges = conferenceParams.priceRanges();
         final PriceGroup priceGroup = conferenceParams.priceGroup();
-        final PriceAttendingDays priceAttendingDays = buildPriceAttendingDays(conferenceParams);
+        final PriceAttendingDays priceAttendingDays = conferenceParams.priceAttendingDays();
 
         Conference.ConferenceBuilder conferenceBuilder = Conference.builder()
                 .name(conferenceParams.name())
@@ -24,39 +26,15 @@ public class CreateConference {
                 .city(conferenceParams.city())
                 .country(conferenceParams.country());
 
-        if (hasPriceGroups(priceRanges, priceAttendingDays)) {
+        if (Objects.nonNull(priceGroup)) {
             conferenceBuilder.priceGroup(priceGroup, conferenceParams.price());
-        } else if (priceAttendingDays.isEmpty()) {
+        } else if (!priceRanges.isEmpty()) {
             conferenceBuilder.priceRanges(priceRanges);
         } else {
             conferenceBuilder.priceAttendingDays(priceAttendingDays);
         }
 
         return conferencePort.save(conferenceBuilder.build());
-    }
-
-    private PriceAttendingDays buildPriceAttendingDays(ConferenceParams conferenceParams) throws InvalidAttendingDaysException {
-        return PriceAttendingDays.create(conferenceParams.priceAttendingDaysParams().stream()
-                .map(priceAttendingDay -> new PriceAttendingDay(priceAttendingDay.price(), priceAttendingDay.attendingDays()))
-                .toList());
-    }
-
-    private static PriceGroup buildPriceGroup(PriceGroupParams priceGroupParams) throws InvalidThresholdException {
-        PriceGroup priceGroup = null;
-        if (priceGroupParams != null) {
-            priceGroup = PriceGroup.create(priceGroupParams.priceGroup(), priceGroupParams.participantsThreshold());
-        }
-        return priceGroup;
-    }
-
-    private static PriceRanges buildPriceRanges(ConferenceParams conferenceParams) throws InvalidPricesException {
-        return PriceRanges.create(conferenceParams.priceRanges().stream()
-                .map(priceRange -> new PriceRange(priceRange.price(), new DateInterval(priceRange.startDate(), priceRange.endDate())))
-                .toList());
-    }
-
-    private static boolean hasPriceGroups(PriceRanges priceRanges, PriceAttendingDays priceAttendingDays) {
-        return priceRanges.isEmpty() && priceAttendingDays.isEmpty();
     }
 
 }

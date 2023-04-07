@@ -295,4 +295,13 @@ public class ConferenceSteps extends AcceptanceTest {
         this.city = city;
         this.country = country;
     }
+
+    @Then("la conférence est enregistée avec le prix {float} €")
+    public void laConférenceEstEnregistéeAvecLePrix€(float defaultPrice) {
+        final Integer savedConferenceId = response.then().extract().as(Integer.class);
+        JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
+        ;
+        assertThat(jpaConference).isNotNull();
+        assertThat(jpaConference.getPrice()).isEqualTo(defaultPrice);
+    }
 }

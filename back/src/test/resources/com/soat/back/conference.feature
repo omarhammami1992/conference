@@ -57,3 +57,10 @@ Feature: Gestion des conférences
       | 2  | DataOps Rocks | https://summit-2022.dataops.rocks/ | 0     | 01-12-2022 | 30-12-2022 |
     When l'utilisateur consulte le détail de la conférence 3
     Then la conférence n'existe pas
+
+  Scenario: Création d'une conférence
+    Given une conférence ayant le nom "Devoxx", le lien "https://www.devoxx" et qui dure entre le "01-12-2022" et le "03-12-2022" et qui aura lieu à "Paris" en "France"
+    And qu'elle a une tarification pleine à 300 €
+    When l utilisateur tente de l enregistrer
+    Then la conférence est enregistée avec le prix 300 €
+#    TODO : complete checking no price type

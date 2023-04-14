@@ -118,12 +118,51 @@ describe('ConferenceFormComponent', () => {
       expect(conferenceNameInput.attributes['for']).toEqual('conference-end-date');
       expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
     });
+
     it('should contain conference end date input', () => {
       // when
       const conferenceNameInput = fixture.debugElement.query(By.css('#conference-end-date'));
 
       // then
       expect(conferenceNameInput).toBeTruthy();
+    });
+
+    it('should contain conference city label', () => {
+      // when
+      const conferenceCityLabel = fixture.debugElement.query(By.css('#conference-city-label'));
+
+      // then
+      expect(conferenceCityLabel).toBeTruthy();
+      expect(conferenceCityLabel.attributes['for']).toEqual('conference-city');
+      expect(conferenceCityLabel.nativeElement.textContent).toBeTruthy();
+
+    });
+
+    it('should contain conference city input', () => {
+      // when
+      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-city'));
+
+      // then
+      expect(conferenceNameInput).toBeTruthy();
+    });
+
+    it('should contain conference country label', () => {
+      // when
+      const conferenceCountryLabel = fixture.debugElement.query(By.css('#conference-country-label'));
+
+      // then
+      expect(conferenceCountryLabel).toBeTruthy();
+      expect(conferenceCountryLabel.attributes['for']).toEqual('conference-country');
+      expect(conferenceCountryLabel.nativeElement.textContent).toBeTruthy();
+
+    });
+
+    it('should contain conference country input', () => {
+      // when
+      const conferenceCountryInput = fixture.debugElement.query(By.css('#conference-country'));
+
+      // then
+      expect(conferenceCountryInput).toBeTruthy();
     });
 
     it("should contain conference pricing mode select", () => {
@@ -320,6 +359,29 @@ describe('ConferenceFormComponent', () => {
           const requiredPriceErrorMessage = fixture.debugElement.query(By.css('#required-valid-dates-error-message'));
           expect(requiredPriceErrorMessage).toBeTruthy();
         })
+
+        it("city is not filled", () => {
+          // given
+          fillFormInputs({
+            name: "Name",
+            price: 1000,
+            link: "archi hexa",
+            city:"",
+            startDate: "2022-01-01",
+            endDate: "2022-01-03"
+          });
+
+          // when
+          component.createConference();
+          fixture.detectChanges();
+
+          // then
+          expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
+          expect(component.conferenceForm.controls.city.errors).not.toEqual(null);
+          const requiredCityErrorMessage = fixture.debugElement.query(By.css('#required-city-error-message'));
+          expect(requiredCityErrorMessage).toBeTruthy();
+        })
+
       });
     })
   })
@@ -348,6 +410,10 @@ describe('ConferenceFormComponent', () => {
     const conferencePricingModeInput = fixture.debugElement.query(By.css('#conference-pricing-mode'));
     conferencePricingModeInput.nativeElement.value = conference.pricingMode;
     conferencePricingModeInput.nativeElement.dispatchEvent(new Event('change'));
+
+    const conferenceCityInput = fixture.debugElement.query(By.css('#conference-city'));
+    conferenceCityInput.nativeElement.value = conference.city;
+    conferenceCityInput.nativeElement.dispatchEvent(new Event('input'));
   }
 
   function checkPriceModeSelector(selector: string) {

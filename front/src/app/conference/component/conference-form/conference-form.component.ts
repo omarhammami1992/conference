@@ -50,6 +50,7 @@ export class ConferenceFormComponent implements OnInit {
       price: ['', [Validators.required, Validators.min(1)]],
       startDate: ['', [Validators.required,]],
       endDate: ['', [Validators.required]],
+      city: ['', Validators.required],
       pricingMode:['', [Validators.required]],
       earlyBirdForm: this._formBuilder.group({
         ranges: this._formBuilder.array([])

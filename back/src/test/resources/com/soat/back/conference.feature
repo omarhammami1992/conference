@@ -63,4 +63,4 @@ Feature: Gestion des conférences
     And qu'elle a une tarification pleine à 300 €
     When l utilisateur tente de l enregistrer
     Then la conférence est enregistée avec le prix 300 €
-#    TODO : complete checking no price type
+    And la conférence n'a aucun système de tarification particulier

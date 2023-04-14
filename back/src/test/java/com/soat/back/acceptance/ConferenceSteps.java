@@ -300,8 +300,18 @@ public class ConferenceSteps extends AcceptanceTest {
     public void laConférenceEstEnregistéeAvecLePrix€(float defaultPrice) {
         final Integer savedConferenceId = response.then().extract().as(Integer.class);
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
-        ;
+
         assertThat(jpaConference).isNotNull();
         assertThat(jpaConference.getPrice()).isEqualTo(defaultPrice);
+    }
+
+    @And("la conférence n'a aucun système de tarification particulier")
+    public void laConférenceNAAucunSystèmeDeTarificationParticulier() {
+        final Integer savedConferenceId = response.then().extract().as(Integer.class);
+        JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
+
+        assertThat(jpaConference).isNotNull()
+                .extracting(JpaConference::getGroupPrice, jpaConference1 -> jpaConference1.getPriceAttendingDays().size(), jpaConference2 -> jpaConference2.getPriceRanges().size())
+                .containsExactly(null, 0, 0);
     }
 }

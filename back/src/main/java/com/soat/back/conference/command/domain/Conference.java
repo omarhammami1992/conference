@@ -150,8 +150,8 @@ public class Conference {
             return this;
         }
 
-        public ConferenceBuilder priceGroup(PriceGroup priceGroup, Float price) throws InvalidPricesException {
-            priceGroup.checkPriceGroupAmount(price);
+        public ConferenceBuilder priceGroup(PriceGroup priceGroup, Float defaultPrice) throws InvalidPricesException {
+            priceGroup.checkPriceGroupAmount(defaultPrice);
             this.priceGroup = priceGroup;
             return this;
         }

@@ -20,8 +20,8 @@ public final class PriceGroup {
         return new PriceGroup(0F, 0);
     }
 
-    public void checkPriceGroupAmount(Float price) throws InvalidPricesException {
-        if (this.price > price) {
+    public void checkPriceGroupAmount(Float defaultPrice) throws InvalidPricesException {
+        if (this.price > defaultPrice) {
             throw new InvalidPricesException("Price group is greater than default price");
         }
     }

@@ -28,6 +28,8 @@
 
   <label id="conference-country-label" for="conference-country">Country</label>
   <input id="conference-country" />
+  <span id="required-country-error-message" *ngIf="conferenceForm.controls.country.touched && conferenceForm.controls.country.errors !== null">Required country</span>
+  <br>
 
   <select id="conference-pricing-mode" formControlName="pricingMode">
     <option *ngFor="let pricingMode of pricingModes" [value]="pricingMode.value">{{pricingMode.label}}</option>

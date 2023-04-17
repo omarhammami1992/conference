@@ -382,6 +382,31 @@ describe('ConferenceFormComponent', () => {
           expect(requiredCityErrorMessage).toBeTruthy();
         })
 
+        it("country is not filled", () => {
+          // given
+          fillFormInputs({
+            name: "Name",
+            price: 1000,
+            link: "archi hexa",
+            city:"Paris",
+            country:"",
+            startDate: "2022-01-01",
+            endDate: "2022-01-03"
+          });
+
+          // when
+          component.createConference();
+          fixture.detectChanges();
+
+          // then
+          expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
+          expect(component.conferenceForm.controls.country.errors).not.toEqual(null);
+          const requiredCountryErrorMessage = fixture.debugElement.query(By.css('#required-country-error-message'));
+          expect(requiredCountryErrorMessage).toBeTruthy();
+        })
+
+
+
       });
     })
   })
@@ -414,6 +439,10 @@ describe('ConferenceFormComponent', () => {
     const conferenceCityInput = fixture.debugElement.query(By.css('#conference-city'));
     conferenceCityInput.nativeElement.value = conference.city;
     conferenceCityInput.nativeElement.dispatchEvent(new Event('input'));
+
+    const conferenceCountryInput = fixture.debugElement.query(By.css('#conference-country'));
+    conferenceCountryInput.nativeElement.value = conference.country;
+    conferenceCountryInput.nativeElement.dispatchEvent(new Event('input'));
   }
 
   function checkPriceModeSelector(selector: string) {

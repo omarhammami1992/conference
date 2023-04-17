@@ -22,12 +22,12 @@
   <br>
 
   <label id="conference-city-label" for="conference-city">City</label>
-  <input id="conference-city" />
+  <input id="conference-city" formControlName="city" />
   <span id="required-city-error-message" *ngIf="conferenceForm.controls.city.touched && conferenceForm.controls.city.errors !== null">Required city</span>
   <br>
 
   <label id="conference-country-label" for="conference-country">Country</label>
-  <input id="conference-country" />
+  <input id="conference-country" formControlName="country" />
   <span id="required-country-error-message" *ngIf="conferenceForm.controls.country.touched && conferenceForm.controls.country.errors !== null">Required country</span>
   <br>
 

@@ -230,17 +230,12 @@ describe('ConferenceFormComponent', () => {
 
       it("should call conference service to create conference with appropriated data", () => {
         // given
-        const conference = {
-          name: "conference",
-          price: 1000,
-          link: "https://www.archihexa.com/conference",
-          startDate: new Date("2022-01-01"),
-          endDate: new Date("2022-01-03")
-        }
         fillFormInputs({
           name: "conference",
           price: 1000,
           link: "https://www.archihexa.com/conference",
+          city: "Paris",
+          country: "France",
           startDate: "2022-01-01",
           endDate: "2022-01-03",
           pricingMode: 'earlyBird'
@@ -251,6 +246,15 @@ describe('ConferenceFormComponent', () => {
         fixture.detectChanges();
 
         // then
+        const conference = {
+          name: "conference",
+          price: 1000,
+          link: "https://www.archihexa.com/conference",
+          city: "Paris",
+          country: "France",
+          startDate: new Date("2022-01-01"),
+          endDate: new Date("2022-01-03")
+        }
         expect(mockConferenceService.createConference).toHaveBeenCalledOnceWith(conference);
       })
 

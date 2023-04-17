@@ -65,6 +65,7 @@ export class ConferenceFormComponent implements OnInit {
 
   createConference() {
     if (this.conferenceForm.invalid) {
+      console.log(this.conferenceForm.errors);
       this.conferenceForm.markAllAsTouched()
       return;
     }
@@ -72,6 +73,8 @@ export class ConferenceFormComponent implements OnInit {
       name: this.conferenceForm.controls.name.value,
       price: Number.parseFloat(this.conferenceForm.controls.price.value),
       link: this.conferenceForm.controls.link.value,
+      city: this.conferenceForm.controls.city.value,
+      country: this.conferenceForm.controls.country.value,
       startDate: new Date(this.conferenceForm.controls.startDate.value),
       endDate: new Date(this.conferenceForm.controls.endDate.value)
     }

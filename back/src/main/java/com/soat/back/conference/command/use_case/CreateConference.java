@@ -30,7 +30,7 @@ public class CreateConference {
             conferenceBuilder.priceGroup(priceGroup, conferenceParams.price());
         } else if (!priceRanges.isEmpty()) {
             conferenceBuilder.priceRanges(priceRanges);
-        } else {
+        } else if(!priceAttendingDays.isEmpty()){
             conferenceBuilder.priceAttendingDays(priceAttendingDays);
         }
 

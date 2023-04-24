@@ -3,7 +3,7 @@ import {HttpClientTestingModule, HttpTestingController} from '@angular/common/ht
 import { ConferenceService } from './conference.service';
 import {Conference} from '../model/conference';
 import {HttpClient} from '@angular/common/http';
-import {of} from 'rxjs';
+import {of, Observable} from 'rxjs';
 
 describe('ConferenceService', () => {
   let service: ConferenceService;
@@ -23,7 +23,7 @@ describe('ConferenceService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('createConference', () => {
+  describe('Conference Management', () => {
     it('should call /api/conference and return saved conference id', () => {
       // given
       const  conference = {} as Conference;
@@ -37,6 +37,29 @@ describe('ConferenceService', () => {
       expect(mockedHttpClient.post).toHaveBeenCalledWith('/api/conference', conference)
       expect(savedConferenceId).toEqual(expectedResult)
     });
+  });
+
+  it('should call /api/conference and return conference by id', () => {
+    // given
+    const idConference = 123;
+    const expectedResult : Observable<Conference> = of({
+      id: 123,
+      name: "Name",
+      price: 1000,
+      link: "archi hexa",
+      city:"Paris",
+      country:"France",
+      startDate: new Date("2022-01-01"),
+      endDate: new Date("2022-01-03")
+    } as Conference);
+    spyOn(mockedHttpClient,'get').and.returnValue(expectedResult);
+
+    // when
+    const conferenceDetail = service.getConferenceDetailById(idConference);
+
+    // then
+    expect(mockedHttpClient.get).toHaveBeenCalledWith('/api/conference/123');
+    expect(conferenceDetail).toEqual(expectedResult);
   });
 
 });

@@ -14,5 +14,11 @@ export class ConferenceService {
     this.httpClient.post('/api/conference', conference);
     return this.httpClient.post<number>('/api/conference', conference);
   }
+
+  getConferenceDetailById(idConference: number): Observable<Conference> {
+
+   return this.httpClient.get<Conference>(`/api/conference/${idConference}`);
+  }
+
 }
 

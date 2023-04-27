@@ -1,6 +1,9 @@
 import { Component, AfterViewInit } from '@angular/core';
 import * as L from 'leaflet';
-import { LongLat } from '../../model/LongLat';
+import { Location } from '../../model/location';
+import { LightConference } from '../../model/light-conference';
+
+const INITIAL_ZOOM : number = 10;
 
 @Component({
   selector: 'app-conference-map',
@@ -11,16 +14,18 @@ export class ConferenceMapComponent implements AfterViewInit {
 
   //TODO: private access modifier ??
   map: any;
+  LightConferences : LightConference[];
 
   constructor() {
+   this.LightConferences = [];
   }
 
 
-  private initMap(longLat : LongLat): void {
+  private initMap(location : Location, initialZoom : number): void {
 
    this.map = L.map('map', {
-      center: [ 48.8300562,2.3734685 ],
-      zoom: 10
+      center: [ location.lat , location.long ],
+      zoom: initialZoom
    });
 
     const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -39,17 +44,46 @@ export class ConferenceMapComponent implements AfterViewInit {
       shadowAnchor: [18, 40]
     });
 
-    L.marker([48.8300562,2.3734685], {icon: myIcon})
-    .bindPopup("<b>Devoxx Paris</b><br>Java.",{offset:[3,43]})
-    .openPopup()
-    .addTo(this.map);
 
-    L.marker([48.88519155689607, 2.313205134143403], {icon: myIcon}).addTo(this.map);
-    L.marker([48.81017091550302, 2.306230060272181], {icon: myIcon}).addTo(this.map);
+           this.LightConferences = [
+           {
+              name: "Super dummy Conf XX",
+              price: 1000,
+              startDate: new Date("2022-01-01"),
+              location: {lat:48.8300562,long:2.3734685}
+            },
+            {
+              name: "Boring stuff Conf :s",
+              price: 1000,
+              startDate: new Date("2022-01-01"),
+              location: {lat:48.88519155689607,long:2.313205134143403}
+             },
+            {
+              name: "Marvel not cool conference",
+              price: 1000,
+              startDate: new Date("2022-01-01"),
+              location: {lat:48.81017091550302,long:2.306230060272181}
+            }
+            ];
+
+
+
+      this.LightConferences.forEach ( lightConference => {
+
+       L.marker([lightConference.location.lat,lightConference.location.long], {icon: myIcon})
+          .bindPopup(`<b>${lightConference.name}</b><br>
+                      Price: ${lightConference.price}€<br>
+                      Start date:  ${lightConference.startDate}`
+          ,{offset:[3,43]})
+          .openPopup()
+          .addTo(this.map);
+      });
+
    }
 
    ngAfterViewInit(): void {
-     this.initMap();
+     let location : Location = {lat:48.8300562,long:2.3734685};
+     this.initMap(location,INITIAL_ZOOM);
    }
 
 }

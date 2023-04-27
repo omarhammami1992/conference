@@ -8,6 +8,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { EarlyBirdPricingModeComponent } from './component/early-bird-pricing-mode/early-bird-pricing-mode.component';
 import { GroupPricingModeComponent } from './component/group-pricing-mode/group-pricing-mode.component';
 import { AttendingDaysPricingModeComponent } from './component/attending-days-pricing-mode/attending-days-pricing-mode.component';
+import { MapConferencePageComponent } from './pages/map-conference-page/map-conference-page.component';
+import { ConferenceMapComponent } from './component/conference-map/conference-map.component';
 
 
 @NgModule({
@@ -17,7 +19,9 @@ import { AttendingDaysPricingModeComponent } from './component/attending-days-pr
     ConferenceFormComponent,
     EarlyBirdPricingModeComponent,
     GroupPricingModeComponent,
-    AttendingDaysPricingModeComponent
+    AttendingDaysPricingModeComponent,
+    MapConferencePageComponent,
+    ConferenceMapComponent
   ],
   imports: [
     CommonModule,

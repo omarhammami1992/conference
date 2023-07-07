@@ -11,6 +11,5 @@ public interface Conference {
     LocalDate getEndDate();
     Float getPrice();
     Boolean getIsOnline();
-    String getCity();
-    String getCountry();
+    Address getAddress();
 }

@@ -7,12 +7,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.soat.back.conference.command.use_case.ConferenceParams;
-import com.soat.back.conference.command.use_case.ConferencePort;
-import com.soat.back.conference.command.use_case.CreateConference;
-import com.soat.back.conference.command.use_case.PriceAttendingDaysParams;
-import com.soat.back.conference.command.use_case.PriceGroupParams;
-import com.soat.back.conference.command.use_case.PriceRangeParams;
+import com.soat.back.conference.command.use_case.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -41,7 +36,13 @@ class CreateConferenceUTest {
             final PriceRangeParams septemberPrice = new PriceRangeParams(150f, LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 30));
             final PriceRangeParams novemberPrice = new PriceRangeParams(200f, LocalDate.of(2022, 11, 1), LocalDate.of(2022, 11, 30));
             float defaultPrice = 300f;
-
+            AddressParams addressParams = new AddressParams(
+                    "3 rue tolbiac Paris France",
+                    "Paris",
+                    "France",
+                    "12345",
+                    "54321"
+            );
             ConferenceParams conferenceParams = new ConferenceParams(
                     "devoxx",
                     "link",
@@ -49,7 +50,9 @@ class CreateConferenceUTest {
                     LocalDate.of(2022, 12, 3),
                     defaultPrice,
                     of(septemberPrice, novemberPrice),
-                    null, of(), null, null
+                    null,
+                    of(),
+                    addressParams
             );
 
             // when
@@ -65,7 +68,13 @@ class CreateConferenceUTest {
             final PriceRangeParams septemberPrice = new PriceRangeParams(250f, LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 30));
             final PriceRangeParams octoberPrice = new PriceRangeParams(200f, LocalDate.of(2022, 10, 1), LocalDate.of(2022, 11, 30));
             float defaultPrice = 300f;
-
+            AddressParams addressParams = new AddressParams(
+                    "3 rue tolbiac Paris France",
+                    "Paris",
+                    "France",
+                    "12345",
+                    "54321"
+            );
             ConferenceParams conferenceParams = new ConferenceParams(
                     "devoxx",
                     "link",
@@ -75,7 +84,7 @@ class CreateConferenceUTest {
                     of(septemberPrice, octoberPrice),
                     null,
                     of(),
-                    null, null
+                    addressParams
             );
 
             // when
@@ -92,7 +101,13 @@ class CreateConferenceUTest {
             final PriceRangeParams septemberPrice = new PriceRangeParams(150f, LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 30));
             final PriceRangeParams octoberPrice = new PriceRangeParams(250f, LocalDate.of(2022, 10, 1), LocalDate.of(2022, 11, 30));
             float defaultPrice = 200f;
-
+            AddressParams addressParams = new AddressParams(
+                    "3 rue tolbiac Paris France",
+                    "Paris",
+                    "France",
+                    "12345",
+                    "54321"
+            );
             ConferenceParams conferenceParams = new ConferenceParams(
                     "devoxx",
                     "link",
@@ -101,7 +116,8 @@ class CreateConferenceUTest {
                     defaultPrice,
                     of(septemberPrice, octoberPrice),
                     null,
-                    of(), null, null
+                    of(),
+                    addressParams
             );
 
             // when
@@ -120,15 +136,15 @@ class CreateConferenceUTest {
             float defaultPrice = 10f;
 
             ConferenceParams conferenceParams = new ConferenceParams(
-                  "devoxx",
-                  "link",
-                  LocalDate.of(2022, 12, 1),
-                  LocalDate.of(2022, 12, 3),
-                  defaultPrice,
-                  List.of(septemberPrice, octoberPrice),
-                  null,
-                  List.of(),
-                    null, null
+                    "devoxx",
+                    "link",
+                    LocalDate.of(2022, 12, 1),
+                    LocalDate.of(2022, 12, 3),
+                    defaultPrice,
+                    List.of(septemberPrice, octoberPrice),
+                    null,
+                    List.of(),
+                    null
             );
 
             // when
@@ -155,7 +171,7 @@ class CreateConferenceUTest {
                     defaultPrice,
                     List.of(septemberPrice, octoberPrice),
                     null,
-                    List.of(), null, null
+                    List.of(), null
             );
 
             // when
@@ -175,7 +191,13 @@ class CreateConferenceUTest {
         void execute_should_throw_exception_when_price_group_greater_than_default_price() {
             final PriceGroupParams priceGroupParams = new PriceGroupParams(250f, 3);
             float defaultPrice = 249f;
-
+            AddressParams addressParams = new AddressParams(
+                    "3 rue tolbiac Paris France",
+                    "Paris",
+                    "France",
+                    "12345",
+                    "54321"
+            );
             ConferenceParams conferenceParams = new ConferenceParams(
                     "devoxx",
                     "link",
@@ -185,7 +207,7 @@ class CreateConferenceUTest {
                     of(),
                     priceGroupParams,
                     of(),
-                    null, null
+                    addressParams
             );
 
             // when
@@ -209,7 +231,7 @@ class CreateConferenceUTest {
                     defaultPrice,
                     of(),
                     priceGroupParams,
-                    of(), null, null
+                    of(), null
             );
 
             // when
@@ -229,6 +251,13 @@ class CreateConferenceUTest {
             final List<PriceAttendingDaysParams> priceAttendingDayList = List.of(
                     new PriceAttendingDaysParams(300f, 2f)
             );
+            AddressParams addressParams = new AddressParams(
+                    "3 rue tolbiac Paris France",
+                    "Paris",
+                    "France",
+                    "12345",
+                    "54321"
+            );
             ConferenceParams conferenceParams = new ConferenceParams(
                     "devoxx",
                     "link",
@@ -238,8 +267,7 @@ class CreateConferenceUTest {
                     of(),
                     null,
                     priceAttendingDayList,
-                    null,
-                    null
+                    addressParams
             );
 
             // when
@@ -256,6 +284,13 @@ class CreateConferenceUTest {
                     new PriceAttendingDaysParams(300f, 2f),
                     new PriceAttendingDaysParams(200f, 2f)
             );
+            AddressParams addressParams = new AddressParams(
+                    "3 rue tolbiac Paris France",
+                    "Paris",
+                    "France",
+                    "12345",
+                    "54321"
+            );
             ConferenceParams conferenceParams = new ConferenceParams(
                     "devoxx",
                     "link",
@@ -265,8 +300,7 @@ class CreateConferenceUTest {
                     List.of(),
                     null,
                     priceAttendingDayList,
-                    null,
-                    null
+                    addressParams
             );
 
             // when
@@ -284,6 +318,13 @@ class CreateConferenceUTest {
                     new PriceAttendingDaysParams(300f, 1f),
                     new PriceAttendingDaysParams(300f, 2f)
             );
+            AddressParams addressParams = new AddressParams(
+                    "3 rue tolbiac Paris France",
+                    "Paris",
+                    "France",
+                    "12345",
+                    "54321"
+            );
             ConferenceParams conferenceParams = new ConferenceParams(
                     "devoxx",
                     "link",
@@ -293,8 +334,7 @@ class CreateConferenceUTest {
                     of(),
                     null,
                     priceAttendingDayList,
-                    null,
-                    null
+                    addressParams
             );
 
             // when
@@ -313,6 +353,13 @@ class CreateConferenceUTest {
                     new PriceAttendingDaysParams(300f, 2f),
                     new PriceAttendingDaysParams(800f, 7f)
             );
+            AddressParams addressParams = new AddressParams(
+                    "3 rue tolbiac Paris France",
+                    "Paris",
+                    "France",
+                    "12345",
+                    "54321"
+            );
             ConferenceParams conferenceParams = new ConferenceParams(
                     "devoxx",
                     "link",
@@ -322,8 +369,7 @@ class CreateConferenceUTest {
                     of(),
                     null,
                     priceAttendingDayList,
-                    "Paris",
-                    "France"
+                    addressParams
             );
 
             // when
@@ -333,6 +379,7 @@ class CreateConferenceUTest {
             assertThat(throwable).isInstanceOf(InvalidAttendingDaysException.class);
             assertThat(throwable).hasMessage("Attending days should be lower than conference period 7 days");
         }
+
         @Test
         void execute_should_throw_exception_when_attending_days_higher_than_conference_period() {
             // given
@@ -340,6 +387,13 @@ class CreateConferenceUTest {
                     new PriceAttendingDaysParams(200f, 1f),
                     new PriceAttendingDaysParams(300f, 2f),
                     new PriceAttendingDaysParams(800f, 10f)
+            );
+            AddressParams addressParams = new AddressParams(
+                    "3 rue tolbiac Paris France",
+                    "Paris",
+                    "France",
+                    "12345",
+                    "54321"
             );
             ConferenceParams conferenceParams = new ConferenceParams(
                     "devoxx",
@@ -350,8 +404,7 @@ class CreateConferenceUTest {
                     of(),
                     null,
                     priceAttendingDayList,
-                    "Paris",
-                    "France"
+                    addressParams
             );
 
             // when

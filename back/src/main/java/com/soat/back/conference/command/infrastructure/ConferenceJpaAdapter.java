@@ -32,8 +32,11 @@ public class ConferenceJpaAdapter implements ConferencePort {
                 conference.getPrice(),
                 conference.getStartDate(),
                 conference.getEndDate(),
-                conference.getCity(),
-                conference.getCountry());
+                conference.getAddress().city(),
+                conference.getAddress().country(),
+                conference.getAddress().fullAddress(),
+                conference.getAddress().latitude(),
+                conference.getAddress().longitude());
         List<JpaPriceRange> jpaPriceRanges = conference.getPriceRanges()
                 .getValues()
                 .stream()

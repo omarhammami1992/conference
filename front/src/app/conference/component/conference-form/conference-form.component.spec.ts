@@ -4,9 +4,11 @@ import {ConferenceFormComponent} from './conference-form.component';
 import {By} from "@angular/platform-browser";
 import {ConferenceService} from "../../service/conference.service";
 import {ReactiveFormsModule} from '@angular/forms';
-import SpyObj = jasmine.SpyObj;
 import {EarlyBirdPricingModeComponent} from "../early-bird-pricing-mode/early-bird-pricing-mode.component";
-
+import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
+import SpyObj = jasmine.SpyObj;
+import { of } from 'rxjs';
 
 describe('ConferenceFormComponent', () => {
   let component: ConferenceFormComponent;
@@ -20,7 +22,8 @@ describe('ConferenceFormComponent', () => {
       providers: [
         {provide: ConferenceService, useValue: mockConferenceService}
       ],
-      imports: [ReactiveFormsModule]
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
       .compileComponents();
   });
@@ -32,149 +35,135 @@ describe('ConferenceFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ConferenceFormComponent);
     component = fixture.componentInstance;
+    mockConferenceService.createConference.and.returnValue(of(1));  
     fixture.detectChanges();
   });
 
   describe('template', () => {
+    describe('name', () => {
+      it('should contain conference name label', () => {
+        // when
+        const conferenceNameInput = fixture.debugElement.query(By.css('#conference-name-label'));
 
-    it('should contain conference name label', () => {
-      // when
-      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-name-label'));
+        // then
+        expect(conferenceNameInput).toBeTruthy();
+        expect(conferenceNameInput.attributes['for']).toEqual('conference-name');
+        expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
+      });
+      it('should contain conference name input', () => {
+        // when
+        const conferenceNameInput = fixture.debugElement.query(By.css('#conference-name'));
 
-      // then
-      expect(conferenceNameInput).toBeTruthy();
-      expect(conferenceNameInput.attributes['for']).toEqual('conference-name');
-      expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
-    });
-
-    it('should contain conference name input', () => {
-      // when
-      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-name'));
-
-      // then
-      expect(conferenceNameInput).toBeTruthy();
-    });
-
-    it('should contain conference link label', () => {
-      // when
-      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-link-label'));
-
-      // then
-      expect(conferenceNameInput).toBeTruthy();
-      expect(conferenceNameInput.attributes['for']).toEqual('conference-link');
-      expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
-    });
-
-    it('should contain conference link input', () => {
-      // when
-      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-link'));
-
-      // then
-      expect(conferenceNameInput).toBeTruthy();
-    });
-
-    it('should contain conference price label', () => {
-      // when
-      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-price-label'));
-
-      // then
-      expect(conferenceNameInput).toBeTruthy();
-      expect(conferenceNameInput.attributes['for']).toEqual('conference-price');
-      expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
-    });
-
-    it('should contain conference price input', () => {
-      // when
-      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-price'));
-
-      // then
-      expect(conferenceNameInput).toBeTruthy();
-    });
-
-    it('should contain conference start-date label', () => {
-      // when
-      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-start-date-label'));
-
-      // then
-      expect(conferenceNameInput).toBeTruthy();
-      expect(conferenceNameInput.attributes['for']).toEqual('conference-start-date');
-      expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
-    });
-
-    it('should contain conference start date input', () => {
-      // when
-      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-start-date'));
-
-      // then
-      expect(conferenceNameInput).toBeTruthy();
-    });
-
-    it('should contain conference end-date label', () => {
-      // when
-      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-end-date-label'));
-
-      // then
-      expect(conferenceNameInput).toBeTruthy();
-      expect(conferenceNameInput.attributes['for']).toEqual('conference-end-date');
-      expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
-    });
-
-    it('should contain conference end date input', () => {
-      // when
-      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-end-date'));
-
-      // then
-      expect(conferenceNameInput).toBeTruthy();
-    });
-
-    it('should contain conference city label', () => {
-      // when
-      const conferenceCityLabel = fixture.debugElement.query(By.css('#conference-city-label'));
-
-      // then
-      expect(conferenceCityLabel).toBeTruthy();
-      expect(conferenceCityLabel.attributes['for']).toEqual('conference-city');
-      expect(conferenceCityLabel.nativeElement.textContent).toBeTruthy();
+        // then
+        expect(conferenceNameInput).toBeTruthy();
+      });
 
     });
 
-    it('should contain conference city input', () => {
-      // when
-      const conferenceNameInput = fixture.debugElement.query(By.css('#conference-city'));
+    describe('link', () => {
+      it('should contain conference link label', () => {
+        // when
+        const conferenceNameInput = fixture.debugElement.query(By.css('#conference-link-label'));
 
-      // then
-      expect(conferenceNameInput).toBeTruthy();
-    });
+        // then
+        expect(conferenceNameInput).toBeTruthy();
+        expect(conferenceNameInput.attributes['for']).toEqual('conference-link');
+        expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
+      });
+      it('should contain conference link input', () => {
+        // when
+        const conferenceNameInput = fixture.debugElement.query(By.css('#conference-link'));
 
-    it('should contain conference country label', () => {
-      // when
-      const conferenceCountryLabel = fixture.debugElement.query(By.css('#conference-country-label'));
-
-      // then
-      expect(conferenceCountryLabel).toBeTruthy();
-      expect(conferenceCountryLabel.attributes['for']).toEqual('conference-country');
-      expect(conferenceCountryLabel.nativeElement.textContent).toBeTruthy();
-
-    });
-
-    it('should contain conference country input', () => {
-      // when
-      const conferenceCountryInput = fixture.debugElement.query(By.css('#conference-country'));
-
-      // then
-      expect(conferenceCountryInput).toBeTruthy();
-    });
-
-    it("should contain conference pricing mode select", () => {
-      // when
-      const conferencePricingModeInput = fixture.debugElement.query(By.css('#conference-pricing-mode'));
-
-      // then
-      expect(conferencePricingModeInput).toBeTruthy();
+        // then
+        expect(conferenceNameInput).toBeTruthy();
+      });
 
     });
+    describe('address', () => {
+      it('should contain conference address label', () => {
+        // when
+        const conferenceAddressInput = fixture.debugElement.query(By.css('#conference-address-label'));
 
+        // then
+        expect(conferenceAddressInput).toBeTruthy();
+        expect(conferenceAddressInput.attributes['for']).toEqual('conference-address');
+        expect(conferenceAddressInput.nativeElement.textContent).toBeTruthy();
+      });
+
+      it('should contain conference address input', () => {
+        // when
+        const conferenceAddressInput = fixture.debugElement.query(By.css('#conference-address'));
+
+        // then
+        expect(conferenceAddressInput).toBeTruthy();
+      });
+    });
+    describe('price', () => {
+      it('should contain conference price label', () => {
+        // when
+        const conferenceNameInput = fixture.debugElement.query(By.css('#conference-price-label'));
+
+        // then
+        expect(conferenceNameInput).toBeTruthy();
+        expect(conferenceNameInput.attributes['for']).toEqual('conference-price');
+        expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
+      });
+      it('should contain conference price input', () => {
+        // when
+        const conferenceNameInput = fixture.debugElement.query(By.css('#conference-price'));
+
+        // then
+        expect(conferenceNameInput).toBeTruthy();
+      });
+    });
+    describe('start-date', () => {
+      it('should contain conference start-date label', () => {
+        // when
+        const conferenceNameInput = fixture.debugElement.query(By.css('#conference-start-date-label'));
+
+        // then
+        expect(conferenceNameInput).toBeTruthy();
+        expect(conferenceNameInput.attributes['for']).toEqual('conference-start-date');
+        expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
+      });
+
+      it('should contain conference start date input', () => {
+        // when
+        const conferenceNameInput = fixture.debugElement.query(By.css('#conference-start-date'));
+
+        // then
+        expect(conferenceNameInput).toBeTruthy();
+      });
+    });
+    describe('end-date', () => {
+      it('should contain conference end-date label', () => {
+        // when
+        const conferenceNameInput = fixture.debugElement.query(By.css('#conference-end-date-label'));
+
+        // then
+        expect(conferenceNameInput).toBeTruthy();
+        expect(conferenceNameInput.attributes['for']).toEqual('conference-end-date');
+        expect(conferenceNameInput.nativeElement.textContent).toBeTruthy();
+      });
+      it('should contain conference end date input', () => {
+        // when
+        const conferenceNameInput = fixture.debugElement.query(By.css('#conference-end-date'));
+
+        // then
+        expect(conferenceNameInput).toBeTruthy();
+      });
+
+    });
     describe('pricing modes', () => {
+
+      it("should contain conference pricing mode select", () => {
+        // when
+        const conferencePricingModeInput = fixture.debugElement.query(By.css('#conference-pricing-mode'));
+
+        // then
+        expect(conferencePricingModeInput).toBeTruthy();
+
+      });
       it("should contain early bird pricing mode component when early bird selected", () => {
         // when
         fillFormInputs({pricingMode: 'earlyBird'});
@@ -234,10 +223,15 @@ describe('ConferenceFormComponent', () => {
           name: "conference",
           price: 1000,
           link: "https://www.archihexa.com/conference",
-          city: "Paris",
-          country: "France",
           startDate: "2022-01-01",
           endDate: "2022-01-03",
+          address: {
+            city:"Paris",
+            country: "France",
+            longitude: "049343",
+            latitude: "4533002",
+            fullAddress: "3 rue tolbiac 75013 Paris France"
+          },
           pricingMode: 'earlyBird'
         });
 
@@ -250,10 +244,17 @@ describe('ConferenceFormComponent', () => {
           name: "conference",
           price: 1000,
           link: "https://www.archihexa.com/conference",
-          city: "Paris",
-          country: "France",
           startDate: new Date("2022-01-01"),
-          endDate: new Date("2022-01-03")
+          endDate: new Date("2022-01-03"),
+          address: {
+            city:"Paris",
+            country: "France",
+            longitude: "049343",
+            latitude: "4533002",
+            fullAddress: "3 rue tolbiac 75013 Paris France"
+          },
+          priceRanges: [],
+          priceAttendingDays: []
         }
         expect(mockConferenceService.createConference).toHaveBeenCalledOnceWith(conference);
       })
@@ -323,6 +324,34 @@ describe('ConferenceFormComponent', () => {
           expect(linkErrorMessage).toBeTruthy();
         })
 
+        it("address is not filled", () => {
+          // given
+          fillFormInputs({
+            name: "devoxx",
+            price: 1,
+            link: "archi hexa",
+            startDate: "2022-01-01",
+            endDate: "2022-01-03",
+            address: {
+            city:null,
+              country: null,
+              longitude: null,
+              latitude: null,
+              fullAddress: null
+          }
+          });
+
+          // when
+          component.createConference();
+          fixture.detectChanges();
+
+          // then
+          expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
+          expect(component.conferenceForm.controls.addressForm.status).toEqual('INVALID');
+          const addressErrorMessage = fixture.debugElement.query(By.css('#required-address-error-message'));
+          expect(addressErrorMessage).toBeTruthy();
+        })
+
         it("dates are empty", () => {
           fillFormInputs({
             name: "devoxx",
@@ -364,53 +393,6 @@ describe('ConferenceFormComponent', () => {
           expect(requiredPriceErrorMessage).toBeTruthy();
         })
 
-        it("city is not filled", () => {
-          // given
-          fillFormInputs({
-            name: "Name",
-            price: 1000,
-            link: "archi hexa",
-            city:"",
-            startDate: "2022-01-01",
-            endDate: "2022-01-03"
-          });
-
-          // when
-          component.createConference();
-          fixture.detectChanges();
-
-          // then
-          expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
-          expect(component.conferenceForm.controls.city.errors).not.toEqual(null);
-          const requiredCityErrorMessage = fixture.debugElement.query(By.css('#required-city-error-message'));
-          expect(requiredCityErrorMessage).toBeTruthy();
-        })
-
-        it("country is not filled", () => {
-          // given
-          fillFormInputs({
-            name: "Name",
-            price: 1000,
-            link: "archi hexa",
-            city:"Paris",
-            country:"",
-            startDate: "2022-01-01",
-            endDate: "2022-01-03"
-          });
-
-          // when
-          component.createConference();
-          fixture.detectChanges();
-
-          // then
-          expect(mockConferenceService.createConference).toHaveBeenCalledTimes(0);
-          expect(component.conferenceForm.controls.country.errors).not.toEqual(null);
-          const requiredCountryErrorMessage = fixture.debugElement.query(By.css('#required-country-error-message'));
-          expect(requiredCountryErrorMessage).toBeTruthy();
-        })
-
-
-
       });
     })
   })
@@ -440,13 +422,9 @@ describe('ConferenceFormComponent', () => {
     conferencePricingModeInput.nativeElement.value = conference.pricingMode;
     conferencePricingModeInput.nativeElement.dispatchEvent(new Event('change'));
 
-    const conferenceCityInput = fixture.debugElement.query(By.css('#conference-city'));
-    conferenceCityInput.nativeElement.value = conference.city;
-    conferenceCityInput.nativeElement.dispatchEvent(new Event('input'));
-
-    const conferenceCountryInput = fixture.debugElement.query(By.css('#conference-country'));
-    conferenceCountryInput.nativeElement.value = conference.country;
-    conferenceCountryInput.nativeElement.dispatchEvent(new Event('input'));
+    const conferenceAddressInput = fixture.debugElement.query(By.css('#conference-address'));
+    conferenceAddressInput.nativeElement.addressForm.patchValue(conference.address)
+    conferenceAddressInput.nativeElement.dispatchEvent(new Event('change'));
   }
 
   function checkPriceModeSelector(selector: string) {

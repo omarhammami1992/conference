@@ -1,8 +1,10 @@
 package com.soat.back.common.infrastructure;
 
+import com.soat.back.conference.query.domain.Address;
 import com.soat.back.conference.query.domain.Conference;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +31,12 @@ public class JpaConference implements Conference {
     private String city;
     @Column
     private String country;
+    @Column
+    private String fullAddress;
+    @Column
+    private String latitude;
+    @Column
+    private String longitude;
 
     @OneToMany(mappedBy = "conference", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<JpaPriceRange> priceRanges;
@@ -39,7 +47,7 @@ public class JpaConference implements Conference {
     @OneToOne(mappedBy = "conference", cascade = CascadeType.ALL)
     private JpaPriceGroup priceGroup;
 
-    public JpaConference(Integer id, String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country) {
+    public JpaConference(Integer id, String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country, String fullAddress, String latitude, String longitude) {
         this.id = id;
         this.name = name;
         this.link = link;
@@ -48,9 +56,13 @@ public class JpaConference implements Conference {
         this.endDate = endDate;
         this.city = city;
         this.country = country;
+        this.fullAddress = fullAddress;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    public JpaConference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country) {
+    public JpaConference(String name, String link, Float price, LocalDate startDate, LocalDate endDate, String city, String country,
+                         String fullAddress, String latitude, String longitude) {
         this.name = name;
         this.link = link;
         this.price = price;
@@ -58,6 +70,9 @@ public class JpaConference implements Conference {
         this.endDate = endDate;
         this.city = city;
         this.country = country;
+        this.fullAddress = fullAddress;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public JpaConference() {
@@ -93,14 +108,10 @@ public class JpaConference implements Conference {
     }
 
     @Override
-    public String getCity() {
-        return city;
+    public Address getAddress() {
+        return new Address(this.fullAddress, this.city, this.country, this.latitude, this.longitude);
     }
 
-    @Override
-    public String getCountry() {
-        return country;
-    }
 
     public JpaPriceGroup getPriceGroup() {
         return priceGroup;

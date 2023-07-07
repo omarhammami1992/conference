@@ -9,29 +9,27 @@ public class Conference {
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final PriceRanges priceRanges;
-    private final String city;
-    private final String country;
+
+    private final Address address;
     private final PriceGroup priceGroup;
     private final PriceAttendingDays priceAttendingDays;
 
     private Conference(String name,
-                      String link,
-                      Float price,
-                      LocalDate startDate,
-                      LocalDate endDate,
-                      String city,
-                      String country,
-                      PriceRanges priceRanges,
-                      PriceGroup priceGroup,
-                      PriceAttendingDays priceAttendingDays) {
+                       String link,
+                       Float price,
+                       LocalDate startDate,
+                       LocalDate endDate,
+                       PriceRanges priceRanges,
+                       Address address,
+                       PriceGroup priceGroup,
+                       PriceAttendingDays priceAttendingDays) {
         this.name = name;
         this.link = link;
         this.price = price;
         this.startDate = startDate;
         this.endDate = endDate;
         this.priceRanges = priceRanges;
-        this.city = city;
-        this.country = country;
+        this.address = address;
         this.priceGroup = priceGroup;
         this.priceAttendingDays = priceAttendingDays;
     }
@@ -72,12 +70,8 @@ public class Conference {
         return priceAttendingDays;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public String getCountry() {
-        return country;
+    public Address getAddress() {
+        return address;
     }
 
     @Override
@@ -93,7 +87,6 @@ public class Conference {
                 '}';
     }
 
-
     public static final class ConferenceBuilder {
         private String name;
         private String link;
@@ -101,8 +94,7 @@ public class Conference {
         private LocalDate startDate;
         private LocalDate endDate;
         private PriceRanges priceRanges = PriceRanges.createEmpty();
-        private String city;
-        private String country;
+        private Address address;
         private PriceGroup priceGroup = PriceGroup.createEmpty();
         private PriceAttendingDays priceAttendingDays = PriceAttendingDays.createEmpty();
 
@@ -140,13 +132,8 @@ public class Conference {
             return this;
         }
 
-        public ConferenceBuilder city(String city) {
-            this.city = city;
-            return this;
-        }
-
-        public ConferenceBuilder country(String country) {
-            this.country = country;
+        public ConferenceBuilder address(Address address) {
+            this.address = address;
             return this;
         }
 
@@ -164,7 +151,7 @@ public class Conference {
         }
 
         public Conference build() {
-            return new Conference(name, link, price, startDate, endDate, city, country, priceRanges, priceGroup, priceAttendingDays);
+            return new Conference(name, link, price, startDate, endDate, priceRanges, address, priceGroup, priceAttendingDays);
         }
     }
 }

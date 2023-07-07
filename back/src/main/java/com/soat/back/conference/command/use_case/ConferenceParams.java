@@ -10,31 +10,34 @@ public record ConferenceParams(String name,
                                LocalDate startDate,
                                LocalDate endDate,
                                Float price,
-                               List<PriceRangeParams> priceRangesParams,
-                               PriceGroupParams priceGroupParams,
-                               List<PriceAttendingDaysParams> priceAttendingDaysParams,
-                               String city,
-                               String country) {
+                               List<PriceRangeParams> priceRanges,
+                               PriceGroupParams priceGroup,
+                               List<PriceAttendingDaysParams> priceAttendingDays,
+                               AddressParams address) {
 
-    PriceGroup priceGroup() throws InvalidThresholdException {
+    PriceGroup toPriceGroup() throws InvalidThresholdException {
         PriceGroup result = null;
-        if (this.priceGroupParams != null) {
-            result = this.priceGroupParams.convertToPriceGroup();
+        if (this.priceGroup != null) {
+            result = this.priceGroup.convertToPriceGroup();
         }
         return result;
     }
 
 
-    PriceRanges priceRanges() throws InvalidPricesException {
-        return PriceRanges.create(this.priceRangesParams().stream()
+    PriceRanges toPriceRanges() throws InvalidPricesException {
+        return PriceRanges.create(this.priceRanges().stream()
                 .map(priceRange -> new PriceRange(priceRange.price(),
                         new DateInterval(priceRange.startDate(), priceRange.endDate())))
                 .toList());
     }
 
-    PriceAttendingDays priceAttendingDays() throws InvalidAttendingDaysException {
-        return PriceAttendingDays.create(this.priceAttendingDaysParams().stream()
+    PriceAttendingDays toPriceAttendingDays() throws InvalidAttendingDaysException {
+        return PriceAttendingDays.create(this.priceAttendingDays().stream()
                 .map(priceAttendingDay -> new PriceAttendingDay(priceAttendingDay.price(), priceAttendingDay.attendingDays()))
                 .toList());
+    }
+
+    public Address toAddress() {
+        return new Address(address.fullAddress(), address.city(), address.country(), address.latitude(), address.longitude());
     }
 }

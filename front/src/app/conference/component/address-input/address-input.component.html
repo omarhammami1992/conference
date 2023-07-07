@@ -1,0 +1,16 @@
+<mat-form-field class="example-full-width">
+  <input matInput placeholder="Search Movie" (blur)="markAddressFormTouched()" [(ngModel)]="selectedAddress" [matAutocomplete]="auto"
+         [formControl]="searchAddressControl" placeholder="Min 3 Characters Ex. Ant">
+  <button *ngIf="selectedAddress" matSuffix mat-icon-button aria-label="Clear" (click)="clearSelection()">
+    <mat-icon>close</mat-icon>
+  </button>
+  <mat-autocomplete [panelWidth]="400" #auto="matAutocomplete" (optionSelected)="onSelected()"
+                    [displayWith]="displayWith">
+    <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+    <ng-container *ngIf="!isLoading">
+      <mat-option *ngFor="let address of filteredAddress" [value]="address">
+        <span>{{address.place_name}}</span>
+      </mat-option>
+    </ng-container>
+  </mat-autocomplete>
+</mat-form-field>

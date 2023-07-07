@@ -1,49 +1,57 @@
-<p>conference-form works!</p>
 <form [formGroup]="conferenceForm" (ngSubmit)="createConference()">
-  <label id="conference-name-label" for="conference-name">Nom de la conférence</label>
-  <input id="conference-name" formControlName="name"/>
-  <span id="required-name-error-message" *ngIf="conferenceForm.controls.name.touched && conferenceForm.controls.name.errors !== null">Required name</span>
-  <br>
-  <label id="conference-link-label" for="conference-link">Lien de la conférence</label>
-  <input id="conference-link" formControlName="link" />
-  <span id="required-link-error-message" *ngIf="conferenceForm.controls.link.touched && conferenceForm.controls.link.errors !== null">Link is required and be should be valid</span>
-  <br>
-  <label id="conference-price-label" for="conference-price">Prix de la conférence</label>
-  <input id="conference-price" type="number" formControlName="price" />
-  <span id="required-price-error-message" *ngIf="conferenceForm.controls.price.touched && conferenceForm.controls.price.errors !== null"> Price should be greater than 0 </span>
-  <br>
-
-  <label id="conference-start-date-label" for="conference-start-date">Date de début de la conférence</label>
-  <input type="date" id="conference-start-date" formControlName="startDate" />
-  <label id="conference-end-date-label" for="conference-end-date">Date de fin de la conférence</label>
-  <input type="date" id="conference-end-date" formControlName="endDate" />
-  <span id="required-valid-dates-error-message" *ngIf="conferenceForm.errors && conferenceForm.controls.startDate.touched && conferenceForm.controls.endDate.touched">Dates not valid</span>
-
-  <br>
-
-  <label id="conference-city-label" for="conference-city">City</label>
-  <input id="conference-city" formControlName="city" />
-  <span id="required-city-error-message" *ngIf="conferenceForm.controls.city.touched && conferenceForm.controls.city.errors !== null">Required city</span>
-  <br>
-
-  <label id="conference-country-label" for="conference-country">Country</label>
-  <input id="conference-country" formControlName="country" />
-  <span id="required-country-error-message" *ngIf="conferenceForm.controls.country.touched && conferenceForm.controls.country.errors !== null">Required country</span>
-  <br>
-
-  <select id="conference-pricing-mode" formControlName="pricingMode">
-    <option *ngFor="let pricingMode of pricingModes" [value]="pricingMode.value">{{pricingMode.label}}</option>
-  </select>
-
-  <div [ngSwitch]="conferenceForm.controls.pricingMode.value">
-    <app-early-bird-pricing-mode [formGroup]="earlyBirdForm" *ngSwitchCase="'earlyBird'"></app-early-bird-pricing-mode>
-    <app-group-pricing-mode *ngSwitchCase="'group'"></app-group-pricing-mode>
-    <app-attending-days-pricing-mode *ngSwitchCase="'attendingDays'"></app-attending-days-pricing-mode>
+  <div class="form-field">
+    <label id="conference-name-label" for="conference-name">Nom de la conférence</label>
+    <input id="conference-name" formControlName="name"/>
+    <span id="required-name-error-message"
+          *ngIf="conferenceForm.controls.name.touched && conferenceForm.controls.name.errors !== null">Required name</span>
   </div>
+  <div class="form-field">
+    <label id="conference-link-label" for="conference-link">Lien de la conférence</label>
+    <input id="conference-link" formControlName="link"/>
+    <span id="required-link-error-message"
+          *ngIf="conferenceForm.controls.link.touched && conferenceForm.controls.link.errors !== null">Link is required and be should be valid</span>
+  </div>
+  <div class="form-field">
+    <label id="conference-address-label" for="conference-address">L'adresse de la conférence</label>
+    <app-address-input id="conference-address" [addressForm]="addressForm"></app-address-input>
+    <span id="required-address-error-message"
+          *ngIf="conferenceForm.controls.addressForm.touched && conferenceForm.controls.addressForm.status === 'INVALID'">  Address is required </span>
+  </div>
+
+  <div class="form-field">
+    <label id="conference-price-label" for="conference-price">Prix de la conférence</label>
+    <input id="conference-price" type="number" formControlName="price"/>
+    <span id="required-price-error-message"
+          *ngIf="conferenceForm.controls.price.touched && conferenceForm.controls.price.errors !== null"> Price should be greater than 0 </span>
+  </div>
+
+  <div class="form-field">
+    <label id="conference-start-date-label" for="conference-start-date">Date de début de la conférence</label>
+    <input type="date" id="conference-start-date" formControlName="startDate"/>
+    <label id="conference-end-date-label" for="conference-end-date">Date de fin de la conférence</label>
+    <input type="date" id="conference-end-date" formControlName="endDate"/>
+    <span id="required-valid-dates-error-message"
+          *ngIf="conferenceForm.errors && conferenceForm.controls.startDate.touched && conferenceForm.controls.endDate.touched">Dates not valid</span>
+  </div>
+
+
+  <div class="form-field">
+    <label id="conference-pricing-mode-label" for="conference-pricing-mode">Type de tarification</label>
+    <select id="conference-pricing-mode" formControlName="pricingMode">
+      <option *ngFor="let pricingMode of pricingModes" [value]="pricingMode.value">{{pricingMode.label}}</option>
+    </select>
+
+    <div [ngSwitch]="conferenceForm.controls.pricingMode.value">
+      <app-early-bird-pricing-mode [formGroup]="earlyBirdForm"
+                                   *ngSwitchCase="'earlyBird'"></app-early-bird-pricing-mode>
+      <app-group-pricing-mode *ngSwitchCase="'group'"></app-group-pricing-mode>
+      <app-attending-days-pricing-mode *ngSwitchCase="'attendingDays'"></app-attending-days-pricing-mode>
+    </div>
+  </div>
+
 
   <br>
   <button type="submit" id="conference-submit-button">Submit</button>
-
 
 </form>
 

@@ -1,6 +1,7 @@
 package com.soat.back.conference.query.infrastructure;
 
 import com.soat.back.common.infrastructure.JpaConference;
+import com.soat.back.conference.command.domain.Address;
 import com.soat.back.conference.query.domain.Conference;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @SqlGroup({
         @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, value = "classpath:/delete-conference-entries.sql"),
-        @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = { "classpath:/delete-conference-entries.sql", "classpath:/insert-conference-entries.sql" })})
-
-//@DataJpaTest
+        @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = {"classpath:/delete-conference-entries.sql", "classpath:/insert-conference-entries.sql"})})
 class ConferenceAdapterIntegrationTest {
 
     @Autowired
@@ -27,7 +26,10 @@ class ConferenceAdapterIntegrationTest {
 
     @Test
     void should_return_all_conferences() {
+        // when
         List<Conference> conferences = conferenceAdapter.getAll();
+
+
         assertThat(conferences).containsExactlyElementsOf(List.of(new JpaConference(
                 1,
                 "conference aaa",
@@ -36,8 +38,8 @@ class ConferenceAdapterIntegrationTest {
                 LocalDate.of(2023, 5, 15),
                 LocalDate.of(2023, 5, 19),
                 "Paris",
-                "France"
-        )));
+                "France",
+                null, null, null)));
     }
 
     @Test
@@ -59,7 +61,7 @@ class ConferenceAdapterIntegrationTest {
                 LocalDate.of(2023, 5, 15),
                 LocalDate.of(2023, 5, 19),
                 "Paris",
-                "France"
-        ));
+                "France",
+                null, null, null));
     }
 }

@@ -7,7 +7,10 @@ create table conference
     start_date timestamp,
     end_date   timestamp,
     city       varchar(100),
-    country    varchar(100)
+    country    varchar(100),
+    full_address    varchar(100),
+    latitude   varchar(100),
+    longitude  varchar(100)
 );
 
 create table price_range

@@ -1,5 +1,6 @@
 package com.soat.back.conference.query.application;
 
+import com.soat.back.conference.query.domain.Address;
 import com.soat.back.conference.query.domain.Conference;
 import com.soat.back.conference.query.domain.GetAllConferences;
 import com.soat.back.conference.query.domain.GetConferenceById;
@@ -49,7 +50,15 @@ public class ConferenceQueryController {
                 conference.getEndDate(),
                 conference.getPrice(),
                 conference.getIsOnline(),
-                conference.getCity(),
-                conference.getCountry());
+                toAddressJson(conference.getAddress()));
     }
+
+    private static AddressJson toAddressJson(Address address) {
+        return new AddressJson(address.fullAddress(),
+                address.city(),
+                address.country(),
+                address.latitude(),
+                address.longitude());
+    }
+
 }

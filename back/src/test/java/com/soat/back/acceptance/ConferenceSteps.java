@@ -1,10 +1,8 @@
 package com.soat.back.acceptance;
 
 import com.soat.back.common.infrastructure.*;
-import com.soat.back.conference.command.use_case.ConferenceParams;
-import com.soat.back.conference.command.use_case.PriceAttendingDaysParams;
-import com.soat.back.conference.command.use_case.PriceGroupParams;
-import com.soat.back.conference.command.use_case.PriceRangeParams;
+import com.soat.back.conference.command.use_case.*;
+import com.soat.back.conference.query.application.AddressJson;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
@@ -52,8 +50,7 @@ public class ConferenceSteps extends AcceptanceTest {
     private LocalDate endDate;
     private float price;
     private PriceGroupParams priceGroupParams;
-    private String city;
-    private String country;
+    private AddressParams addressParams;
 
     @Before
     public void before() {
@@ -72,9 +69,14 @@ public class ConferenceSteps extends AcceptanceTest {
         this.endDate = LocalDate.parse(endDate, DATE_TIME_FORMATTER);
     }
 
+    @And("qui aura lieu à {string} {string} {string} de latitude {string} et longitude {string}")
+    public void quiAuraLieuÀDeLatitudeEtLongitude(String street, String city, String country, String latitude, String longitude) {
+        this.addressParams = new AddressParams(street + " " + city + " " + country, city, country, latitude, longitude);
+    }
+
     @When("l utilisateur tente de l enregistrer")
     public void lUtilisateurTenteDeLEnregistrer() {
-        conferenceParams = new ConferenceParams(name, link, startDate, endDate, price, priceRangeParams, priceGroupParams, priceAttendingDaysParams, city, country);
+        conferenceParams = new ConferenceParams(name, link, startDate, endDate, price, priceRangeParams, priceGroupParams, priceAttendingDaysParams, addressParams);
         executePost("", conferenceParams);
     }
 
@@ -84,10 +86,37 @@ public class ConferenceSteps extends AcceptanceTest {
         var priceRange = new PriceRangeParams(price, null, end);
         priceRangeParams.add(priceRange);
     }
+//
+//    @Then("la conférence est enregistée avec le prix {float} € et les intervalles de réduction early bird à {string} en {string}")
+//    @Transactional
+//    public void laConférenceEstEnregistéeAvecLePrix€EtLesIntervallesDeRéductionEarlyBird(float defaultPrice, String city, String country, DataTable dataTable) {
+//        final Integer savedConferenceId = response.then().extract().as(Integer.class);
+//        JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
+//        JpaConference expectedJpaConference = new JpaConference(
+//                savedConferenceId,
+//                conferenceParams.name(),
+//                conferenceParams.link(),
+//                defaultPrice,
+//                conferenceParams.startDate(),
+//                conferenceParams.endDate(),
+//                city,
+//                country
+//        );
+//
+//        assertThat(jpaConference).usingRecursiveComparison()
+//                .ignoringFields("priceRanges", "priceGroup", "priceAttendingDays")
+//                .isEqualTo(expectedJpaConference);
+//
+//        List<JpaPriceRange> expectedJpaPriceRanges = dataTableTransformEntries(dataTable, this::buildJpaPriceRange);
+//
+//        assert jpaConference != null;
+//        assertThat(jpaConference.getPriceRanges())
+//                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id", "conference")
+//                .containsExactlyInAnyOrder(expectedJpaPriceRanges.toArray(JpaPriceRange[]::new));
 
-    @Then("la conférence est enregistée avec le prix {float} € et les intervalles de réduction early bird à {string} en {string}")
-    @Transactional
-    public void laConférenceEstEnregistéeAvecLePrix€EtLesIntervallesDeRéductionEarlyBird(float defaultPrice, String city, String country, DataTable dataTable) {
+    //    }
+    @Then("la conférence est enregistée avec le prix {int} € et les intervalles de réduction early bird")
+    public void laConférenceEstEnregistéeAvecLePrix€EtLesIntervallesDeRéductionEarlyBird(float defaultPrice, DataTable dataTable) {
         final Integer savedConferenceId = response.then().extract().as(Integer.class);
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
         JpaConference expectedJpaConference = new JpaConference(
@@ -97,8 +126,11 @@ public class ConferenceSteps extends AcceptanceTest {
                 defaultPrice,
                 conferenceParams.startDate(),
                 conferenceParams.endDate(),
-                city,
-                country
+                conferenceParams.address().city(),
+                conferenceParams.address().country(),
+                conferenceParams.address().fullAddress(),
+                conferenceParams.address().latitude(),
+                conferenceParams.address().longitude()
         );
 
         assertThat(jpaConference).usingRecursiveComparison()
@@ -147,8 +179,8 @@ public class ConferenceSteps extends AcceptanceTest {
         this.priceGroupParams = new PriceGroupParams(ticketPrice, participantThreshold);
     }
 
-    @Then("la conférence est enregistée avec le prix {int} € et un prix réduit de {int} € à partir de {int} participants à {string} en {string}")
-    public void laConférenceEstEnregistéeAvecLePrix€EtUnPrixRéduitDe€ÀPartirDeParticipantsÀEn(float price, int groupPrice, int threshold, String city, String country) {
+    @Then("la conférence est enregistée avec le prix {int} € et un prix réduit de {int} € à partir de {int} participants")
+    public void laConférenceEstEnregistéeAvecLePrix€EtUnPrixRéduitDe€ÀPartirDeParticipantsÀEn(float price, int groupPrice, int threshold) {
         final Integer savedConferenceId = response.then().extract().as(Integer.class);
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
         JpaConference expectedJpaConference = new JpaConference(
@@ -158,9 +190,11 @@ public class ConferenceSteps extends AcceptanceTest {
                 price,
                 startDate,
                 endDate,
-                city,
-                country
-        );
+                conferenceParams.address().city(),
+                conferenceParams.address().country(),
+                conferenceParams.address().fullAddress(),
+                conferenceParams.address().latitude(),
+                conferenceParams.address().longitude());
 
         assertThat(jpaConference).isNotNull()
                 .usingRecursiveComparison()
@@ -180,9 +214,9 @@ public class ConferenceSteps extends AcceptanceTest {
 
     }
 
-    @Then("la conférence est enregistée avec le prix {int} € et les prix réduits par jour de présence à {string} en {string}")
+    @Then("la conférence est enregistée avec le prix {int} € et les prix réduits par jour de présence")
     @Transactional
-    public void laConférenceEstEnregistéeAvecLePrix€EtLesPrixRéduitsParJourDePrésenceÀEn(float price, String city, String country, DataTable dataTable) {
+    public void laConférenceEstEnregistéeAvecLePrix€EtLesPrixRéduitsParJourDePrésenceÀEn(float price, DataTable dataTable) {
         assertThat(response.statusCode()).isEqualTo(201);
         final Integer savedConferenceId = response.then().extract().as(Integer.class);
         JpaConference jpaConference = jpaConferenceRepository.findById(savedConferenceId).orElse(null);
@@ -193,9 +227,11 @@ public class ConferenceSteps extends AcceptanceTest {
                 price,
                 conferenceParams.startDate(),
                 conferenceParams.endDate(),
-                city,
-                country
-        );
+                conferenceParams.address().city(),
+                conferenceParams.address().country(),
+                conferenceParams.address().fullAddress(),
+                conferenceParams.address().latitude(),
+                conferenceParams.address().longitude());
 
         assertThat(jpaConference).usingRecursiveComparison()
                 .ignoringFields("priceRanges", "priceGroup", "priceAttendingDays")
@@ -222,10 +258,20 @@ public class ConferenceSteps extends AcceptanceTest {
                 LocalDate.parse(entry.get("startDate"), DATE_TIME_FORMATTER),
                 LocalDate.parse(entry.get("endDate"), DATE_TIME_FORMATTER),
                 entry.get("city"),
-                entry.get("country"));
+                entry.get("country"),
+                entry.get("fullAddress"),
+                entry.get("latitude"),
+                entry.get("longitude"));
     }
 
     private com.soat.back.conference.query.application.ConferenceJson buildConferencesDto(Map<String, String> entry) {
+        AddressJson address = new AddressJson(
+                entry.get("fullAddress"),
+                entry.get("city"),
+                entry.get("country"),
+                entry.get("latitude"),
+                entry.get("longitude")
+        );
         return new com.soat.back.conference.query.application.ConferenceJson(
                 Integer.parseInt(entry.get("id")),
                 entry.get("name"),
@@ -234,8 +280,8 @@ public class ConferenceSteps extends AcceptanceTest {
                 LocalDate.parse(entry.get("endDate"), DATE_TIME_FORMATTER),
                 Float.valueOf(entry.get("fullPrice")),
                 Boolean.parseBoolean(entry.get("isOnline")),
-                entry.get("city"),
-                entry.get("country"));
+                address
+                );
     }
 
     @Given("une liste de conférences enregistrées")
@@ -269,8 +315,9 @@ public class ConferenceSteps extends AcceptanceTest {
 
     @Then("la conférence récupérée devrait contenir l id {int}, le nom {string}, le lien {string}, ayant le prix {int} et qui dure entre le {string} et le {string} et qui aura lieu à {string} \\({string}) {string}")
     public void laConférenceRécupéréeDevraitContenirLeNomLeLienAyantLePrixEtQuiDureEntreLeEtLe(int id, String name, String link, float price, String startDate, String endDate, String city, String country, String isOnLineValueAsString) {
+        final AddressJson address = new AddressJson(null, city, country, null, null);
         final boolean isOnLine = !isOnLineValueAsString.equals("en présentielle");
-        var expectedConference = new com.soat.back.conference.query.application.ConferenceJson(id, name, link, LocalDate.parse(startDate, DATE_TIME_FORMATTER), LocalDate.parse(endDate, DATE_TIME_FORMATTER), price, isOnLine, city, country);
+        var expectedConference = new com.soat.back.conference.query.application.ConferenceJson(id, name, link, LocalDate.parse(startDate, DATE_TIME_FORMATTER), LocalDate.parse(endDate, DATE_TIME_FORMATTER), price, isOnLine, address);
 
         var conference = response.then()
                 .extract()
@@ -285,16 +332,16 @@ public class ConferenceSteps extends AcceptanceTest {
     public void laConférenceNExistePas() {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
+//    @Given("une conférence ayant le nom {string}, le lien {string} et qui dure entre le {string} et le {string} et qui aura lieu à {string} en {string}")
+//    public void uneConférenceAyantLeNomLeLienEtQuiDureEntreLeEtLeEtQuiAuraLieuÀEn(String name, String link, String startDate, String endDate, String city, String country) {
+//        this.name = name;
+//        this.link = link;
+//        this.startDate = LocalDate.parse(startDate, DATE_TIME_FORMATTER);
+//        this.endDate = LocalDate.parse(endDate, DATE_TIME_FORMATTER);
+//        this.city = city;
+//        this.country = country;
 
-    @Given("une conférence ayant le nom {string}, le lien {string} et qui dure entre le {string} et le {string} et qui aura lieu à {string} en {string}")
-    public void uneConférenceAyantLeNomLeLienEtQuiDureEntreLeEtLeEtQuiAuraLieuÀEn(String name, String link, String startDate, String endDate, String city, String country) {
-        this.name = name;
-        this.link = link;
-        this.startDate = LocalDate.parse(startDate, DATE_TIME_FORMATTER);
-        this.endDate = LocalDate.parse(endDate, DATE_TIME_FORMATTER);
-        this.city = city;
-        this.country = country;
-    }
+//    }
 
     @Then("la conférence est enregistée avec le prix {float} €")
     public void laConférenceEstEnregistéeAvecLePrix€(float defaultPrice) {

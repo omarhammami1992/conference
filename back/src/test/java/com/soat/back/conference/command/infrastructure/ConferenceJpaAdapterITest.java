@@ -1,10 +1,8 @@
 package com.soat.back.conference.command.infrastructure;
 
 import com.soat.back.common.infrastructure.JpaConferenceRepository;
-import com.soat.back.conference.command.domain.Conference;
-import com.soat.back.conference.command.domain.InvalidAttendingDaysException;
-import com.soat.back.conference.command.domain.PriceAttendingDay;
-import com.soat.back.conference.command.domain.PriceAttendingDays;
+import com.soat.back.conference.command.domain.*;
+import com.soat.back.conference.command.use_case.AddressParams;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,14 +23,20 @@ class ConferenceJpaAdapterITest {
 
     @Test
     void save_data() throws InvalidAttendingDaysException {
+        Address address = new Address(
+                "3 rue tolbiac Paris France",
+                "Paris",
+                "France",
+                "12345",
+                "54321"
+        );
         Conference conference = Conference.builder()
                 .name("conference aaa")
                 .link("link to aaa")
                 .price(100f)
                 .startDate(LocalDate.of(2023, 5, 15))
                 .endDate(LocalDate.of(2023, 5, 19))
-                .city("city")
-                .country("country")
+                .address(address)
                 .priceAttendingDays(PriceAttendingDays.create(List.of(new PriceAttendingDay(100f, 1f))))
                 .build();
         var id = conferenceAdapter.save(conference);

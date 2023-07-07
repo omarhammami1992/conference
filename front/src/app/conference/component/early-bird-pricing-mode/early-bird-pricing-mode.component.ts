@@ -8,7 +8,9 @@ import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
 })
 export class EarlyBirdPricingModeComponent implements OnInit {
 
-  @Input() formGroup: FormGroup = new FormGroup({});
+  @Input() formGroup: FormGroup = new FormGroup({
+    ranges: this._formBuilder.array([])
+  });
 
   constructor(private _formBuilder: FormBuilder) {
   }

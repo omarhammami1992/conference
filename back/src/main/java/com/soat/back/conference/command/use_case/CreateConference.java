@@ -13,9 +13,10 @@ public class CreateConference {
     }
 
     public Integer execute(ConferenceParams conferenceParams) throws InvalidIntervalException, InvalidPricesException, InvalidThresholdException, InvalidAttendingDaysException {
-        final PriceRanges priceRanges = conferenceParams.priceRanges();
-        final PriceGroup priceGroup = conferenceParams.priceGroup();
-        final PriceAttendingDays priceAttendingDays = conferenceParams.priceAttendingDays();
+        final PriceRanges priceRanges = conferenceParams.toPriceRanges();
+        final PriceGroup priceGroup = conferenceParams.toPriceGroup();
+        final PriceAttendingDays priceAttendingDays = conferenceParams.toPriceAttendingDays();
+        final Address address = conferenceParams.toAddress();
 
         Conference.ConferenceBuilder conferenceBuilder = Conference.builder()
                 .name(conferenceParams.name())
@@ -23,8 +24,7 @@ public class CreateConference {
                 .price(conferenceParams.price())
                 .startDate(conferenceParams.startDate())
                 .endDate(conferenceParams.endDate())
-                .city(conferenceParams.city())
-                .country(conferenceParams.country());
+                .address(address);
 
         if (Objects.nonNull(priceGroup)) {
             conferenceBuilder.priceGroup(priceGroup, conferenceParams.price());

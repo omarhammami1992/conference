@@ -1,23 +1,28 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Conference} from '../model/conference';
 import {HttpClient} from '@angular/common/http';
+import {environment} from "../../../environments/environment";
+import {LightConference} from "../model/light-conference";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConferenceService {
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+  }
 
   createConference(conference: Conference): Observable<number> {
-    this.httpClient.post('/api/conference', conference);
-    return this.httpClient.post<number>('/api/conference', conference);
+    return this.httpClient.post<number>(environment.apiUrl + '/api/conference', conference);
   }
 
   getConferenceDetailById(idConference: number): Observable<Conference> {
+    return this.httpClient.get<Conference>(environment.apiUrl + `/api/conference/${idConference}`);
+  }
 
-   return this.httpClient.get<Conference>(`/api/conference/${idConference}`);
+  getLightConferences(): Observable<LightConference[]> {
+    return this.httpClient.get<LightConference[]>(environment.apiUrl + '/api/conference');
   }
 
 }

@@ -4,6 +4,7 @@ import { ConferenceService } from './conference.service';
 import {Conference} from '../model/conference';
 import {HttpClient} from '@angular/common/http';
 import {of, Observable} from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 describe('ConferenceService', () => {
   let service: ConferenceService;
@@ -34,7 +35,7 @@ describe('ConferenceService', () => {
       const savedConferenceId = service.createConference(conference);
 
       // then
-      expect(mockedHttpClient.post).toHaveBeenCalledWith('/api/conference', conference)
+      expect(mockedHttpClient.post).toHaveBeenCalledWith(environment.apiUrl + '/api/conference', conference)
       expect(savedConferenceId).toEqual(expectedResult)
     });
   });
@@ -47,8 +48,13 @@ describe('ConferenceService', () => {
       name: "Name",
       price: 1000,
       link: "archi hexa",
-      city:"Paris",
-      country:"France",
+      address: {
+        city:"Paris",
+        country: "France",
+        longitude: "049343",
+        latitude: "4533002",
+        fullAddress: "3 rue tolbiac 75013 Paris France"
+      },
       startDate: new Date("2022-01-01"),
       endDate: new Date("2022-01-03")
     } as Conference);
@@ -58,7 +64,7 @@ describe('ConferenceService', () => {
     const conferenceDetail = service.getConferenceDetailById(idConference);
 
     // then
-    expect(mockedHttpClient.get).toHaveBeenCalledWith('/api/conference/123');
+    expect(mockedHttpClient.get).toHaveBeenCalledWith(environment.apiUrl + '/api/conference/123');
     expect(conferenceDetail).toEqual(expectedResult);
   });
 

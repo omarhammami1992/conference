@@ -1,7 +1,18 @@
 import {Component, OnInit} from '@angular/core';
 import {ConferenceService} from '../../service/conference.service';
-import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import {Conference} from '../../model/conference';
+import {debounceTime, distinctUntilChanged, filter, finalize, switchMap, tap} from "rxjs/operators";
+import {HttpClient} from "@angular/common/http";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-conference-form',
@@ -30,6 +41,13 @@ export class ConferenceFormComponent implements OnInit {
   ];
   conferenceForm: FormGroup = new FormGroup({});
 
+  selectedAddress: any = "";
+  searchAddressControl = new FormControl();
+  filteredAddress: any;
+  isLoading = false;
+  errorMsg!: string;
+  minLengthTerm = 3;
+
   dateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const start = control.get('startDate');
     const end = control.get('endDate');
@@ -38,7 +56,7 @@ export class ConferenceFormComponent implements OnInit {
   }
 
 
-  constructor(private _conferenceService: ConferenceService, private _formBuilder: FormBuilder) {
+  constructor(private _conferenceService: ConferenceService, private _formBuilder: FormBuilder, private http: HttpClient) {
 
   }
 
@@ -50,22 +68,56 @@ export class ConferenceFormComponent implements OnInit {
       price: ['', [Validators.required, Validators.min(1)]],
       startDate: ['', [Validators.required,]],
       endDate: ['', [Validators.required]],
-      city: ['', Validators.required],
-      country: ['', Validators.required],
-      pricingMode:['', [Validators.required]],
+      addressForm: this._formBuilder.group({
+        city: ['', Validators.required],
+        country: ['', Validators.required],
+        longitude: ['', Validators.required],
+        latitude: ['', Validators.required],
+        fullAddress: ['', Validators.required]
+      }),
+      pricingMode:[''],
       earlyBirdForm: this._formBuilder.group({
         ranges: this._formBuilder.array([])
       })
     }, {validators: this.dateValidator});
+
+    this.searchAddressControl.valueChanges
+        .pipe(
+            filter(res =>
+               res !== null && res.length >= this.minLengthTerm
+            ),
+            distinctUntilChanged(),
+            debounceTime(500),
+            tap(() => {
+              this.errorMsg = "";
+              this.filteredAddress = [];
+              this.isLoading = true;
+            }),
+            switchMap(value => this.http.get('https://api.mapbox.com/geocoding/v5/mapbox.places/' + value + '.json?access_token=' + environment.mapbox.accessToken)
+                .pipe(
+                    finalize(() => {
+                      this.isLoading = false
+                    }),
+                )
+            )
+        )
+        .subscribe((data: any) => {
+          this.filteredAddress = data.features;
+        });
   }
+
+
 
   get earlyBirdForm(): FormGroup {
     return this.conferenceForm.controls.earlyBirdForm as FormGroup;
   }
 
+  get addressForm(): FormGroup {
+    return this.conferenceForm.controls.addressForm as FormGroup;
+  }
+
   createConference() {
     if (this.conferenceForm.invalid) {
-      console.log(this.conferenceForm.errors);
       this.conferenceForm.markAllAsTouched()
       return;
     }
@@ -73,13 +125,17 @@ export class ConferenceFormComponent implements OnInit {
       name: this.conferenceForm.controls.name.value,
       price: Number.parseFloat(this.conferenceForm.controls.price.value),
       link: this.conferenceForm.controls.link.value,
-      city: this.conferenceForm.controls.city.value,
-      country: this.conferenceForm.controls.country.value,
+      address: this.conferenceForm.controls.addressForm.value,
       startDate: new Date(this.conferenceForm.controls.startDate.value),
-      endDate: new Date(this.conferenceForm.controls.endDate.value)
+      endDate: new Date(this.conferenceForm.controls.endDate.value),
+      priceRanges: [],
+      priceAttendingDays: []
     }
-    console.log(this.conferenceForm.controls.earlyBirdForm.value);
 
-    this._conferenceService.createConference(conference);
+    this._conferenceService.createConference(conference).subscribe(
+      response => {
+        console.log("OK");
+      }
+    );
   }
 }

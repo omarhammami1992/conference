@@ -10,6 +10,5 @@ public record ConferenceJson(
         LocalDate endDate,
         float fullPrice,
         Boolean isOnline,
-        String city,
-        String country) {
+        AddressJson address) {
 }
